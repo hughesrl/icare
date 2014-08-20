@@ -1,0 +1,102 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="@android:style/Theme.Translucent">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@drawable/app_background</item>
+
+        <item name="android:spinnerDropDownItemStyle">@style/mySpinnerItemStyle</item>
+        <item name="android:dropDownListViewStyle">@style/MySpinnerStyle</item>
+
+    </style>
+
+    <!-- SPINNER -->
+    <style name="mySpinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="MySpinnerStyle" parent="android:style/Widget.ListView.DropDown">
+        <item name="android:divider">#FFEEEEEE</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+
+
+    <style name="DialogAnimation">
+        <item name="@android:windowEnterAnimation">@anim/grow_from_top</item>
+        <item name="@android:windowExitAnimation">@anim/sink_to_top</item>
+    </style>
+    <style name="DialogSlideAnim" parent="android:Theme.Translucent.NoTitleBar">
+        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="text_Appearance_normal">
+        <item name="android:textSize">15sp</item>
+    </style>
+    <style name="text_Appearance_normal_light" parent="text_Appearance_normal">
+        <item name="android:textSize">15sp</item>
+        <item name="android:color">@color/white</item>
+    </style>
+
+    <style name="text_Appearance_large">
+        <item name="android:textSize">20sp</item>
+    </style>
+    <style name="text_Appearance_large_light" parent="text_Appearance_large">
+        <item name="android:color">@color/white</item>
+    </style>
+    <style name="text_Appearance_large_title_light">
+        <item name="android:textSize">35sp</item>
+        <item name="android:color">@color/white</item>
+    </style>
+    <style name="text_Appearance_large_container_title_light" parent="text_Appearance_large">
+        <item name="android:color">@color/white</item>
+        <item name="android:shadowColor">@android:color/black</item>
+        <item name="android:shadowRadius">5</item>
+        <item name="android:paddingBottom">@dimen/rounded_padding_title_containers</item>
+    </style>
+
+    <style name="text_Appearance_large_growth_tracker">
+        <item name="android:textSize">55sp</item>
+        <item name="android:color">@color/white</item>
+        <item name="android:shadowColor">@android:color/black</item>
+        <item name="android:shadowRadius">5</item>
+    </style>
+
+    <style name="widget_button_appearance" parent="android:Widget.Button">
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:textAppearance">@style/text_Appearance_large</item>
+    </style>
+
+    <style name="button_appearance" parent="widget_button_appearance">
+        <item name="android:textAppearance">@style/text_Appearance_large</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:paddingLeft">30dp</item>
+        <item name="android:paddingRight">30dp</item>
+    </style>
+
+    <style name="button_appearance_login" parent="widget_button_appearance">
+        <item name="android:textAppearance">@style/text_Appearance_large</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="button_appearance_signup" parent="widget_button_appearance">
+        <item name="android:textAppearance">@style/text_Appearance_large</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+    <style name="CustomWindowTitleBackground">
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+    <style name="RadialMenuLegacyTitleBar" parent="android:Theme">
+        <item name="android:windowTitleSize">35dp</item>
+        <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
+    </style>
+</resources>

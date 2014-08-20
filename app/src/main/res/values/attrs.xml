@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MyTextView">
+        <attr name="fontName" format="string" />
+        <attr name="fontStyle" format="string" />
+        <attr name="fontColor" format="color" />
+        <attr name="isEnabled" format="boolean" />
+   	</declare-styleable>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  res/drawable/rounded_edittext.xml -->
+<!--<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" android:padding="@dimen/rounded_padding">
+    <solid android:color="@color/orange"/>
+    <corners
+        android:bottomRightRadius="0.1dp"
+        android:bottomLeftRadius="0.1dp"
+        android:topLeftRadius="@dimen/rounded_corners_containers"
+        android:topRightRadius="@dimen/rounded_corners_containers" />
+    <padding
+        android:top="@dimen/rounded_padding_title_containers"
+        android:bottom="@dimen/rounded_padding_title_containers" />
+</shape>-->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item>
+    <shape android:shape="rectangle">
+        <solid
+            android:color="@color/orange"/>
+
+        <corners
+            android:topLeftRadius="@dimen/rounded_corners_containers"
+            android:topRightRadius="@dimen/rounded_corners_containers" />
+        <padding
+            android:top="@dimen/rounded_padding_title_containers" />
+    </shape>
+</item>
+<item android:top="@dimen/rounded_padding_title_containers_line">
+    <shape android:shape="rectangle">
+        <solid android:color="@color/white"/>
+    </shape>
+</item>
+</layer-list>

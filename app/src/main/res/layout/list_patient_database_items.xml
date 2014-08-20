@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:icare="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10dp"
+    android:descendantFocusability="blocksDescendants">
+
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_toLeftOf="@+id/linearLayout"
+        android:layout_toStartOf="@+id/linearLayout">
+        <com.fourello.icare.view.CustomTextView
+            icare:fontName="VAGRoundedLight.ttf"
+            icare:fontStyle="bold"
+            icare:fontColor="@color/white"
+            android:textSize="@dimen/menu_font_size"
+            android:id="@+id/txtName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name" />
+
+        <com.fourello.icare.view.CustomTextView
+            icare:fontName="VAGRoundedLight.ttf"
+            icare:fontStyle="normal"
+            icare:fontColor="@color/white"
+            android:textSize="@dimen/menu_font_size"
+            android:id="@+id/txtMobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name" />
+        <!--<com.fourello.icare.view.CustomTextView
+            icare:fontName="VAGRoundedLight.ttf"
+            icare:fontStyle="bold"
+            icare:fontColor="@android:color/black"
+            android:textSize="@dimen/menu_font_size"
+            android:id="@+id/txtLastSeen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name" />
+        <com.fourello.icare.view.CustomTextView
+            icare:fontName="VAGRoundedLight.ttf"
+            icare:fontStyle="bold"
+            icare:fontColor="@android:color/black"
+            android:textSize="@dimen/menu_font_size"
+            android:id="@+id/txtNextVisit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name" />-->
+    </LinearLayout>
+    <LinearLayout
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout">
+
+        <ImageButton
+            android:contentDescription="@string/app_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnPatientInfo"
+            android:src="@drawable/ic_patient_info_big"
+            android:background="@android:color/transparent"
+            android:layout_weight="1"
+            android:padding="5dp"/>
+        <ImageButton
+            android:contentDescription="@string/app_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnPatientCheckin"
+            android:src="@drawable/ic_patient_checkin_big"
+            android:background="@android:color/transparent"
+            android:layout_weight="1"
+            android:padding="5dp"/>
+        <ImageButton
+            android:contentDescription="@string/app_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnPatientCalendar"
+            android:src="@drawable/ic_patient_calendar_big"
+            android:background="@android:color/transparent"
+            android:layout_weight="1"
+            android:padding="5dp"/>
+    </LinearLayout>
+
+</RelativeLayout>

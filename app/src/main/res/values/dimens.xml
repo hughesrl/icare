@@ -1,0 +1,17 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="dashboard_container_height">300dp</dimen>
+
+    <dimen name="rounded_padding">25dp</dimen>
+    <dimen name="rounded_corners">6dp</dimen>
+    <dimen name="rounded_corners_containers">15dp</dimen>
+    <dimen name="rounded_padding_title_containers">15dp</dimen>
+    <dimen name="rounded_padding_title_containers_line">38dp</dimen>
+
+    <dimen name="menu_layout_height">560dp</dimen>
+
+    <dimen name="menu_font_size">25sp</dimen>
+</resources>

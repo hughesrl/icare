@@ -1,0 +1,152 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:icare="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_below="@+id/btnShowMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/rounded_corners_container_wth_transparency">
+        <com.fourello.icare.view.CustomTextView
+            icare:fontName="VAGRoundedLight.ttf"
+            icare:fontStyle="bold"
+            icare:fontColor="@color/white"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_add_user"
+            android:id="@+id/pageTitle"
+            android:layout_gravity="center_horizontal"
+            style="@style/text_Appearance_large_container_title_light"
+            android:shadowColor="@android:color/background_dark"
+            android:background="@drawable/rounded_corners_container_title_bg" />
+
+        <!-- FIELDS -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:id="@+id/linearLayout">
+            <com.fourello.icare.view.CustomEditTextView
+                icare:fontName="VAGRoundedLight.ttf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etFirstname"
+                android:drawableStart="@drawable/custom_ic_user"
+                android:background="@drawable/rounded_corners"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:singleLine="true"
+                android:hint="@string/lblFirstname" />
+
+            <com.fourello.icare.view.CustomEditTextView
+                icare:fontName="VAGRoundedLight.ttf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etLastname"
+                android:drawableStart="@drawable/custom_ic_user"
+                android:background="@drawable/rounded_corners"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:singleLine="true"
+                android:hint="@string/lbl_lastname" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinnerRelationship"
+                android:background="@drawable/rounded_corners_spinner"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:singleLine="true"
+                android:hint="@string/lbl_relationship"
+                android:paddingLeft="60dp"/>
+
+            <com.fourello.icare.view.CustomEditTextView
+                icare:fontName="VAGRoundedLight.ttf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etContactNumber"
+                android:drawableStart="@drawable/custom_ic_user"
+                android:background="@drawable/rounded_corners"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:singleLine="true"
+                android:hint="@string/lbl_contact_number" />
+
+            <!-- SOME SPACE HERE -->
+            <com.fourello.icare.view.CustomEditTextView
+                icare:fontName="VAGRoundedLight.ttf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etEmail"
+                android:drawableStart="@drawable/custom_ic_email"
+                android:background="@drawable/rounded_corners"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:singleLine="true"
+                android:hint="@string/lbl_email" />
+            <com.fourello.icare.view.CustomEditTextView
+                icare:fontName="VAGRoundedLight.ttf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etConfirmEmail"
+                android:drawableStart="@drawable/custom_ic_email"
+                android:background="@drawable/rounded_corners"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:singleLine="true"
+                android:hint="@string/lbl_confirm_email" />
+
+            <com.fourello.icare.view.CustomEditTextView
+                icare:fontName="VAGRoundedLight.ttf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:id="@+id/etPassword"
+                android:drawableStart="@drawable/custom_ic_password"
+                android:background="@drawable/rounded_corners"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:singleLine="true"
+                android:hint="@string/hint_password" />
+            <com.fourello.icare.view.CustomEditTextView
+                icare:fontName="VAGRoundedLight.ttf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:id="@+id/etConfirmPassword"
+                android:drawableStart="@drawable/custom_ic_password"
+                android:background="@drawable/rounded_corners"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:singleLine="true"
+                android:hint="@string/lbl_confirm_password" />
+
+
+            <com.fourello.icare.view.CustomButton
+                icare:fontName="VAGRoundedLight.ttf"
+                icare:fontStyle="bold"
+                icare:fontColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_next"
+                android:id="@+id/btnAddUser"
+                android:background="@drawable/custom_button"
+                android:layout_gravity="center_horizontal"
+                style="@style/button_appearance" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>
