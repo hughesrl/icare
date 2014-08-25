@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:icare="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10dp"
+    android:descendantFocusability="blocksDescendants">
+
+    <ImageView
+        android:layout_centerVertical="true"
+        android:textSize="@dimen/menu_font_size"
+        android:id="@+id/patientPhoto"
+        android:layout_width="@dimen/patient_queue_photo_size"
+        android:layout_height="@dimen/patient_queue_photo_size"
+        android:src="@drawable/app_logo"
+        android:scaleType="centerInside"/>
+
+    <com.fourello.icare.view.CustomTextView
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/patientPhoto"
+        icare:fontName="VAGRoundedLight.ttf"
+        icare:fontStyle="bold"
+        icare:fontColor="@color/white"
+        android:textSize="@dimen/menu_font_size"
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:layout_marginStart="10dp"/>
+
+    <!--<com.fourello.icare.view.CustomTextView
+        icare:fontName="VAGRoundedLight.ttf"
+        icare:fontStyle="normal"
+        icare:fontColor="@color/white"
+        android:textSize="@dimen/menu_font_size"
+        android:id="@+id/txtMobile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name" />-->
+
+</RelativeLayout>

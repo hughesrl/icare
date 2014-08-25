@@ -1,5 +1,6 @@
 package com.fourello.icare;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -15,6 +16,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -29,26 +31,36 @@ import android.widget.Toast;
 
 import com.fourello.icare.adapters.MenuItemsAdapter;
 import com.fourello.icare.datas.MenuItems;
+import com.fourello.icare.datas.PatientDatabase;
 import com.fourello.icare.fragments.AddBabyFragment;
 import com.fourello.icare.fragments.AddUserFragment;
+import com.fourello.icare.fragments.CheckInFragment;
 import com.fourello.icare.fragments.CheckinPatientDialogFragment;
 import com.fourello.icare.fragments.DoctorDashboardFragment;
 import com.fourello.icare.fragments.MyDashboardFragment;
 import com.fourello.icare.fragments.NoticeDialogFragment;
+import com.fourello.icare.fragments.PatientDatabaseActionsFragment;
 import com.fourello.icare.fragments.PatientDatabaseFragment;
 import com.fourello.icare.fragments.PromosFragment;
 import com.fourello.icare.fragments.SettingsFragment;
 import com.fourello.icare.fragments.ValidateEmailFragment;
 import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.view.RoundedImageView;
+import com.fourello.icare.widgets.FragmentUtils;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.fourello.icare.widgets.PasswordDialogFragment;
 import com.parse.DeleteCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 
-public class DashboardDoctorFragmentActivity extends FragmentActivity
-        implements PasswordDialogFragment.PasswordDialogListener, CheckinPatientDialogFragment.CheckinPatientDialogListener {
+import java.io.ByteArrayOutputStream;
+import java.util.List;
+
+public class DashboardDoctorFragmentActivity extends FragmentActivity implements
+        FragmentUtils.ActivityForResultStarter,
+        PasswordDialogFragment.PasswordDialogListener,
+        CheckinPatientDialogFragment.CheckinPatientDialogListener {
 
     private static final int MY_REQUEST_CODE = 1;
 
@@ -64,6 +76,7 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity
     public int validPassword;
 
     private OpenMenuCallbacks mCallbacks;
+    private SparseArray<Bundle> requests;
 
     @Override
     public void onDialogDoneClick(DialogFragment dialog) {
@@ -75,6 +88,20 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity
         dialog.dismiss();
     }
 
+    @Override
+    public void startActivityForResultWhileSavingOrigin(int requestCode, Intent intent, int[] indices) {
+        //special method for start an activity for result.
+//we save the information about where this request comes from in a bundle and store it based on requestCode
+        final Bundle bundle = new Bundle();
+        bundle.putInt("code", requestCode);
+        bundle.putParcelable("intent", intent);
+        bundle.putIntArray("indices", indices);
+
+        this.requests.put(requestCode, bundle);
+        this.startActivityForResult(intent, requestCode);
+    }
+
+
     public interface OpenMenuCallbacks {
         public void onMenuPressedCallback();
     }
@@ -82,6 +109,15 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null)
+        {
+            this.requests = new SparseArray<Bundle>();
+        }
+        else
+        {
+            this.requests = savedInstanceState.getSparseParcelableArray("requests");
+        }
+
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         getActionBar().hide();
         setContentView(R.layout.activity_dashboard);
@@ -116,6 +152,12 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity
                     mCallbacks.onMenuPressedCallback();
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSparseParcelableArray("requests", this.requests);
     }
 
     @Override
@@ -422,6 +464,29 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity
                     "Fragment must implement the callbacks.");
         }
         mCallbacks = (OpenMenuCallbacks) myFragment;
+    }
+    public void PatientDatabaseActions(PatientDatabase patientDatabase) {
+        mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        PatientDatabaseActionsFragment myFragment = new PatientDatabaseActionsFragment();
+
+
+        String patientObjectId = patientDatabase.getPatientObjectId();
+        String patientName = patientDatabase.getFullName();
+
+        Bundle bundle = getIntent().getExtras();
+        bundle.putString(PatientDatabaseActionsFragment.ARG_PATIENT_OBJECT_ID, patientObjectId);
+        bundle.putParcelable(PatientDatabaseActionsFragment.ARG_PATIENT_DATA, patientDatabase);
+        myFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.alt_fragment_content_container, myFragment, "PATIENT_DATABASE_ACTIONS_FRAGMENT");
+        transaction.commit();
+        // Fragment must implement the callback.
+        if (!(myFragment instanceof OpenMenuCallbacks)) {
+            throw new IllegalStateException(
+                    "Fragment must implement the callbacks.");
+        }
+        mCallbacks = (OpenMenuCallbacks) myFragment;
 
     }
 
@@ -444,5 +509,49 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity
         mCallbacks = (OpenMenuCallbacks) myFragment;
 
     }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data){
+//        super.onActivityResult(requestCode,resultCode,data);
+//
+//        Toast.makeText(getApplicationContext(), requestCode+" - DashboardDoctorFragmentActivity", Toast.LENGTH_LONG).show();
+//    }
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data)
+{
+//first check if we saved any data about the origin of this request (which fragment)
+    final Bundle request = this.requests.get(requestCode, null);
+    if (request != null)
+    {
+//find the indices-array
+        final int[] indices = request.getIntArray("indices");
+
+        FragmentManager fm = this.getSupportFragmentManager();
+        Fragment f = null;
+//loop backwards
+        for(int i = indices.length - 1 ; i >= 0 ; i--)
+        {
+            if (fm != null)
+            {
+//find a list of active fragments
+                List<Fragment> flist = fm.getFragments();
+                if (flist != null && indices[i] < flist.size())
+                {
+                    f = flist.get(indices[i]);
+                    fm = f.getChildFragmentManager();
+                }
+            }
+        }
+
+//we found our fragment that initiated the request to startActivityForResult, give it the callback!
+        if (f != null)
+        {
+            f.onActivityResult(requestCode, resultCode, data);
+            return ;
+        }
+    }
+
+    super.onActivityResult(requestCode, resultCode, data);
+}
 
 }

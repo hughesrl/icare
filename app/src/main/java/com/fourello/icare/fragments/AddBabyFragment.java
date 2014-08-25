@@ -193,7 +193,7 @@ public class AddBabyFragment extends Fragment implements
             final CustomEditTextView etLastname = (CustomEditTextView) myFragmentView.findViewById(R.id.etLastname);
             final Spinner spinnerGender = (Spinner) myFragmentView.findViewById(R.id.spinnerGender);
             final CustomTextView etBirthday = (CustomTextView) myFragmentView.findViewById(R.id.spinnerBirthday);
-            final CustomTextView etBirthdayTime = (CustomTextView) myFragmentView.findViewById(R.id.spinnerBirthdayTime);
+
 
             if (password.trim().equals(mParamLoginData.getString("password"))) {
                 if (mProgressDialog == null) {
@@ -212,10 +212,10 @@ public class AddBabyFragment extends Fragment implements
                     updatePatient.put("lastname", etLastname.getText().toString());
                     updatePatient.put("gender", strGender);
 
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm");
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm");
                     Date convertedDate = new Date();
                     try {
-                        String birthdayAndTime = etBirthday.getText().toString() + " " + etBirthdayTime.getText().toString();
+                        String birthdayAndTime = etBirthday.getText().toString().trim() + " 00:00";
                         convertedDate = simpleDateFormat.parse(birthdayAndTime);
                     } catch (java.text.ParseException e) {
                         e.printStackTrace();
@@ -256,10 +256,10 @@ public class AddBabyFragment extends Fragment implements
                                     initialPatientData.put("lastname", etLastname.getText().toString());
                                     initialPatientData.put("gender", strGender);
 
-                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm");
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm");
                                     Date convertedDate = new Date();
                                     try {
-                                        String birthdayAndTime = etBirthday.getText().toString() + " " + etBirthdayTime.getText().toString();
+                                        String birthdayAndTime = etBirthday.getText().toString().trim() + " 00:00";
                                         convertedDate = simpleDateFormat.parse(birthdayAndTime);
                                     } catch (java.text.ParseException e1) {
                                         e1.printStackTrace();

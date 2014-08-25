@@ -36,7 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fourello.icare.R;
-import com.fourello.icare.adapters.ViewPagerAdapter;
+//import com.fourello.icare.adapters.ViewPagerAdapter;
 import com.fourello.icare.datas.PatientDatabase;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.view.RoundedImageView;

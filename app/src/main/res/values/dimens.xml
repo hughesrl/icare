@@ -14,4 +14,6 @@
     <dimen name="menu_layout_height">560dp</dimen>
 
     <dimen name="menu_font_size">25sp</dimen>
+
+    <dimen name="patient_queue_photo_size">50dp</dimen>
 </resources>

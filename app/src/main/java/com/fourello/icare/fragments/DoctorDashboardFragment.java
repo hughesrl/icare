@@ -9,12 +9,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.fourello.icare.DashboardDoctorFragmentActivity;
 import com.fourello.icare.R;
 
+import com.fourello.icare.datas.PatientDatabase;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.fourello.icare.widgets.PasswordDialogFragment;
 
@@ -88,10 +90,20 @@ public class DoctorDashboardFragment extends Fragment implements
                 hideFragmentListener(fm.findFragmentById(R.id.scheduler_frag));
                 hideFragmentListener(fm.findFragmentById(R.id.news_feed_frag));
 
-                Fragment patientsQueueFrag =  fm.findFragmentById(R.id.patient_queue_frag);
-                ViewGroup.LayoutParams patientsQueueParams = patientsQueueFrag.getView().getLayoutParams();
+                /* PATIENT QUEUE */
+                FrameLayout frame = (FrameLayout) myFragmentView.findViewById(R.id.patient_queue_frag);
+                ViewGroup.LayoutParams patientsQueueParams = frame.getLayoutParams();
                 patientsQueueParams.height = patientsHeight;
-                patientsQueueFrag.getView().setLayoutParams(patientsQueueParams);
+                frame.setLayoutParams(patientsQueueParams);
+
+                PatientQueueFragment patientQueueFragment = new PatientQueueFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(PatientQueueFragment.ARG_LOGIN_DATA, mParamLoginData);
+                bundle.putString(PatientQueueFragment.ARG_DOCTOR_ID, mParamLoginData.getString("linked_doctorid"));
+                patientQueueFragment.setArguments(bundle);
+                ft.replace(R.id.patient_queue_frag, patientQueueFragment, "PATIENTS_QUEUE_FRAGMENT");
+                ft.commit();
+
 
                 Fragment promosFrag = fm.findFragmentById(R.id.promos_frag);
                 ViewGroup.LayoutParams promosParams = promosFrag.getView().getLayoutParams();
@@ -111,22 +123,6 @@ public class DoctorDashboardFragment extends Fragment implements
         ((DashboardDoctorFragmentActivity) getActivity()).showMenuContents(getView());
     }
 
-//    @Override
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
 
     /**
      * This interface must be implemented by activities that contain this

@@ -13,10 +13,17 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.fourello.icare.datas.SpinnerItems;
+import com.fourello.icare.widgets.ParseProxyObject;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +35,9 @@ public class ICareApplication extends Application {
     public static String DOCTORS_LABEL = "Doctors";
     public static String USERS_LABEL = "Users";
     public static String PATIENTS_LABEL = "Patients";
-    public static String VISITS_LABEL = "Visit";
+    public static String VISITS_LABEL = "Visits";
+
+    public static ParseProxyObject mLoginData;
 
     @Override
     public void onCreate() {
@@ -287,7 +296,35 @@ public class ICareApplication extends Application {
     }
 
 
-
-
-
+    public static ArrayList<SpinnerItems> populateRelationshipToPatient(){
+        final ArrayList<SpinnerItems> spinnerItems = new ArrayList<SpinnerItems>();
+        spinnerItems.add(new SpinnerItems("", false));
+        spinnerItems.add(new SpinnerItems("Father", true));
+        spinnerItems.add(new SpinnerItems("Mother", true));
+        spinnerItems.add(new SpinnerItems("Relative", true));
+        return spinnerItems;
+    }
+    public static ArrayList<SpinnerItems> populatePurpose(){
+        final ArrayList<SpinnerItems> spinnerItems = new ArrayList<SpinnerItems>();
+        spinnerItems.add(new SpinnerItems("", false));
+        spinnerItems.add(new SpinnerItems("Checkup", true));
+        spinnerItems.add(new SpinnerItems("Follow-up", true));
+        spinnerItems.add(new SpinnerItems("Vaccination", true));
+        return spinnerItems;
+    }
+    public static ArrayList<SpinnerItems> populateTypeOfDelivery(){
+        final ArrayList<SpinnerItems> spinnerItems = new ArrayList<SpinnerItems>();
+        spinnerItems.add(new SpinnerItems("", false));
+        spinnerItems.add(new SpinnerItems("Normal", true));
+        spinnerItems.add(new SpinnerItems("CS", true));
+        return spinnerItems;
+    }
+    public static ArrayList<SpinnerItems> populateAllergyRisk(){
+        final ArrayList<SpinnerItems> spinnerItems = new ArrayList<SpinnerItems>();
+        spinnerItems.add(new SpinnerItems("", false));
+        spinnerItems.add(new SpinnerItems("At Risk", true));
+        spinnerItems.add(new SpinnerItems("Medium Risk (15%-40%)", true));
+        spinnerItems.add(new SpinnerItems("High Risk (50%-80%)", true));
+        return spinnerItems;
+    }
 }

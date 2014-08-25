@@ -19,6 +19,7 @@
     <string name="lbl_register">Register</string>
     <string name="lbl_next">Next</string>
     <string name="lbl_done">Done</string>
+    <string name="lbl_save">Save</string>
     <string name="lbl_email">Email</string>
     <string name="lbl_confirm_email">Confirm Email</string>
     <string name="lbl_role">Role</string>
@@ -33,6 +34,7 @@
     <string name="lbl_news_feed">NEWS FEED</string>
     <string name="lbl_scheduler">SCHEDULER</string>
     <string name="lbl_my_dashboard">MY DASHBOARD</string>
+    <string name="lbl_patient_database">PATIENT DATABASE</string>
     <string name="lbl_patients_queue">PATIENTS QUEUE</string>
     <string name="lbl_add_user">ADD USER</string>
     <string name="lbl_add_baby">ADD BABY</string>
@@ -57,13 +59,40 @@
     <string name="lblRelationshipToPatient">Relationship to Patient</string>
     <string name="lblPurpose">Purpose</string>
     <string name="lblTypeOfDelivery">Type of Delivery</string>
+    <string name="lblAllergyRisk">Allergy Risk</string>
     <string name="lblMomsNotes">Mom\'s Notes</string>
     <string name="lblGrowthTracker">Growth Tracker</string>
     <string name="lblGrowthTrackerWeight">Weight</string>
     <string name="lblGrowthTrackerHeight">Height</string>
     <string name="lblGrowthTrackerHead">Head</string>
     <string name="lblGrowthTrackerChest">Chest</string>
+    <string name="lblGrowthTrackerAbdomen">Abdomen</string>
     <string name="lblGrowthTrackerTemperature">Temperature</string>
+
+    <string name="lblMyNameIs">My name is</string>
+    <string name="lblIWasBorn">I was born</string>
+    <string name="lblAt">at</string>
+    <string name="lblIWasDeliveredBy">I was delivered by</string>
+    <string name="lblMyMomGaveBirthToMeThrough">My mom gave birth to me through</string>
+    <string name="lblWhenIWasBornIWeighed">When I was born I weighed</string>
+    <string name="lblAndIMeasured">and I measured</string>
+    <string name="lblAllergyRiskNotes"><![CDATA[When your child have allergies, his development may also suffer.\n Find out your child\'s allergy risk here (<a>http://stage.allergyrisktracker.com/ph/</a>).]]></string>
+    <string name="lblCircumcisedOn">Circumcised on</string>
+    <string name="lblEarsPiercedOn">Ears pierced on</string>
+    <string name="lblDistinguishingMarks">Distinguishing marks</string>
+    <string name="lblNewBornScreening">Newborn screening</string>
+    <string name="lblVaccinationsGiven">Vaccinations given</string>
+    <string name="lblMyMommyNameIs">My Mommy\'s name is</string>
+    <string name="lblSheWorksAt">She works at</string>
+    <string name="lblMyDaddyNameIs">My Daddy\'s name is</string>
+    <string name="lblHeWorksAt">He works at</string>
+    <string name="lblAs">as</string>
+    <string name="lblHerHMOIs">Her HMO is</string>
+    <string name="lblHisHMOIs">His HMO is</string>
+    <string name="lblILiveAt">I live at</string>
+    <string name="lblAddress1">Address 1</string>
+    <string name="lblAddress2">Address 2</string>
+
 
     <string name="lblPINOfTheDay">PIN of the day</string>
     <string name="lblUpdateConfiguration">Update Configuration</string>

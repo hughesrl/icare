@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:scrollbars="none"
-    android:layout_below="@+id/pageTitle">
+    android:layout_below="@+id/pageTitle"
+    >
     <LinearLayout
         android:layout_marginTop="5dp"
         android:padding="@dimen/activity_vertical_margin"
@@ -99,12 +100,10 @@
                 android:text="@string/lblRelationshipToPatient"
                 />
 
-            <com.fourello.icare.view.CustomEditTextView
-                icare:fontName="VAGRoundedLight.ttf"
+            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/etRelationshipToPatient"
-                android:drawableStart="@drawable/custom_edittext_no_drawable_left"
+                android:id="@+id/spinnerRelationshipToPatient"
                 android:background="@drawable/rounded_corners"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
@@ -152,18 +151,18 @@
                 android:gravity="center_vertical"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="3"
-                android:id="@+id/lblTypeOfDelivery"
-                android:text="@string/lblTypeOfDelivery"
+                android:id="@+id/lblAllergyRisk"
+                android:text="@string/lblAllergyRisk"
                 />
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinnerTypeOfDelivery"
+                android:id="@+id/spinnerAllergyRisk"
                 android:background="@drawable/rounded_corners"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
                 android:singleLine="true"
-                android:hint="@string/lblTypeOfDelivery"
+                android:hint="@string/lblAllergyRisk"
                 android:layout_weight="1" />
         </LinearLayout>
         <LinearLayout

@@ -1,6 +1,4 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:icare="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,12 +25,18 @@
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             tools:layout="@layout/fragment_scheduler" />
 
-        <fragment class="com.fourello.icare.fragments.PatientQueueFragment"
+        <!--<fragment
             android:id="@+id/patient_queue_frag"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dashboard_container_height"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            tools:layout="@layout/fragment_patient_queue" />
+            tools:layout="@layout/fragment_patient_queue" />-->
+        <FrameLayout
+            android:id="@+id/patient_queue_frag"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dashboard_container_height"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            />
 
         <fragment class="com.fourello.icare.fragments.NewsFeedFragment"
             android:id="@+id/news_feed_frag"
