@@ -13,10 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.fourello.icare.datas.PatientCheckIn;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.parse.Parse;
 import com.parse.ParseACL;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ public class ICareApplication extends Application {
 
         // Add your initialization code here
         Parse.enableLocalDatastore(this);
+        ParseObject.registerSubclass(PatientCheckIn.class);
         Parse.initialize(this, "mgjwXn2NpSfBlZenRbnWGYFqIOfZ0AdGUIqXxq9k", "RRw4cxwZG4wZryUuxqYHbzYLtof8fvizS7JhQ6PO");
 
         //ParseUser.enableAutomaticUser();

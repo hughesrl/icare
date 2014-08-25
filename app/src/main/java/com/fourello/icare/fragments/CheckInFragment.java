@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.fourello.icare.DashboardDoctorFragmentActivity;
 import com.fourello.icare.ICareApplication;
 import com.fourello.icare.R;
+import com.fourello.icare.datas.PatientCheckIn;
 import com.fourello.icare.datas.PatientDatabase;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.view.CustomButton;
@@ -69,6 +70,8 @@ public class CheckInFragment extends Fragment implements
     private static ParseProxyObject mParamLoginData;
     private static String mParamPatientObjectId;
 
+    private PatientCheckIn patientCheckIn;
+
 
 
 
@@ -87,6 +90,7 @@ public class CheckInFragment extends Fragment implements
     private CustomEditTextView pName, pAccompaniedBy, pMomsNotes, etGrowthTrackerWeight, etGrowthTrackerHeight, etGrowthTrackerHead, etGrowthTrackerChest, etGrowthTrackerTemperature;
     private Spinner spinnerRelationshipToPatient, spinnerPurpose, spinnerAllergyRisk;
     private static ImageButton patient_photo;
+
 
     public static Fragment newInstance(int position, PatientDatabase patientData, ParseProxyObject loginData, String patientObjectId) {
         CheckInFragment f = new CheckInFragment();
@@ -207,19 +211,34 @@ public class CheckInFragment extends Fragment implements
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-//        super.onActivityResult(requestCode,resultCode,data);
-
         Toast.makeText(getActivity(), requestCode+" - CheckInFragment", Toast.LENGTH_LONG).show();
 
         if( requestCode == CheckInFragment.CAMERA_CAPTURE ) { // 1 Checkin
             if(resultCode != 0) {
                 final Bitmap thePic = data.getExtras().getParcelable("data");
+
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 thePic.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                bytearray = stream.toByteArray();// get byte array here
+                Log.d("ROBERT bytearray", bytearray.toString()+"");
+                if (bytearray != null) {
+                    final ParseFile photoFile = new ParseFile("UserProfile.jpg", bytearray);
+                    photoFile.saveInBackground(new SaveCallback() {
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                Toast.makeText(getActivity(),
+                                        "Error saving: " + e.getMessage(),
+                                        Toast.LENGTH_LONG).show();
+                            } else {
+                                patientCheckIn.setPatientphoto(photoFile);
+                                Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(thePic);
+                                patient_photo.setImageBitmap(profileInCircle);
+                            }
+                        }
+                    });
+                }
 
-                Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(thePic);
 
-                patient_photo.setImageBitmap(profileInCircle);
 
             }
         }
@@ -250,41 +269,71 @@ public class CheckInFragment extends Fragment implements
                 String purpose = String.valueOf(spinnerPurpose.getSelectedItem());
                 String allergyRisk = String.valueOf(spinnerAllergyRisk.getSelectedItem());
 
-                final ParseObject quickSurvey = new ParseObject(ICareApplication.VISITS_LABEL);
-//----------------------
-                quickSurvey.put("accompaniedby", accompaniedBy);
-//                quickSurvey.put("age", "");
-                quickSurvey.put("doctorid", Integer.parseInt(mParamLoginData.getString("linked_doctorid").toString()));
-                quickSurvey.put("email", mParamPatientData.getParentEmail());
-                quickSurvey.put("chest", growthTrackerChest);
-                quickSurvey.put("head", growthTrackerHead);
-                quickSurvey.put("height", growthTrackerHeight);
-                quickSurvey.put("temperature", growthTrackerTemperature);
-                quickSurvey.put("weight", growthTrackerWeight);
-                quickSurvey.put("patientid", mParamPatientData.getPatientObjectId());
-                quickSurvey.put("patientname", mParamPatientData.getFullName());
-                quickSurvey.put("personal_notes", momsNotes);
-//                quickSurvey.put("photoFile", );
-                quickSurvey.put("purpose_of_visit", purpose);
-                quickSurvey.put("relationship_to_patient", relationshipToPatient);
-                quickSurvey.put("allergyrisk", allergyRisk);
-//                quickSurvey.put("", );
+//                final ParseObject quickSurvey = new ParseObject(ICareApplication.VISITS_LABEL);
+////----------------------
+//                quickSurvey.put("accompaniedby", accompaniedBy);
+////                quickSurvey.put("age", "");
+//                quickSurvey.put("doctorid", Integer.parseInt(mParamLoginData.getString("linked_doctorid").toString()));
+//                quickSurvey.put("email", mParamPatientData.getParentEmail());
+//                quickSurvey.put("chest", growthTrackerChest);
+//                quickSurvey.put("head", growthTrackerHead);
+//                quickSurvey.put("height", growthTrackerHeight);
+//                quickSurvey.put("temperature", growthTrackerTemperature);
+//                quickSurvey.put("weight", growthTrackerWeight);
+//                quickSurvey.put("patientid", mParamPatientData.getPatientObjectId());
+//                quickSurvey.put("patientname", mParamPatientData.getFullName());
+//                quickSurvey.put("personal_notes", momsNotes);
+////                quickSurvey.put("photoFile", );
+//                quickSurvey.put("purpose_of_visit", purpose);
+//                quickSurvey.put("relationship_to_patient", relationshipToPatient);
+//                quickSurvey.put("allergyrisk", allergyRisk);
+////                quickSurvey.put("", );
+                patientCheckIn.setAccompaniedBy(accompaniedBy);
+                patientCheckIn.setDoctorId(Integer.parseInt(mParamLoginData.getString("linked_doctorid").toString()));
+                patientCheckIn.setEmail(mParamPatientData.getParentEmail());
+                patientCheckIn.setChest(growthTrackerChest);
+                patientCheckIn.setHead(growthTrackerHead);
+                patientCheckIn.setHeight(growthTrackerHeight);
+                patientCheckIn.setTemperature(growthTrackerTemperature);
+                patientCheckIn.setWeight(growthTrackerWeight);
+                patientCheckIn.setPatientObjectId(mParamPatientData.getPatientObjectId());
+                patientCheckIn.setPatientFullname(mParamPatientData.getFullName());
+                patientCheckIn.setMomsNotes(momsNotes);
+                patientCheckIn.setPurposeOfVisit(purpose);
+                patientCheckIn.setRelationshipToPatient(relationshipToPatient);
+                patientCheckIn.setAllergyRisk(allergyRisk);
 
-                Log.d("ICare", quickSurvey.toString());
-                passwordDialog.dismiss();
-                quickSurvey.saveInBackground(new SaveCallback() {
+                // Save the meal and return
+                patientCheckIn.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
-                            mProgressDialog.dismiss();
-                            ((DashboardDoctorFragmentActivity) getActivity()).PatientDatabase();
+                            getActivity().setResult(Activity.RESULT_OK);
+                            getActivity().finish();
                         } else {
-                            mProgressDialog.dismiss();
-                            Toast.makeText(getActivity(), "An Error Occured", Toast.LENGTH_LONG).show();
-                            Log.e("ICare", e.getLocalizedMessage());
+                            Toast.makeText(
+                                    getActivity().getApplicationContext(),
+                                    "Error saving: " + e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
+
                 });
+//                Log.d("ICare", quickSurvey.toString());
+//                passwordDialog.dismiss();
+//                quickSurvey.saveInBackground(new SaveCallback() {
+//                    @Override
+//                    public void done(ParseException e) {
+//                        if (e == null) {
+//                            mProgressDialog.dismiss();
+//                            ((DashboardDoctorFragmentActivity) getActivity()).PatientDatabase();
+//                        } else {
+//                            mProgressDialog.dismiss();
+//                            Toast.makeText(getActivity(), "An Error Occured", Toast.LENGTH_LONG).show();
+//                            Log.e("ICare", e.getLocalizedMessage());
+//                        }
+//                    }
+//                });
 
             } else { // incorrect Password
                 Toast.makeText(getActivity(), "Incorrect Password", Toast.LENGTH_LONG).show();
@@ -401,4 +450,7 @@ public class CheckInFragment extends Fragment implements
         }
     }
 
+    public PatientCheckIn getCurrentPatientCheckIn() {
+        return patientCheckIn;
+    }
 }

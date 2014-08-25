@@ -91,7 +91,7 @@
     </layouts>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: com.fourello.icare" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="ERROR" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="20a6743f-f4c9-450c-bcb8-a93940fc42cd" name="Default" comment="" />
@@ -116,16 +116,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="PatientInformationFragment.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/PatientInformationFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="499" max-vertical-offset="3604">
-              <caret line="63" column="0" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="PatientDatabaseActionsFragment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/PatientDatabaseActionsFragment.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -136,16 +126,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fragment_patient_database_actions.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_patient_database_actions.xml">
+      <file leaf-file-name="ICareApplication.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/ICareApplication.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.111111" vertical-offset="676" max-vertical-offset="1241">
-              <caret line="59" column="33" selection-start-line="59" selection-start-column="33" selection-end-line="59" selection-end-column="33" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="28" max-vertical-offset="5304">
+              <caret line="49" column="59" selection-start-line="49" selection-start-column="59" selection-end-line="49" selection-end-column="59" />
               <folding />
             </state>
-          </provider>
-          <provider editor-type-id="android-designer">
-            <state />
           </provider>
         </entry>
       </file>
@@ -167,32 +154,51 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PatientQueueFragment.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/PatientQueueFragment.java">
+      <file leaf-file-name="CheckInFragment.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/CheckInFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1323" max-vertical-offset="2193">
-              <caret line="141" column="25" selection-start-line="132" selection-start-column="24" selection-end-line="141" selection-end-column="25" />
+            <state vertical-scroll-proportion="0.39338234" vertical-offset="3854" max-vertical-offset="7854">
+              <caret line="233" column="104" selection-start-line="233" selection-start-column="104" selection-end-line="233" selection-end-column="104" />
               <folding>
-                <element signature="e#4278#4291#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#9159#9817#0" expanded="true" />
+                <element signature="e#9806#9807#0" expanded="true" />
+                <element signature="e#9967#10237#0" expanded="true" />
+                <element signature="e#10226#10227#0" expanded="true" />
+                <element signature="e#11322#12027#0" expanded="true" />
+                <element signature="e#12004#12005#0" expanded="true" />
+                <element signature="e#16037#16664#0" expanded="true" />
+                <element signature="e#16644#16645#0" expanded="true" />
+                <element signature="e#17716#17717#0" expanded="true" />
+                <element signature="e#17748#17749#0" expanded="true" />
+                <element signature="e#21335#21362#0" expanded="true" />
+                <element signature="e#21493#21494#0" expanded="true" />
+                <element signature="e#21530#21531#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CheckInFragment.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/CheckInFragment.java">
+      <file leaf-file-name="PatientDatabase.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/datas/PatientDatabase.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.50949913" vertical-offset="3445" max-vertical-offset="6919">
-              <caret line="220" column="0" selection-start-line="220" selection-start-column="0" selection-end-line="220" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7004">
+              <caret line="8" column="29" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PatientCheckIn.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/datas/PatientCheckIn.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="769" max-vertical-offset="1088">
+              <caret line="117" column="38" selection-start-line="117" selection-start-column="38" selection-end-line="117" selection-end-column="38" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#9066#9724#0" expanded="true" />
-                <element signature="e#9713#9714#0" expanded="true" />
-                <element signature="e#9874#10144#0" expanded="true" />
-                <element signature="e#10133#10134#0" expanded="true" />
-                <element signature="e#14993#14994#0" expanded="true" />
-                <element signature="e#15025#15026#0" expanded="true" />
-                <element signature="e#18612#18639#0" expanded="true" />
+                <element signature="method#setRelationshipToPatient#0;class#PatientCheckIn#0" expanded="false" />
+                <element signature="method#setPurposeOfVisit#0;class#PatientCheckIn#0" expanded="false" />
+                <element signature="e#3005#3006#0" expanded="true" />
+                <element signature="e#3048#3049#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -201,28 +207,8 @@
       <file leaf-file-name="CheckinPatientDialogFragment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/CheckinPatientDialogFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3400" max-vertical-offset="6511">
-              <caret line="281" column="74" selection-start-line="278" selection-start-column="28" selection-end-line="281" selection-end-column="74" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="402" max-vertical-offset="2108">
-              <caret line="36" column="38" selection-start-line="36" selection-start-column="18" selection-end-line="36" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DashboardDoctorFragmentActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/DashboardDoctorFragmentActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="723" max-vertical-offset="8143">
-              <caret line="93" column="58" selection-start-line="93" selection-start-column="58" selection-end-line="93" selection-end-column="58" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="346" max-vertical-offset="6511">
+              <caret line="246" column="32" selection-start-line="246" selection-start-column="32" selection-end-line="246" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -941,7 +927,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/dialog_checkin_patient.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/CheckinPatientDialogFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/ValidateEmailFragment.java" />
@@ -976,7 +961,6 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/list_patient_queue_items.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/fourello/icare/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/fourello/icare/LoginSignupActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/fourello/icare/ICareApplication.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_dashboard.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_patient_queue.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/fourello/icare/datas/PatientQueue.java" />
@@ -991,6 +975,8 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/PatientDatabaseFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/fourello/icare/widgets/FragmentUtils.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/fourello/icare/DashboardDoctorFragmentActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/fourello/icare/ICareApplication.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/fourello/icare/datas/PatientCheckIn.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/CheckInFragment.java" />
       </list>
     </option>
@@ -1155,41 +1141,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="widgets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="icare" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="icare" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="icare" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fragments" />
+              <option name="myItemId" value="datas" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1305,9 +1257,9 @@
       <recent name="" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.fourello.icare.datas" />
       <recent name="android.support.v4.app" />
       <recent name="com.fourello.icare.adapters" />
-      <recent name="com.fourello.icare.datas" />
       <recent name="com.fourello.icare.widgets" />
       <recent name="com.fourello.icare.fragments" />
     </key>
@@ -1504,7 +1456,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4951613" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4951613" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" sideWeight="0.5" order="13" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22254759" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1540,13 +1492,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/20.0.0/res/values-large-v14/values.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="238">
-          <caret line="3" column="63" selection-start-line="3" selection-start-column="63" selection-end-line="3" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_add_user.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="235" max-vertical-offset="2941">
@@ -1800,168 +1745,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/datas/PatientDatabase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="14.994819" vertical-offset="260" max-vertical-offset="9639">
-          <caret line="526" column="40" selection-start-line="526" selection-start-column="40" selection-end-line="526" selection-end-column="40" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1374#1375#0" expanded="false" />
-            <element signature="e#1404#1405#0" expanded="false" />
-            <element signature="e#6108#6109#0" expanded="false" />
-            <element signature="e#6146#6147#0" expanded="false" />
-            <element signature="e#6296#6297#0" expanded="false" />
-            <element signature="e#6327#6328#0" expanded="false" />
-            <element signature="e#6374#6375#0" expanded="false" />
-            <element signature="e#6414#6415#0" expanded="false" />
-            <element signature="e#6451#6452#0" expanded="false" />
-            <element signature="e#6484#6485#0" expanded="false" />
-            <element signature="e#6535#6536#0" expanded="false" />
-            <element signature="e#6579#6580#0" expanded="false" />
-            <element signature="e#6614#6615#0" expanded="false" />
-            <element signature="e#6645#6646#0" expanded="false" />
-            <element signature="e#6692#6693#0" expanded="false" />
-            <element signature="e#6732#6733#0" expanded="false" />
-            <element signature="e#6772#6773#0" expanded="false" />
-            <element signature="e#6808#6809#0" expanded="false" />
-            <element signature="e#6865#6866#0" expanded="false" />
-            <element signature="e#6915#6916#0" expanded="false" />
-            <element signature="e#6954#6955#0" expanded="false" />
-            <element signature="e#6989#6990#0" expanded="false" />
-            <element signature="e#7044#7045#0" expanded="false" />
-            <element signature="e#7092#7093#0" expanded="false" />
-            <element signature="e#7127#7128#0" expanded="false" />
-            <element signature="e#7194#7195#0" expanded="false" />
-            <element signature="e#7259#7260#0" expanded="false" />
-            <element signature="e#7293#7294#0" expanded="false" />
-            <element signature="e#7347#7348#0" expanded="false" />
-            <element signature="e#7393#7394#0" expanded="false" />
-            <element signature="e#7433#7434#0" expanded="false" />
-            <element signature="e#7469#7470#0" expanded="false" />
-            <element signature="e#7527#7528#0" expanded="false" />
-            <element signature="e#7577#7578#0" expanded="false" />
-            <element signature="e#7622#7623#0" expanded="false" />
-            <element signature="e#7663#7664#0" expanded="false" />
-            <element signature="e#7829#7830#0" expanded="false" />
-            <element signature="e#7863#7864#0" expanded="false" />
-            <element signature="e#7917#7918#0" expanded="false" />
-            <element signature="e#7963#7964#0" expanded="false" />
-            <element signature="e#7995#7996#0" expanded="false" />
-            <element signature="e#8023#8024#0" expanded="false" />
-            <element signature="e#8065#8066#0" expanded="false" />
-            <element signature="e#8099#8100#0" expanded="false" />
-            <element signature="e#8132#8133#0" expanded="false" />
-            <element signature="e#8161#8162#0" expanded="false" />
-            <element signature="e#8205#8206#0" expanded="false" />
-            <element signature="e#8241#8242#0" expanded="false" />
-            <element signature="e#8274#8275#0" expanded="false" />
-            <element signature="e#8303#8304#0" expanded="false" />
-            <element signature="e#8347#8348#0" expanded="false" />
-            <element signature="e#8383#8384#0" expanded="false" />
-            <element signature="e#8422#8423#0" expanded="false" />
-            <element signature="e#8457#8458#0" expanded="false" />
-            <element signature="e#8513#8514#0" expanded="false" />
-            <element signature="e#8561#8562#0" expanded="false" />
-            <element signature="e#8595#8596#0" expanded="false" />
-            <element signature="e#8625#8626#0" expanded="false" />
-            <element signature="e#8671#8672#0" expanded="false" />
-            <element signature="e#8709#8710#0" expanded="false" />
-            <element signature="e#8743#8744#0" expanded="false" />
-            <element signature="e#8773#8774#0" expanded="false" />
-            <element signature="e#8819#8820#0" expanded="false" />
-            <element signature="e#8857#8858#0" expanded="false" />
-            <element signature="e#8889#8890#0" expanded="false" />
-            <element signature="e#8917#8918#0" expanded="false" />
-            <element signature="e#8959#8960#0" expanded="false" />
-            <element signature="e#8993#8994#0" expanded="false" />
-            <element signature="e#9026#9027#0" expanded="false" />
-            <element signature="e#9055#9056#0" expanded="false" />
-            <element signature="e#9099#9100#0" expanded="false" />
-            <element signature="e#9135#9136#0" expanded="false" />
-            <element signature="e#9170#9171#0" expanded="false" />
-            <element signature="e#9201#9202#0" expanded="false" />
-            <element signature="e#9249#9250#0" expanded="false" />
-            <element signature="e#9289#9290#0" expanded="false" />
-            <element signature="e#9330#9331#0" expanded="false" />
-            <element signature="e#9367#9368#0" expanded="false" />
-            <element signature="e#9427#9428#0" expanded="false" />
-            <element signature="e#9479#9480#0" expanded="false" />
-            <element signature="e#9519#9520#0" expanded="false" />
-            <element signature="e#9555#9556#0" expanded="false" />
-            <element signature="e#9613#9614#0" expanded="false" />
-            <element signature="e#9663#9664#0" expanded="false" />
-            <element signature="e#9710#9711#0" expanded="false" />
-            <element signature="e#9753#9754#0" expanded="false" />
-            <element signature="e#9933#9934#0" expanded="false" />
-            <element signature="e#9973#9974#0" expanded="false" />
-            <element signature="e#10142#10143#0" expanded="false" />
-            <element signature="e#10183#10184#0" expanded="false" />
-            <element signature="e#10348#10349#0" expanded="false" />
-            <element signature="e#10381#10382#0" expanded="false" />
-            <element signature="e#10433#10434#0" expanded="false" />
-            <element signature="e#10477#10478#0" expanded="false" />
-            <element signature="e#10514#10515#0" expanded="false" />
-            <element signature="e#10547#10548#0" expanded="false" />
-            <element signature="e#10599#10600#0" expanded="false" />
-            <element signature="e#10643#10644#0" expanded="false" />
-            <element signature="e#10680#10681#0" expanded="false" />
-            <element signature="e#10713#10714#0" expanded="false" />
-            <element signature="e#10765#10766#0" expanded="false" />
-            <element signature="e#10809#10810#0" expanded="false" />
-            <element signature="e#10850#10851#0" expanded="false" />
-            <element signature="e#10887#10888#0" expanded="false" />
-            <element signature="e#10947#10948#0" expanded="false" />
-            <element signature="e#10999#11000#0" expanded="false" />
-            <element signature="e#11037#11038#0" expanded="false" />
-            <element signature="e#11071#11072#0" expanded="false" />
-            <element signature="e#11125#11126#0" expanded="false" />
-            <element signature="e#11171#11172#0" expanded="false" />
-            <element signature="e#11206#11207#0" expanded="false" />
-            <element signature="e#11237#11238#0" expanded="false" />
-            <element signature="e#11285#11286#0" expanded="false" />
-            <element signature="e#11325#11326#0" expanded="false" />
-            <element signature="e#11362#11363#0" expanded="false" />
-            <element signature="e#11395#11396#0" expanded="false" />
-            <element signature="e#11447#11448#0" expanded="false" />
-            <element signature="e#11491#11492#0" expanded="false" />
-            <element signature="e#11528#11529#0" expanded="false" />
-            <element signature="e#11561#11562#0" expanded="false" />
-            <element signature="e#11613#11614#0" expanded="false" />
-            <element signature="e#11657#11658#0" expanded="false" />
-            <element signature="e#11694#11695#0" expanded="false" />
-            <element signature="e#11727#11728#0" expanded="false" />
-            <element signature="e#11779#11780#0" expanded="false" />
-            <element signature="e#11823#11824#0" expanded="false" />
-            <element signature="e#11864#11865#0" expanded="false" />
-            <element signature="e#11901#11902#0" expanded="false" />
-            <element signature="e#11961#11962#0" expanded="false" />
-            <element signature="e#12013#12014#0" expanded="false" />
-            <element signature="e#12051#12052#0" expanded="false" />
-            <element signature="e#12085#12086#0" expanded="false" />
-            <element signature="e#12139#12140#0" expanded="false" />
-            <element signature="e#12185#12186#0" expanded="false" />
-            <element signature="e#12220#12221#0" expanded="false" />
-            <element signature="e#12251#12252#0" expanded="false" />
-            <element signature="e#12299#12300#0" expanded="false" />
-            <element signature="e#12339#12340#0" expanded="false" />
-            <element signature="e#12375#12376#0" expanded="false" />
-            <element signature="e#12407#12408#0" expanded="false" />
-            <element signature="e#12457#12458#0" expanded="false" />
-            <element signature="e#12499#12500#0" expanded="false" />
-            <element signature="e#12535#12536#0" expanded="false" />
-            <element signature="e#12567#12568#0" expanded="false" />
-            <element signature="e#12617#12618#0" expanded="false" />
-            <element signature="e#12659#12660#0" expanded="false" />
-            <element signature="e#12710#12711#0" expanded="false" />
-            <element signature="e#12734#12735#0" expanded="false" />
-            <element signature="e#14463#14464#0" expanded="false" />
-            <element signature="e#14517#14518#0" expanded="false" />
-            <element signature="e#14579#14580#0" expanded="false" />
-            <element signature="e#14635#14636#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/dimens.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="425">
@@ -2001,14 +1784,6 @@
       </provider>
       <provider editor-type-id="android-designer">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/ICareApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.785473" vertical-offset="28" max-vertical-offset="5287">
-          <caret line="54" column="46" selection-start-line="54" selection-start-column="46" selection-end-line="54" selection-end-column="46" />
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_dashboard.xml">
@@ -2220,6 +1995,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/ICareApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="28" max-vertical-offset="5304">
+          <caret line="49" column="59" selection-start-line="49" selection-start-column="59" selection-end-line="49" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/DashboardDoctorFragmentActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="7798" max-vertical-offset="8143">
+          <caret line="548" column="0" selection-start-line="548" selection-start-column="0" selection-end-line="548" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/CheckinPatientDialogFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="346" max-vertical-offset="6511">
+          <caret line="246" column="32" selection-start-line="246" selection-start-column="32" selection-end-line="246" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/PatientDatabaseFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="4658" max-vertical-offset="6630">
@@ -2236,35 +2035,46 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/DashboardDoctorFragmentActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/datas/PatientDatabase.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="723" max-vertical-offset="8143">
-          <caret line="93" column="58" selection-start-line="93" selection-start-column="58" selection-end-line="93" selection-end-column="58" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7004">
+          <caret line="8" column="29" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/CheckinPatientDialogFragment.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/datas/PatientCheckIn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3400" max-vertical-offset="6511">
-          <caret line="281" column="74" selection-start-line="278" selection-start-column="28" selection-end-line="281" selection-end-column="74" />
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="769" max-vertical-offset="1088">
+          <caret line="117" column="38" selection-start-line="117" selection-start-column="38" selection-end-line="117" selection-end-column="38" />
+          <folding>
+            <element signature="method#setRelationshipToPatient#0;class#PatientCheckIn#0" expanded="false" />
+            <element signature="method#setPurposeOfVisit#0;class#PatientCheckIn#0" expanded="false" />
+            <element signature="e#3005#3006#0" expanded="true" />
+            <element signature="e#3048#3049#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/fourello/icare/fragments/CheckInFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.50949913" vertical-offset="3445" max-vertical-offset="6919">
-          <caret line="220" column="0" selection-start-line="220" selection-start-column="0" selection-end-line="220" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.39338234" vertical-offset="3854" max-vertical-offset="7854">
+          <caret line="233" column="104" selection-start-line="233" selection-start-column="104" selection-end-line="233" selection-end-column="104" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#9066#9724#0" expanded="true" />
-            <element signature="e#9713#9714#0" expanded="true" />
-            <element signature="e#9874#10144#0" expanded="true" />
-            <element signature="e#10133#10134#0" expanded="true" />
-            <element signature="e#14993#14994#0" expanded="true" />
-            <element signature="e#15025#15026#0" expanded="true" />
-            <element signature="e#18612#18639#0" expanded="true" />
+            <element signature="e#9159#9817#0" expanded="true" />
+            <element signature="e#9806#9807#0" expanded="true" />
+            <element signature="e#9967#10237#0" expanded="true" />
+            <element signature="e#10226#10227#0" expanded="true" />
+            <element signature="e#11322#12027#0" expanded="true" />
+            <element signature="e#12004#12005#0" expanded="true" />
+            <element signature="e#16037#16664#0" expanded="true" />
+            <element signature="e#16644#16645#0" expanded="true" />
+            <element signature="e#17716#17717#0" expanded="true" />
+            <element signature="e#17748#17749#0" expanded="true" />
+            <element signature="e#21335#21362#0" expanded="true" />
+            <element signature="e#21493#21494#0" expanded="true" />
+            <element signature="e#21530#21531#0" expanded="true" />
           </folding>
         </state>
       </provider>
