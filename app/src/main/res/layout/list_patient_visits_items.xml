@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:icare="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10dp"
+    android:gravity="center"
+    android:descendantFocusability="blocksDescendants">
+    <com.fourello.icare.view.CustomTextView
+        icare:fontName="VAGRoundedLight.ttf"
+        icare:fontStyle="bold"
+        icare:fontColor="@color/white"
+        android:textSize="@dimen/menu_font_size"
+        android:id="@+id/txtVisitDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/app_name" />
+</RelativeLayout>

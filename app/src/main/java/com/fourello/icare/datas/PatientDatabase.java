@@ -3,6 +3,9 @@ package com.fourello.icare.datas;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PatientDatabase implements Parcelable {
     public String patientObjectId;
     public String firtname;
@@ -48,13 +51,11 @@ public class PatientDatabase implements Parcelable {
     public String pAddress1;
     public String pAddress2;
 
+    public List<PatientVisits> visits;
+
     public static Creator<PatientDatabase> getCreator() {
         return CREATOR;
     }
-
-
-
-
 
     public PatientDatabase() {
         patientObjectId = "";
@@ -99,6 +100,8 @@ public class PatientDatabase implements Parcelable {
         pDadsHMO= "";
         pAddress1= "";
         pAddress2= "";
+
+        visits = null;
     }
 
     public PatientDatabase(Parcel in) {
@@ -146,6 +149,16 @@ public class PatientDatabase implements Parcelable {
         pDadsHMO= in.readString();
         pAddress1= in.readString();
         pAddress2= in.readString();
+
+//        if (visits == null) {
+//            visits = new ArrayList<PatientVisits>();
+//        }
+//        in.readTypedList(visits, PatientVisits.CREATOR);
+
+//        visits = new ArrayList<PatientVisits>();
+//        in.readList(visits,null);
+        visits = new ArrayList<PatientVisits>();
+        in.readTypedList(visits, PatientVisits.CREATOR);
     }
 
 
@@ -155,7 +168,7 @@ public class PatientDatabase implements Parcelable {
                            String pNewbornScreening,String pVaccinationsGiven,String pMomsFname,String pMomsMname,
                            String pMomsLname,String pMomsWorkPlace,String pMomsWorkAs,String pMomsHMO,String pDadsFname,
                            String pDadsMname,String pDadsLname,String pDadsWorkPlace,String pDadsWorkAs,String pDadsHMO,
-                           String pAddress1,String pAddress2) {
+                           String pAddress1,String pAddress2, ArrayList<PatientVisits> visits) {
         super();
         setPatientObjectId(patientObjectId);
         setFirtname(firstname);
@@ -192,6 +205,7 @@ public class PatientDatabase implements Parcelable {
         setpDadsHMO(pDadsHMO);
         setpAddress1(pAddress1);
         setpAddress2(pAddress2);
+        setVisits(visits);
     }
 
     public String getPatientObjectId() {
@@ -497,6 +511,14 @@ public class PatientDatabase implements Parcelable {
         this.pAddress2 = pAddress2;
     }
 
+    public List<PatientVisits> getVisits() {
+        return visits;
+    }
+
+    public void setVisits(List<PatientVisits> visits) {
+        this.visits = visits;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -545,6 +567,8 @@ public class PatientDatabase implements Parcelable {
         dest.writeString(pAddress1);
         dest.writeString(pAddress2);
 
+        dest.writeTypedList(visits);
+
     }
 
     public static final Parcelable.Creator<PatientDatabase> CREATOR = new Parcelable.Creator<PatientDatabase>()
@@ -558,4 +582,6 @@ public class PatientDatabase implements Parcelable {
             return new PatientDatabase[size];
         }
     };
+
+
 }

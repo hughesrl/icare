@@ -35,6 +35,7 @@
     <string name="lbl_scheduler">SCHEDULER</string>
     <string name="lbl_my_dashboard">MY DASHBOARD</string>
     <string name="lbl_patient_database">PATIENT DATABASE</string>
+    <string name="lbl_patient_visits">VISITS</string>
     <string name="lbl_patients_queue">PATIENTS QUEUE</string>
     <string name="lbl_add_user">ADD USER</string>
     <string name="lbl_add_baby">ADD BABY</string>

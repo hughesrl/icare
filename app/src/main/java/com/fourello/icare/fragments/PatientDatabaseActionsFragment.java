@@ -144,7 +144,7 @@ public class PatientDatabaseActionsFragment extends Fragment implements
         return myFragmentView;
     }
     public class MyPagerAdapter extends FragmentPagerAdapter {
-        private final String[] TITLES = { "Check In", "Patient Information", "Patient Calendar" };
+        private final String[] TITLES = { "Check In", "Patient Information", "Visits" };
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -176,7 +176,10 @@ public class PatientDatabaseActionsFragment extends Fragment implements
                     return patientInformationFragment;
 
                 case 2: // Patient Visit Calendar
-                    return f;
+                    PatientVisitsFragment patientVisitsFragment = new PatientVisitsFragment();
+
+                    patientVisitsFragment.setArguments(args);
+                    return patientVisitsFragment;
             }
         return null;
         }

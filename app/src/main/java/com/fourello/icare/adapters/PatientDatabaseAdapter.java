@@ -82,7 +82,7 @@ public class PatientDatabaseAdapter extends BaseAdapter {
             holder.name = (TextView) view.findViewById(R.id.txtName);
             holder.mobilenumber = (TextView) view.findViewById(R.id.txtMobile);
 
-            holder.patientCheckin = (ImageButton) view.findViewById(R.id.btnPatientCheckin);
+//            holder.patientCheckin = (ImageButton) view.findViewById(R.id.btnPatientCheckin);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -93,13 +93,6 @@ public class PatientDatabaseAdapter extends BaseAdapter {
         holder.name.setText(patientName);
         holder.mobilenumber.setText(patientDatabaselist.get(position).getMobilenumbers());
 
-//        final PatientDatabase patientDatabase = patientDatabaselist.get(position);
-//        holder.patientCheckin.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showPatientDialog(patientDatabase, position);
-//            }
-//        });
         return view;
     }
 

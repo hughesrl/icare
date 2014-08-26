@@ -475,6 +475,7 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
 
         Bundle bundle = getIntent().getExtras();
         bundle.putString(PatientDatabaseActionsFragment.ARG_PATIENT_OBJECT_ID, patientObjectId);
+//        bundle.putParcelableArrayList("test", patientDatabase.getVisits());
         bundle.putParcelable(PatientDatabaseActionsFragment.ARG_PATIENT_DATA, patientDatabase);
         myFragment.setArguments(bundle);
 

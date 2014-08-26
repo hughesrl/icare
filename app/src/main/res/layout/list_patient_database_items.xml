@@ -52,41 +52,5 @@
             android:layout_height="wrap_content"
             android:text="@string/app_name" />-->
     </LinearLayout>
-    <LinearLayout
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/linearLayout">
-
-        <ImageButton
-            android:contentDescription="@string/app_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnPatientInfo"
-            android:src="@drawable/ic_patient_info_big"
-            android:background="@android:color/transparent"
-            android:layout_weight="1"
-            android:padding="5dp"/>
-        <ImageButton
-            android:contentDescription="@string/app_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnPatientCheckin"
-            android:src="@drawable/ic_patient_checkin_big"
-            android:background="@android:color/transparent"
-            android:layout_weight="1"
-            android:padding="5dp"/>
-        <ImageButton
-            android:contentDescription="@string/app_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnPatientCalendar"
-            android:src="@drawable/ic_patient_calendar_big"
-            android:background="@android:color/transparent"
-            android:layout_weight="1"
-            android:padding="5dp"/>
-    </LinearLayout>
 
 </RelativeLayout>
