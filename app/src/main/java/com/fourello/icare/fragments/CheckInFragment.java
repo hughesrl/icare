@@ -112,6 +112,8 @@ public class CheckInFragment extends Fragment implements
             mParamPatientObjectId = getArguments().getString(PatientDatabaseActionsFragment.ARG_PATIENT_OBJECT_ID);
             mParamPatientData = getArguments().getParcelable(PatientDatabaseActionsFragment.ARG_PATIENT_DATA);
         }
+
+        patientCheckIn = new PatientCheckIn();
     }
 
     @Override
@@ -222,7 +224,7 @@ public class CheckInFragment extends Fragment implements
                 bytearray = stream.toByteArray();// get byte array here
                 Log.d("ROBERT bytearray", bytearray.toString()+"");
                 if (bytearray != null) {
-                    final ParseFile photoFile = new ParseFile("UserProfile.jpg", bytearray);
+                    final ParseFile photoFile = new ParseFile(mParamPatientObjectId+"_photo.jpg", bytearray);
                     photoFile.saveInBackground(new SaveCallback() {
                         public void done(ParseException e) {
                             if (e != null) {
@@ -246,9 +248,10 @@ public class CheckInFragment extends Fragment implements
 
 
     @Override
-    public void onDialogPositiveClick(DialogFragment passwordDialog, String password, String purposeToOpen) {
+    public void onDialogPositiveClick(final DialogFragment passwordDialog, String password, String purposeToOpen) {
         if(purposeToOpen.equals(PasswordDialogFragment.PASSWORD_DIALOG_CUSTOM)) {
             if (password.trim().equals(mParamLoginData.getString("password"))) {
+                passwordDialog.dismiss();
                 if (mProgressDialog == null) {
                     mProgressDialog = Utils.createProgressDialog(getActivity());
                     mProgressDialog.show();
@@ -269,25 +272,6 @@ public class CheckInFragment extends Fragment implements
                 String purpose = String.valueOf(spinnerPurpose.getSelectedItem());
                 String allergyRisk = String.valueOf(spinnerAllergyRisk.getSelectedItem());
 
-//                final ParseObject quickSurvey = new ParseObject(ICareApplication.VISITS_LABEL);
-////----------------------
-//                quickSurvey.put("accompaniedby", accompaniedBy);
-////                quickSurvey.put("age", "");
-//                quickSurvey.put("doctorid", Integer.parseInt(mParamLoginData.getString("linked_doctorid").toString()));
-//                quickSurvey.put("email", mParamPatientData.getParentEmail());
-//                quickSurvey.put("chest", growthTrackerChest);
-//                quickSurvey.put("head", growthTrackerHead);
-//                quickSurvey.put("height", growthTrackerHeight);
-//                quickSurvey.put("temperature", growthTrackerTemperature);
-//                quickSurvey.put("weight", growthTrackerWeight);
-//                quickSurvey.put("patientid", mParamPatientData.getPatientObjectId());
-//                quickSurvey.put("patientname", mParamPatientData.getFullName());
-//                quickSurvey.put("personal_notes", momsNotes);
-////                quickSurvey.put("photoFile", );
-//                quickSurvey.put("purpose_of_visit", purpose);
-//                quickSurvey.put("relationship_to_patient", relationshipToPatient);
-//                quickSurvey.put("allergyrisk", allergyRisk);
-////                quickSurvey.put("", );
                 patientCheckIn.setAccompaniedBy(accompaniedBy);
                 patientCheckIn.setDoctorId(Integer.parseInt(mParamLoginData.getString("linked_doctorid").toString()));
                 patientCheckIn.setEmail(mParamPatientData.getParentEmail());
@@ -308,8 +292,8 @@ public class CheckInFragment extends Fragment implements
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
-                            getActivity().setResult(Activity.RESULT_OK);
-                            getActivity().finish();
+                            mProgressDialog.dismiss();
+                            ((DashboardDoctorFragmentActivity) getActivity()).PatientDatabase();
                         } else {
                             Toast.makeText(
                                     getActivity().getApplicationContext(),
@@ -319,22 +303,6 @@ public class CheckInFragment extends Fragment implements
                     }
 
                 });
-//                Log.d("ICare", quickSurvey.toString());
-//                passwordDialog.dismiss();
-//                quickSurvey.saveInBackground(new SaveCallback() {
-//                    @Override
-//                    public void done(ParseException e) {
-//                        if (e == null) {
-//                            mProgressDialog.dismiss();
-//                            ((DashboardDoctorFragmentActivity) getActivity()).PatientDatabase();
-//                        } else {
-//                            mProgressDialog.dismiss();
-//                            Toast.makeText(getActivity(), "An Error Occured", Toast.LENGTH_LONG).show();
-//                            Log.e("ICare", e.getLocalizedMessage());
-//                        }
-//                    }
-//                });
-
             } else { // incorrect Password
                 Toast.makeText(getActivity(), "Incorrect Password", Toast.LENGTH_LONG).show();
             }
