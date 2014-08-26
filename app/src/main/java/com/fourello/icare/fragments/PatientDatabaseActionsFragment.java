@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -34,15 +35,24 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.fourello.icare.DashboardDoctorFragmentActivity;
+import com.fourello.icare.ICareApplication;
 import com.fourello.icare.R;
 import com.fourello.icare.adapters.PatientDatabaseAdapter;
 import com.fourello.icare.adapters.TabsPagerAdapter;
 import com.fourello.icare.datas.PatientDatabase;
+import com.fourello.icare.datas.PatientVisits;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.widgets.ParseProxyObject;
+import com.fourello.icare.widgets.Utils;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -59,12 +69,16 @@ public class PatientDatabaseActionsFragment extends Fragment implements
     public static final String ARG_MY_PICTURE = "myPicture";
     public static final String ARG_PATIENT_OBJECT_ID = "patientObjectId";
     public static final String ARG_PATIENT_DATA = "patientData";
+    public static final String ARG_PATIENT_DATA_COMPLETE = "patientDataComplete";
+    public static final String ARG_PATIENT_DATA_POSITION = "patientDataPosition";
 
     // TODO: Rename and change types of parameters
     private ParseProxyObject mParamLoginData;
     private byte[] mParamMyPicture;
     private String mParamPatientObjectId;
+    private int mParamPatientDataPosition;
     private PatientDatabase mParamPatientData;
+    private ArrayList<PatientDatabase> mParamPatientDataComplete;
 
     private ListView listView;
 
@@ -76,6 +90,9 @@ public class PatientDatabaseActionsFragment extends Fragment implements
     private ViewPager pager;
 //    private ViewPager mViewPager;
     private MyPagerAdapter pagerAdapter;
+    private List<PatientDatabase> patientDatabaselist;
+    private List<PatientVisits> patientVisitsList = null;
+    private ProgressDialog mProgressDialog;
 
     /**
      * Use this factory method to create a new instance of
@@ -113,6 +130,61 @@ public class PatientDatabaseActionsFragment extends Fragment implements
             mParamPatientObjectId = getArguments().getString(ARG_PATIENT_OBJECT_ID);
 
             mParamPatientData = getArguments().getParcelable(ARG_PATIENT_DATA);
+            mParamPatientDataComplete = getArguments().getParcelableArrayList(ARG_PATIENT_DATA_COMPLETE);
+            mParamPatientDataPosition = getArguments().getInt(ARG_PATIENT_DATA_POSITION);
+
+//            if (mProgressDialog == null) {
+//                mProgressDialog = Utils.createProgressDialog(getActivity());
+//                mProgressDialog.show();
+//            } else {
+//                mProgressDialog.show();
+//            }
+
+//            patientDatabaselist = new ArrayList<PatientDatabase>();
+//            /* Adding the Visits */
+//            ParseQuery<ParseObject> queryVisits = new ParseQuery<ParseObject>(ICareApplication.VISITS_LABEL);
+//            queryVisits.setSkip(0);
+//            queryVisits.whereEqualTo("patientid", mParamPatientObjectId);
+//            queryVisits.addDescendingOrder("createdAt");
+//            queryVisits.findInBackground(new FindCallback<ParseObject>() {
+//                @Override
+//                public void done(List<ParseObject> parseObjectsVisits, ParseException e) {
+//                    Log.d("HUGHES", "DONE");
+//                    DateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
+//                    if (e == null) {
+//                        if (parseObjectsVisits.size() > 0) {
+//                            patientVisitsList = new ArrayList<PatientVisits>();
+//                            for (int i = 0; i < parseObjectsVisits.size(); i++) {
+//                                ParseObject patientDatabaseObject = parseObjectsVisits.get(i);
+//
+//                                PatientVisits visitMap = new PatientVisits();
+//
+//                                visitMap.setPatientObjectId(patientDatabaseObject.getObjectId());
+//                                Date visitDateParse = patientDatabaseObject.getCreatedAt();
+//                                String visitDate = df.format(visitDateParse);
+//                                visitMap.setVisitDate(visitDate);
+//
+//                                Log.d(ICareApplication.VISITS_LABEL + "  Found", visitDate);
+//
+//                                if(!patientVisitsList.contains(visitMap)) {
+//                                    patientVisitsList.add(visitMap);
+//                                }
+//                            }
+////                            if(patientVisitsList != null) {
+////                                mParamPatientData.setVisits(patientVisitsList);
+////                                mParamPatientDataComplete.set(mParamPatientDataPosition, mParamPatientData);
+////                            }
+//
+//                        } else {
+//                            Log.d("HUGHES", "NO DATA FOUND");
+//                            mProgressDialog.dismiss();
+//                        }
+//                    } else {
+//                        Log.d("HUGHES", e.getLocalizedMessage());
+//                    }
+//                    mProgressDialog.dismiss();
+//                }
+//            });
         }
     }
 
@@ -139,7 +211,6 @@ public class PatientDatabaseActionsFragment extends Fragment implements
                 .getDisplayMetrics());
         pager.setPageMargin(pageMargin);
         tabs.setViewPager(pager);
-
 
         return myFragmentView;
     }
@@ -170,14 +241,13 @@ public class PatientDatabaseActionsFragment extends Fragment implements
                     return checkInFragment;
                 case 1: // Patient Information
                     PatientInformationFragment patientInformationFragment = new PatientInformationFragment();
-//                    args.putByteArray(CheckInFragment.ARG_MY_PICTURE, mParamPatientData.getPatientphoto());
 
                     patientInformationFragment.setArguments(args);
                     return patientInformationFragment;
 
                 case 2: // Patient Visit Calendar
                     PatientVisitsFragment patientVisitsFragment = new PatientVisitsFragment();
-
+//                    args.putParcelableArrayList(PatientDatabaseActionsFragment.ARG_PATIENT_DATA, patientVisitsList);
                     patientVisitsFragment.setArguments(args);
                     return patientVisitsFragment;
             }

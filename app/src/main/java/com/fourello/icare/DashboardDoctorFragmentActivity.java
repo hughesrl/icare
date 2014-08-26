@@ -55,6 +55,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DashboardDoctorFragmentActivity extends FragmentActivity implements
@@ -465,7 +466,7 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
         }
         mCallbacks = (OpenMenuCallbacks) myFragment;
     }
-    public void PatientDatabaseActions(PatientDatabase patientDatabase) {
+    public void PatientDatabaseActions(PatientDatabase patientDatabase, ArrayList<PatientDatabase> patientDatabaseComplete, int position) {
         mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         PatientDatabaseActionsFragment myFragment = new PatientDatabaseActionsFragment();
 
@@ -475,8 +476,10 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
 
         Bundle bundle = getIntent().getExtras();
         bundle.putString(PatientDatabaseActionsFragment.ARG_PATIENT_OBJECT_ID, patientObjectId);
+        bundle.putInt(PatientDatabaseActionsFragment.ARG_PATIENT_DATA_POSITION, position);
 //        bundle.putParcelableArrayList("test", patientDatabase.getVisits());
         bundle.putParcelable(PatientDatabaseActionsFragment.ARG_PATIENT_DATA, patientDatabase);
+        bundle.putParcelableArrayList(PatientDatabaseActionsFragment.ARG_PATIENT_DATA_COMPLETE, patientDatabaseComplete);
         myFragment.setArguments(bundle);
 
         FragmentTransaction transaction = mFragmentManager.beginTransaction();

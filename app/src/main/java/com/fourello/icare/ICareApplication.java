@@ -19,7 +19,7 @@ import com.fourello.icare.widgets.ParseProxyObject;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
+import com.parse.ParseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -106,9 +106,10 @@ public class PatientVisitsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_patient_visits, container, false);
 
-        patientVisitsList = mParamPatientData.getVisits();
+//        patientVisitsList = mParamPatientData.getVisits();
+//
+//        Log.d("SIZE", patientVisitsList.get(0).getVisitDate());
 
-        Log.d("SIZE", patientVisitsList.get(0).getVisitDate());
 //        Log.d("SIZE", patientVisitsList.size()+"");
 //        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.VISITS_LABEL);
 //        query.whereEqualTo("patientid", mParamPatientObjectId);
@@ -136,14 +137,61 @@ public class PatientVisitsFragment extends ListFragment {
 //                            }
 //                        }
 //                    }
-            adapter = new PatientVisitsAdapter(getActivity(), patientVisitsList);
-            setListAdapter(adapter);
+
 //                    getListView().setOnItemClickListener(PatientVisitsFragment.this);
 
 //                }
 //            }
 //        });
 
+        patientVisitsList = new ArrayList<PatientVisits>();
+        patientVisitsList.clear();
+            /* Adding the Visits */
+        ParseQuery<ParseObject> queryVisits = new ParseQuery<ParseObject>(ICareApplication.VISITS_LABEL);
+        queryVisits.setSkip(0);
+        queryVisits.whereEqualTo("patientid", mParamPatientObjectId);
+        queryVisits.addDescendingOrder("createdAt");
+        queryVisits.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjectsVisits, ParseException e) {
+                Log.d("HUGHES", "DONE");
+                DateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
+                if (e == null) {
+                    if (parseObjectsVisits.size() > 0) {
+//                        patientVisitsList = new ArrayList<PatientVisits>();
+                        for (int i = 0; i < parseObjectsVisits.size(); i++) {
+                            ParseObject patientDatabaseObject = parseObjectsVisits.get(i);
+
+                            PatientVisits visitMap = new PatientVisits();
+
+                            visitMap.setPatientObjectId(patientDatabaseObject.getObjectId());
+                            Date visitDateParse = patientDatabaseObject.getCreatedAt();
+                            String visitDate = df.format(visitDateParse);
+                            visitMap.setVisitDate(visitDate);
+
+                            Log.d(ICareApplication.VISITS_LABEL + "  VISIT Found", visitDate);
+
+//                            if(!patientVisitsList.contains(visitMap)) {
+                                patientVisitsList.add(visitMap);
+//                            }
+                        }
+//                            if(patientVisitsList != null) {
+//                                mParamPatientData.setVisits(patientVisitsList);
+//                                mParamPatientDataComplete.set(mParamPatientDataPosition, mParamPatientData);
+//                            }
+
+                    } else {
+                        Log.d("HUGHES", "NO DATA FOUND");
+//                        mProgressDialog.dismiss();
+                    }
+                } else {
+                    Log.d("HUGHES", e.getLocalizedMessage());
+                }
+//                mProgressDialog.dismiss();
+            }
+        });
+        adapter = new PatientVisitsAdapter(getActivity(), patientVisitsList);
+        setListAdapter(adapter);
         return myFragmentView;
     }
 

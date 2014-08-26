@@ -147,269 +147,227 @@ public class PatientDatabaseFragment extends ListFragment implements
             mProgressDialog.show();
         }
 
-//        ParseObject queryPatients = new ParseObject(ICareApplication.PATIENTS_LABEL);
-//        ParseObject queryUsers = new ParseObject(ICareApplication.USERS_LABEL);
-//
-//        ParseObject queryVisits = new ParseObject(ICareApplication.VISITS_LABEL);
-//        queryVisits.put("patientid", queryPatients.get("patientid"));
-//
-//
-//        ParseObject queryPatients = new ParseObject(ICareApplication.PATIENTS_LABEL);
-
-        ParseQuery<ParseObject> queryPatients = new ParseQuery<ParseObject>(ICareApplication.PATIENTS_LABEL);
-        queryPatients.whereEqualTo("doctorid", mParamLoginData.getString("linked_doctorid"));
-        queryPatients.addDescendingOrder("createdAt");
-
-        ParseQuery<ParseObject> queryUsers = new ParseQuery<ParseObject>(ICareApplication.USERS_LABEL);
-//        queryUsers.whereEqualTo("email", queryPatients.get(queryPatients.));
-        queryUsers.whereMatchesKeyInQuery("email", "email", queryPatients);
-
-        ParseQuery<ParseObject> queryVisits = new ParseQuery<ParseObject>(ICareApplication.VISITS_LABEL);
-        queryVisits.addDescendingOrder("createdAt");
-        queryVisits.whereMatchesKeyInQuery("patientid", "patientid", queryPatients);
-        queryVisits.whereMatchesKeyInQuery("email", "email", queryUsers);
-
-        queryVisits.findInBackground(new FindCallback<ParseObject>() {
+        final int patientsCount = 0;
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.PATIENTS_LABEL);
+        query.whereEqualTo("doctorid", mParamLoginData.getString("linked_doctorid"));
+        query.addDescendingOrder("createdAt");
+        query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
+                DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
                 if (e == null) {
-                    Log.d("ROBERT", parseObjects.size()+" SIZE");
+
                     for (int i = 0; i < parseObjects.size(); i++) {
                         final ParseObject patientDatabaseObject = parseObjects.get(i);
-                        Log.d("ROBERT", patientDatabaseObject.getString("patientid"));
-                    }
-                } else {
-                    Log.d("ROBERT", e.getLocalizedMessage());
-                }
-            }
-        });
+
+                        final PatientDatabase map = new PatientDatabase();
+                        map.setPatientObjectId(patientDatabaseObject.getObjectId());
+                        map.setFirtname((String) patientDatabaseObject.get("firstname"));
+                        map.setMiddlename((String) patientDatabaseObject.get("middlename"));
+                        map.setLastname((String) patientDatabaseObject.get("lastname"));
+
+                        if (patientDatabaseObject.getDate("dateofbirth") != null) {
+                            Date dateOfBirthParse = patientDatabaseObject.getDate("dateofbirth");
+                            String dateOfBirth = df.format(dateOfBirthParse);
+                            map.setbDate(dateOfBirth);
+                        }
+                        if (patientDatabaseObject.getString("placeofbirth") != null) {
+                            map.setbPlace(patientDatabaseObject.getString("placeofbirth"));
+                        }
+                        if (patientDatabaseObject.getString("deliveredby") != null) {
+                            map.setDrName(patientDatabaseObject.getString("deliveredby"));
+                        }
+                        if (patientDatabaseObject.getString("typeofdelivery") != null) {
+                            map.setDeliveryType(patientDatabaseObject.getString("typeofdelivery"));
+                        }
+                        if (patientDatabaseObject.getString("weight") != null) {
+                            map.setpWeight(patientDatabaseObject.getString("weight"));
+                        }
+                        if (patientDatabaseObject.getString("length") != null) {
+                            map.setpHeight(patientDatabaseObject.getString("length"));
+                        }
+                        if (patientDatabaseObject.getString("headcircumference") != null) {
+                            map.setpHead(patientDatabaseObject.getString("headcircumference"));
+                        }
+                        if (patientDatabaseObject.getString("chestcircumference") != null) {
+                            map.setpChest(patientDatabaseObject.getString("chestcircumference"));
+                        }
+                        if (patientDatabaseObject.getString("abdomencircumference") != null) {
+                            map.setpAbdomen(patientDatabaseObject.getString("abdomencircumference"));
+                        }
+                        if (patientDatabaseObject.getString("allergyrisk") != null) {
+                            map.setAllergyRisk(patientDatabaseObject.getString("allergyrisk"));
+                        }
+                        if (patientDatabaseObject.getDate("circumcisedon") != null) {
+                            Date circumcisedon = patientDatabaseObject.getDate("circumcisedon");
+                            String circumcisedOn = df.format(circumcisedon);
+                            map.setpCircumcisedOn(circumcisedOn);
+                        }
+                        if (patientDatabaseObject.getDate("earpiercedon") != null) {
+                            map.setpEarPiercedOn(patientDatabaseObject.getString("earpiercedon"));
+                            Date earpiercedon = patientDatabaseObject.getDate("earpiercedon");
+                            String earpiercedOn = df.format(earpiercedon);
+                            map.setpCircumcisedOn(earpiercedOn);
+                        }
+                        // Distinguishing Marks cannot found
+
+                        // Newborn Screening cannot found
+
+                        // Vaccinations Given cannot found
+
+                        /* MOTHER */
+                        if (patientDatabaseObject.getString("motherfirstname") != null) {
+                            map.setpMomsFname(patientDatabaseObject.getString("motherfirstname"));
+                        }
+                        if (patientDatabaseObject.getString("mothermiddlename") != null) {
+                            map.setpMomsMname(patientDatabaseObject.getString("mothermiddlename"));
+                        }
+                        if (patientDatabaseObject.getString("motherlastname") != null) {
+                            map.setpMomsLname(patientDatabaseObject.getString("motherlastname"));
+                        }
+                        if (patientDatabaseObject.getString("mothercompany") != null) {
+                            map.setpMomsWorkPlace(patientDatabaseObject.getString("mothercompany"));
+                        }
+                        if (patientDatabaseObject.getString("motherprofession") != null) {
+                            map.setpMomsWorkAs(patientDatabaseObject.getString("motherprofession"));
+                        }
+                        if (patientDatabaseObject.getString("motherhmo") != null) {
+                            map.setpMomsHMO(patientDatabaseObject.getString("motherhmo"));
+                        }
+
+                        /* FATHER */
+                        if (patientDatabaseObject.getString("fatherfirstname") != null) {
+                            map.setpDadsFname(patientDatabaseObject.getString("fatherfirstname"));
+                        }
+                        if (patientDatabaseObject.getString("fathermiddlename") != null) {
+                            map.setpDadsMname(patientDatabaseObject.getString("fathermiddlename"));
+                        }
+                        if (patientDatabaseObject.getString("fatherlastname") != null) {
+                            map.setpDadsLname(patientDatabaseObject.getString("fatherlastname"));
+                        }
+                        if (patientDatabaseObject.getString("fathercompany") != null) {
+                            map.setpDadsWorkPlace(patientDatabaseObject.getString("fathercompany"));
+                        }
+                        if (patientDatabaseObject.getString("fatherprofession") != null) {
+                            map.setpDadsWorkAs(patientDatabaseObject.getString("fatherprofession"));
+                        }
+                        if (patientDatabaseObject.getString("fatherhmo") != null) {
+                            map.setpDadsHMO(patientDatabaseObject.getString("fatherhmo"));
+                        }
+
+                        /* ADDRESS */
+                        if (patientDatabaseObject.getString("address_1") != null) {
+                            map.setpAddress1(patientDatabaseObject.getString("address_1"));
+                        }
+                        if (patientDatabaseObject.getString("address_2") != null) {
+                            map.setpAddress2(patientDatabaseObject.getString("address_2"));
+                        }
+
+                        if (patientDatabaseObject.getString("mothercontactnumber") != null && patientDatabaseObject.getString("fathercontactnumber") != null) {
+                            contactnumber = patientDatabaseObject.getString("mothercontactnumber") + " / " + patientDatabaseObject.getString("fathercontactnumber");
+                        } else if (patientDatabaseObject.getString("mothercontactnumber") != null) {
+                            contactnumber = patientDatabaseObject.getString("mothercontactnumber");
+                        } else if (patientDatabaseObject.getString("fathercontactnumber") != null) {
+                            contactnumber = patientDatabaseObject.getString("fathercontactnumber");
+                        }
 
 
-        // stick the objects in an array
-//        ArrayList<ParseObject> patientDatabase = new ArrayList<ParseObject>();
-//        patientDatabase.add(queryPatients);
-//        patientDatabase.add(queryUsers);
-//        patientDatabase.add(queryVisits);
+                        map.setMobilenumbers(contactnumber);
 
+//                        if(patientDatabaseObject.get("photoFile")!=null) {
+//                            ParseFile myPhoto = (ParseFile) patientDatabaseObject.get("photoFile");
+//                            if (myPhoto != null) {
+//                                try {
+//                                    byte[] data = myPhoto.getData();
+//                                    map.setPatientphoto(data);
+//                                } catch (ParseException e2) {
+//                                    // TODO Auto-generated catch block
+//                                    e2.printStackTrace();
+//                                }
+//                            }
+//                        }
+//                        if(patientDatabaseObject.has("photoFile")) {
+//                            final ParseFile myPhoto = patientDatabaseObject.getParseFile("photoFile");
+//                            myPhoto.getDataInBackground(new GetDataCallback() {
+//                                @Override
+//                                public void done(byte[] bytes, ParseException e) {
+//                                    if (e == null) {
+//                                        Log.d("test", "We've got data in data.");
+//                                        // use data for something
+//                                        map.setPatientphoto(bytes);
+//                                    } else {
+//                                        Log.d("test", "There was a problem downloading the data.");
+//                                    }
+//                                }
+//                            });
+//                        }
 
-//        final int patientsCount = 0;
-//        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.PATIENTS_LABEL);
-//        query.whereEqualTo("doctorid", mParamLoginData.getString("linked_doctorid"));
-//        query.addDescendingOrder("createdAt");
-//        query.findInBackground(new FindCallback<ParseObject>() {
-//            @Override
-//            public void done(List<ParseObject> parseObjects, ParseException e) {
-//                DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
-//                if (e == null) {
-//
-//                    for (int i = 0; i < parseObjects.size(); i++) {
-//                        final ParseObject patientDatabaseObject = parseObjects.get(i);
-//
-//                        final PatientDatabase map = new PatientDatabase();
-//                        map.setPatientObjectId(patientDatabaseObject.getObjectId());
-//                        map.setFirtname((String) patientDatabaseObject.get("firstname"));
-//                        map.setMiddlename((String) patientDatabaseObject.get("middlename"));
-//                        map.setLastname((String) patientDatabaseObject.get("lastname"));
-//
-//                        if (patientDatabaseObject.getDate("dateofbirth") != null) {
-//                            Date dateOfBirthParse = patientDatabaseObject.getDate("dateofbirth");
-//                            String dateOfBirth = df.format(dateOfBirthParse);
-//                            map.setbDate(dateOfBirth);
-//                        }
-//                        if (patientDatabaseObject.getString("placeofbirth") != null) {
-//                            map.setbPlace(patientDatabaseObject.getString("placeofbirth"));
-//                        }
-//                        if (patientDatabaseObject.getString("deliveredby") != null) {
-//                            map.setDrName(patientDatabaseObject.getString("deliveredby"));
-//                        }
-//                        if (patientDatabaseObject.getString("typeofdelivery") != null) {
-//                            map.setDeliveryType(patientDatabaseObject.getString("typeofdelivery"));
-//                        }
-//                        if (patientDatabaseObject.getString("weight") != null) {
-//                            map.setpWeight(patientDatabaseObject.getString("weight"));
-//                        }
-//                        if (patientDatabaseObject.getString("length") != null) {
-//                            map.setpHeight(patientDatabaseObject.getString("length"));
-//                        }
-//                        if (patientDatabaseObject.getString("headcircumference") != null) {
-//                            map.setpHead(patientDatabaseObject.getString("headcircumference"));
-//                        }
-//                        if (patientDatabaseObject.getString("chestcircumference") != null) {
-//                            map.setpChest(patientDatabaseObject.getString("chestcircumference"));
-//                        }
-//                        if (patientDatabaseObject.getString("abdomencircumference") != null) {
-//                            map.setpAbdomen(patientDatabaseObject.getString("abdomencircumference"));
-//                        }
-//                        if (patientDatabaseObject.getString("allergyrisk") != null) {
-//                            map.setAllergyRisk(patientDatabaseObject.getString("allergyrisk"));
-//                        }
-//                        if (patientDatabaseObject.getDate("circumcisedon") != null) {
-//                            Date circumcisedon = patientDatabaseObject.getDate("circumcisedon");
-//                            String circumcisedOn = df.format(circumcisedon);
-//                            map.setpCircumcisedOn(circumcisedOn);
-//                        }
-//                        if (patientDatabaseObject.getDate("earpiercedon") != null) {
-//                            map.setpEarPiercedOn(patientDatabaseObject.getString("earpiercedon"));
-//                            Date earpiercedon = patientDatabaseObject.getDate("earpiercedon");
-//                            String earpiercedOn = df.format(earpiercedon);
-//                            map.setpCircumcisedOn(earpiercedOn);
-//                        }
-//                        // Distinguishing Marks cannot found
-//
-//                        // Newborn Screening cannot found
-//
-//                        // Vaccinations Given cannot found
-//
-//                        /* MOTHER */
-//                        if (patientDatabaseObject.getString("motherfirstname") != null) {
-//                            map.setpMomsFname(patientDatabaseObject.getString("motherfirstname"));
-//                        }
-//                        if (patientDatabaseObject.getString("mothermiddlename") != null) {
-//                            map.setpMomsMname(patientDatabaseObject.getString("mothermiddlename"));
-//                        }
-//                        if (patientDatabaseObject.getString("motherlastname") != null) {
-//                            map.setpMomsLname(patientDatabaseObject.getString("motherlastname"));
-//                        }
-//                        if (patientDatabaseObject.getString("mothercompany") != null) {
-//                            map.setpMomsWorkPlace(patientDatabaseObject.getString("mothercompany"));
-//                        }
-//                        if (patientDatabaseObject.getString("motherprofession") != null) {
-//                            map.setpMomsWorkAs(patientDatabaseObject.getString("motherprofession"));
-//                        }
-//                        if (patientDatabaseObject.getString("motherhmo") != null) {
-//                            map.setpMomsHMO(patientDatabaseObject.getString("motherhmo"));
-//                        }
-//
-//                        /* FATHER */
-//                        if (patientDatabaseObject.getString("fatherfirstname") != null) {
-//                            map.setpDadsFname(patientDatabaseObject.getString("fatherfirstname"));
-//                        }
-//                        if (patientDatabaseObject.getString("fathermiddlename") != null) {
-//                            map.setpDadsMname(patientDatabaseObject.getString("fathermiddlename"));
-//                        }
-//                        if (patientDatabaseObject.getString("fatherlastname") != null) {
-//                            map.setpDadsLname(patientDatabaseObject.getString("fatherlastname"));
-//                        }
-//                        if (patientDatabaseObject.getString("fathercompany") != null) {
-//                            map.setpDadsWorkPlace(patientDatabaseObject.getString("fathercompany"));
-//                        }
-//                        if (patientDatabaseObject.getString("fatherprofession") != null) {
-//                            map.setpDadsWorkAs(patientDatabaseObject.getString("fatherprofession"));
-//                        }
-//                        if (patientDatabaseObject.getString("fatherhmo") != null) {
-//                            map.setpDadsHMO(patientDatabaseObject.getString("fatherhmo"));
-//                        }
-//
-//                        /* ADDRESS */
-//                        if (patientDatabaseObject.getString("address_1") != null) {
-//                            map.setpAddress1(patientDatabaseObject.getString("address_1"));
-//                        }
-//                        if (patientDatabaseObject.getString("address_2") != null) {
-//                            map.setpAddress2(patientDatabaseObject.getString("address_2"));
-//                        }
-//
-//                        if (patientDatabaseObject.getString("mothercontactnumber") != null && patientDatabaseObject.getString("fathercontactnumber") != null) {
-//                            contactnumber = patientDatabaseObject.getString("mothercontactnumber") + " / " + patientDatabaseObject.getString("fathercontactnumber");
-//                        } else if (patientDatabaseObject.getString("mothercontactnumber") != null) {
-//                            contactnumber = patientDatabaseObject.getString("mothercontactnumber");
-//                        } else if (patientDatabaseObject.getString("fathercontactnumber") != null) {
-//                            contactnumber = patientDatabaseObject.getString("fathercontactnumber");
-//                        }
-//
-//
-//                        map.setMobilenumbers(contactnumber);
-//
-////                        if(patientDatabaseObject.get("photoFile")!=null) {
-////                            ParseFile myPhoto = (ParseFile) patientDatabaseObject.get("photoFile");
-////                            if (myPhoto != null) {
-////                                try {
-////                                    byte[] data = myPhoto.getData();
-////                                    map.setPatientphoto(data);
-////                                } catch (ParseException e2) {
-////                                    // TODO Auto-generated catch block
-////                                    e2.printStackTrace();
-////                                }
-////                            }
-////                        }
-////                        if(patientDatabaseObject.has("photoFile")) {
-////                            final ParseFile myPhoto = patientDatabaseObject.getParseFile("photoFile");
-////                            myPhoto.getDataInBackground(new GetDataCallback() {
-////                                @Override
-////                                public void done(byte[] bytes, ParseException e) {
-////                                    if (e == null) {
-////                                        Log.d("test", "We've got data in data.");
-////                                        // use data for something
-////                                        map.setPatientphoto(bytes);
-////                                    } else {
-////                                        Log.d("test", "There was a problem downloading the data.");
-////                                    }
-////                                }
-////                            });
-////                        }
-//
-//                        // Adding Contents from Users Class
-//                        ParseQuery queryUsers = new ParseQuery(ICareApplication.USERS_LABEL);
-//                        queryUsers.whereEqualTo("email", patientDatabaseObject.get("email"));
-//                        queryUsers.getFirstInBackground(new GetCallback() {
+                        // Adding Contents from Users Class
+                        ParseQuery<ParseObject> queryUsers = new ParseQuery<ParseObject>(ICareApplication.USERS_LABEL);
+                        queryUsers.whereEqualTo("email", patientDatabaseObject.get("email"));
+                        queryUsers.findInBackground(new FindCallback<ParseObject>() {
+                            @Override
+                            public void done(List<ParseObject> usersDatabaseParseObject, ParseException e) {
+                                if (e == null) {
+                                    if (usersDatabaseParseObject.size() > 0) {
+                                        ParseObject usersDatabaseObject = usersDatabaseParseObject.get(0);
+
+                                        map.setParentEmail((String) usersDatabaseObject.get("email"));
+                                        String accompaniedBy = usersDatabaseObject.get("firstname") + " " + usersDatabaseObject.get("lastname");
+                                        map.setAccompaniedBy(accompaniedBy);
+                                        map.setParentRelationship((String) usersDatabaseObject.get("role"));
+                                    }
+                                }
+                            }
+                        });
+
+//                        /* Adding the Visits */
+//                        ParseQuery<ParseObject> queryVisits = new ParseQuery<ParseObject>(ICareApplication.VISITS_LABEL);
+//                        queryVisits.whereEqualTo("patientid", patientDatabaseObject.getObjectId());
+//                        queryVisits.addDescendingOrder("createdAt");
+//                        queryVisits.findInBackground(new FindCallback<ParseObject>() {
 //                            @Override
-//                            public void done(ParseObject usersDatabaseObject, ParseException e) {
+//                            public void done(List<ParseObject> parseObjectsVisits, ParseException e) {
+//                                DateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
 //                                if (e == null) {
-//                                    map.setParentEmail((String) usersDatabaseObject.get("email"));
-//                                    String accompaniedBy = usersDatabaseObject.get("firstname") + " " + usersDatabaseObject.get("lastname");
-//                                    map.setAccompaniedBy(accompaniedBy);
-//                                    map.setParentRelationship((String) usersDatabaseObject.get("role"));
+//                                    if (parseObjectsVisits.size() > 0) {
+//                                        patientVisitsList = new ArrayList<PatientVisits>();
+//                                        for (int i = 0; i < parseObjectsVisits.size(); i++) {
+//                                            ParseObject patientDatabaseObject = parseObjectsVisits.get(i);
 //
-//                                    /* Adding the Visits */
-//                                    ParseQuery<ParseObject> queryVisits = new ParseQuery<ParseObject>(ICareApplication.VISITS_LABEL);
-//                                    queryVisits.whereEqualTo("patientid", patientDatabaseObject.getObjectId());
-//                                    queryVisits.addDescendingOrder("createdAt");
-//                                    queryVisits.findInBackground(new FindCallback<ParseObject>() {
-//                                        @Override
-//                                        public void done(List<ParseObject> parseObjectsVisits, ParseException e) {
-//                                            DateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
-//                                            if (e == null) {
-//                                                if (parseObjectsVisits.size() > 0) {
-//                                                    patientVisitsList = new ArrayList<PatientVisits>();
-//                                                    for (int i = 0; i < parseObjectsVisits.size(); i++) {
-//                                                        ParseObject patientDatabaseObject = parseObjectsVisits.get(i);
+//                                            PatientVisits visitMap = new PatientVisits();
 //
-//                                                        PatientVisits visitMap = new PatientVisits();
+//                                            visitMap.setPatientObjectId(patientDatabaseObject.getObjectId());
+//                                            Date visitDateParse = patientDatabaseObject.getCreatedAt();
+//                                            String visitDate = df.format(visitDateParse);
+//                                            visitMap.setVisitDate(visitDate);
 //
-//                                                        visitMap.setPatientObjectId(patientDatabaseObject.getObjectId());
-//                                                        Date visitDateParse = patientDatabaseObject.getCreatedAt();
-//                                                        String visitDate = df.format(visitDateParse);
-//                                                        visitMap.setVisitDate(visitDate);
+//                                            Log.d(ICareApplication.VISITS_LABEL + "  Found", visitDate);
 //
-//                                                        Log.d(ICareApplication.VISITS_LABEL + "  Found", visitDate);
-//
-//                                                        patientVisitsList.add(visitMap);
-//                                                    }
-//                                                    map.setVisits(patientVisitsList);
-//                                                    Log.d(ICareApplication.VISITS_LABEL + "  Found", "setVisits " + patientVisitsList.size());
-//                                                }
-//                                            }
-//                                            patientDatabaselist.add(map);
-//                                            adapter = new PatientDatabaseAdapter(getActivity(), patientDatabaselist);
-//                                            setListAdapter(adapter);
-//
-//                                            getListView().setOnItemClickListener(PatientDatabaseFragment.this);
-//
+//                                            patientVisitsList.add(visitMap);
 //                                        }
-//                                    });
+//                                        map.setVisits(patientVisitsList);
+//                                        Log.d(ICareApplication.VISITS_LABEL + "  Found", "setVisits " + patientVisitsList.size());
+//                                    }
 //                                }
 //                            }
 //                        });
-//                        if(i == parseObjects.size()){
-//                            mProgressDialog.dismiss();
-//                        }
-//                        Log.d("Patient Found", "# " + parseObjects.size()+" of "+i);
-//                    }
-//
-//                } else {
-//                    Log.d("RBERT", "There was a problem downloading the data.");
-//                }
-//            }
-//        });
+
+                        patientDatabaselist.add(map);
+
+                    }
+
+                } else {
+                    Log.d("RBERT", "There was a problem downloading the data.");
+                }
+                adapter = new PatientDatabaseAdapter(getActivity(), patientDatabaselist);
+                setListAdapter(adapter);
+                getListView().setOnItemClickListener(PatientDatabaseFragment.this);
+                mProgressDialog.dismiss();
+//                Log.d("Patient Found", "# " + parseObjects.size()+" of "+i);
+            }
+        });
+
 
 
         return myFragmentView;
@@ -420,7 +378,7 @@ public class PatientDatabaseFragment extends ListFragment implements
 //                .show();
         PatientDatabase itemAtPosition = patientDatabaselist.get(position);
 
-        showPatientDatabaseActionsDialog(itemAtPosition, patientDatabaselist);
+        showPatientDatabaseActionsDialog(itemAtPosition, (ArrayList<PatientDatabase>) patientDatabaselist, position);
     }
 
 
@@ -429,8 +387,8 @@ public class PatientDatabaseFragment extends ListFragment implements
         ((DashboardDoctorFragmentActivity) getActivity()).showMenuContents(getView());
     }
 
-    public void showPatientDatabaseActionsDialog(PatientDatabase patientDatabase, List<PatientDatabase> patientDatabaselist) {
-        ((DashboardDoctorFragmentActivity) getActivity()).PatientDatabaseActions(patientDatabase);
+    public void showPatientDatabaseActionsDialog(PatientDatabase patientDatabase, ArrayList<PatientDatabase> patientDatabaselist, int position) {
+        ((DashboardDoctorFragmentActivity) getActivity()).PatientDatabaseActions(patientDatabase, patientDatabaselist, position);
     }
 
     @Override
