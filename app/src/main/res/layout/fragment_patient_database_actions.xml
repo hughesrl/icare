@@ -53,6 +53,12 @@
             android:layout_width="match_parent"
             android:layout_height="48dip"
             icare:pstsShouldExpand="true"
+
+            android:background="@drawable/background_tabs"
+            icare:pstsDividerColor="@android:color/transparent"
+            icare:pstsIndicatorColor="@color/orange"
+            icare:pstsTabPaddingLeftRight="14dip"
+            icare:pstsUnderlineColor="@color/orange"
              />
 
         <android.support.v4.view.ViewPager
