@@ -1,26 +1,18 @@
 package com.fourello.icare.fragments;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,13 +26,15 @@ import com.fourello.icare.view.CustomEditTextView;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.fourello.icare.widgets.PasswordDialogFragment;
 import com.fourello.icare.widgets.Utils;
-import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
-import com.parse.ParseException;
 import java.util.ArrayList;
+import java.util.Map;
+
+import ua.org.zasadnyy.zvalidations.Form;
+import ua.org.zasadnyy.zvalidations.ValidationFailedRenderer;
 
 public class AddUserFragment extends Fragment implements
         PasswordDialogFragment.PasswordDialogListener,
@@ -54,7 +48,22 @@ public class AddUserFragment extends Fragment implements
     private ParseProxyObject mParamLoginData;
     private ProgressDialog mProgressDialog;
 
-    private OnFragmentInteractionListener mListener;
+//    private OnFragmentInteractionListener mListener;
+
+
+    private Map<Integer, ValidationFailedRenderer> mVaildationRenderers;
+
+    // Form used for validation
+    private Form mForm;
+
+    private Activity mActivity;
+    private CustomEditTextView etFirstname;
+    private CustomEditTextView etLastname;
+    private Spinner spinnerRelationship;
+    private CustomEditTextView etContactNumber;
+    private CustomEditTextView etEmail;
+    private CustomEditTextView etPassword;
+    private CustomEditTextView etConfirmPassword;
 
     private View myFragmentView;
     /**
@@ -83,6 +92,7 @@ public class AddUserFragment extends Fragment implements
         if (getArguments() != null) {
             mParamLoginData = (ParseProxyObject) getArguments().getSerializable(ARG_LOGIN_DATA);
         }
+        mActivity = getActivity();
     }
 
     @Override
@@ -91,18 +101,22 @@ public class AddUserFragment extends Fragment implements
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_add_user, container, false);
 
-        ((DashboardDoctorFragmentActivity)getActivity()).changePageTitle(getString(R.string.title_my_patients));
+        initFields();
 
+        ((DashboardDoctorFragmentActivity)mActivity).changePageTitle(getString(R.string.title_my_patients));
 
-        Spinner customSpinner = (Spinner) myFragmentView.findViewById(R.id.spinnerRelationship);
-        CustomAdapter adapter = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, populateRelatioship());
-        customSpinner.setAdapter(adapter);
+        CustomAdapter adapter = new CustomAdapter(mActivity, android.R.layout.simple_spinner_item, populateRelatioship());
+        spinnerRelationship.setAdapter(adapter);
 
         CustomButton btnAddUser = (CustomButton)myFragmentView.findViewById(R.id.btnAddUser);
         btnAddUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((DashboardDoctorFragmentActivity)getActivity()).showPasswordDialog(AddUserFragment.this, PasswordDialogFragment.PASSWORD_DIALOG_CUSTOM);
+                if(validateFields()){
+                    ((DashboardDoctorFragmentActivity) mActivity).showPasswordDialog(AddUserFragment.this, PasswordDialogFragment.PASSWORD_DIALOG_CUSTOM);
+                } else {
+                    Toast.makeText(mActivity, "Please check your form.", Toast.LENGTH_LONG).show();
+                }
             }
         });
         return myFragmentView;
@@ -115,36 +129,6 @@ public class AddUserFragment extends Fragment implements
         }
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString() + " must implement onViewSelected");
-//        }
-    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(int isValid);
-    }
 
     private class CustomAdapter extends ArrayAdapter<SpinnerItems> {
         private Activity context;
@@ -167,7 +151,7 @@ public class AddUserFragment extends Fragment implements
             name.setTypeface(myTypeFace, Typeface.NORMAL);
             name.setGravity(Gravity.LEFT);
             name.setTextSize(18);
-            if(current.getSpinnerStatus() == false) {
+            if(!current.getSpinnerStatus()) {
                 name.setTextColor(Color.GRAY);
             } else {
                 name.setTextColor(Color.BLACK);
@@ -187,7 +171,7 @@ public class AddUserFragment extends Fragment implements
             }
             SpinnerItems current = spinnerItems.get(position);
             TextView name = (TextView) row.findViewById(R.id.spinnerTxtTitle);
-            if(current.getSpinnerStatus() == false) {
+            if(!current.getSpinnerStatus()) {
                 name.setTextColor(Color.GRAY);
             } else {
                 name.setTextColor(Color.BLACK);
@@ -196,8 +180,6 @@ public class AddUserFragment extends Fragment implements
             return row;
         }
     }
-
-
 
     private ArrayList<SpinnerItems> populateRelatioship(){
         final ArrayList<SpinnerItems> spinnerItems = new ArrayList<SpinnerItems>();
@@ -215,28 +197,15 @@ public class AddUserFragment extends Fragment implements
         if(purposeToOpen.equals(PasswordDialogFragment.PASSWORD_DIALOG_MENU)) {
             passwordDialog.dismiss();
             if (password.trim().equals(mParamLoginData.getString("password"))) {
-                ((DashboardDoctorFragmentActivity) getActivity()).showMenuContents(getView());
+                ((DashboardDoctorFragmentActivity) mActivity).showMenuContents(getView());
             } else { // incorrect Password
-                Toast.makeText(getActivity(), "Incorrect Password", Toast.LENGTH_LONG).show();
+                Toast.makeText(mActivity, "Incorrect Password", Toast.LENGTH_LONG).show();
             }
         } else {
-            //Toast.makeText(getActivity(), "Checking Password : " + password, Toast.LENGTH_LONG).show();
-
-//            Spinner customSpinner = (Spinner) myFragmentView.findViewById(R.id.spinnerRelationship);
-//            CustomAdapter adapter = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, populateReindeer());
-//            customSpinner.setAdapter(adapter);
-
-            final CustomEditTextView etFirstname = (CustomEditTextView) myFragmentView.findViewById(R.id.etFirstname);
-            final CustomEditTextView etLastname = (CustomEditTextView) myFragmentView.findViewById(R.id.etLastname);
-            final Spinner spinnerRelationship = (Spinner) myFragmentView.findViewById(R.id.spinnerRelationship);
-            final CustomEditTextView etContactNumber = (CustomEditTextView) myFragmentView.findViewById(R.id.etContactNumber);
-            final CustomEditTextView etEmail = (CustomEditTextView) myFragmentView.findViewById(R.id.etEmail);
-            final CustomEditTextView etPassword = (CustomEditTextView) myFragmentView.findViewById(R.id.etPassword);
-            final CustomEditTextView etConfirmPassword = (CustomEditTextView) myFragmentView.findViewById(R.id.etConfirmPassword);
 
             if (password.trim().equals(mParamLoginData.getString("password"))) {
                 if (mProgressDialog == null) {
-                    mProgressDialog = Utils.createProgressDialog(getActivity());
+                    mProgressDialog = Utils.createProgressDialog(mActivity);
                     mProgressDialog.show();
                 } else {
                     mProgressDialog.show();
@@ -259,7 +228,7 @@ public class AddUserFragment extends Fragment implements
                             newUserRecordObjectId = (String) newUser.get("objectId");
 
                             final ParseObject initialPatientData = new ParseObject(ICareApplication.PATIENTS_LABEL);
-                            initialPatientData.put("doctorid", mParamLoginData.getString("linked_doctorid").toString());
+                            initialPatientData.put("doctorid", mParamLoginData.getString("linked_doctorid"));
                             initialPatientData.put("email", etEmail.getText().toString());
                             initialPatientData.put("username", etFirstname.getText().toString());
                             initialPatientData.put("password", etFirstname.getText().toString());
@@ -286,7 +255,7 @@ public class AddUserFragment extends Fragment implements
                                     if (e == null) {
                                         mProgressDialog.dismiss();
                                         newPatientRecordObjectId = initialPatientData.getObjectId();
-                                        ((DashboardDoctorFragmentActivity) getActivity()).ParentEmailValidate(newUserRecordObjectId, newPatientRecordObjectId);
+                                        ((DashboardDoctorFragmentActivity) mActivity).ParentEmailValidate(newUserRecordObjectId, newPatientRecordObjectId);
                                     }
                                 }
                             });
@@ -294,7 +263,7 @@ public class AddUserFragment extends Fragment implements
                     }
                 });
             } else { // incorrect Password
-                Toast.makeText(getActivity(), "Incorrect Password", Toast.LENGTH_LONG).show();
+                Toast.makeText(mActivity, "Incorrect Password", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -307,6 +276,34 @@ public class AddUserFragment extends Fragment implements
 
     @Override
     public void onMenuPressedCallback() {
-        ((DashboardDoctorFragmentActivity)getActivity()).showPasswordDialog(AddUserFragment.this, PasswordDialogFragment.PASSWORD_DIALOG_MENU);
+        ((DashboardDoctorFragmentActivity)mActivity).showPasswordDialog(AddUserFragment.this, PasswordDialogFragment.PASSWORD_DIALOG_MENU);
+    }
+
+    private void initFields() {
+        etFirstname = (CustomEditTextView) myFragmentView.findViewById(R.id.etFirstname);
+        etLastname = (CustomEditTextView) myFragmentView.findViewById(R.id.etLastname);
+        spinnerRelationship = (Spinner) myFragmentView.findViewById(R.id.spinnerRelationship);
+        etContactNumber = (CustomEditTextView) myFragmentView.findViewById(R.id.etContactNumber);
+        etEmail = (CustomEditTextView) myFragmentView.findViewById(R.id.etEmail);
+        etPassword = (CustomEditTextView) myFragmentView.findViewById(R.id.etPassword);
+        etConfirmPassword = (CustomEditTextView) myFragmentView.findViewById(R.id.etConfirmPassword);
+    }
+    private boolean validateFields() {
+        boolean ret = false;
+        String strRelationship = spinnerRelationship.getSelectedItem().toString();
+        if((!etPassword.getText().toString().equals("") || !etConfirmPassword.getText().toString().equals("")) &&
+             etPassword.getText().toString().equals(etConfirmPassword.getText().toString())) {
+            if(etFirstname.getText().toString().trim().equals("") ||
+               etLastname.getText().toString().trim().equals("")  ||
+               strRelationship.trim().equals("") ||
+               etContactNumber.getText().toString().trim().equals("") ||
+               etEmail.getText().toString().trim().equals("")
+               ) {
+//                Toast.makeText(mActivity, "All fields are Required.", Toast.LENGTH_LONG);
+            } else {
+                ret = true;
+            }
+        }
+        return ret;
     }
 }

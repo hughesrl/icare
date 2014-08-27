@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ICare.iml" filepath="$PROJECT_DIR$/ICare.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/icare.iml" filepath="$PROJECT_DIR$/icare.iml" />
+      <module fileurl="file://$PROJECT_DIR$/z-validations-library/z-validations-library.iml" filepath="$PROJECT_DIR$/z-validations-library/z-validations-library.iml" />
     </modules>
   </component>
 </project>
