@@ -19,13 +19,20 @@ public class RoundedImageView {
         final Paint paint = new Paint();
         final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 
+//        paint.setAntiAlias(true);
+//        canvas.drawARGB(0, 0, 0, 0);
+//        paint.setColor(color);
+//        paint.setFlags(Paint.ANTI_ALIAS_FLAG);
+//        // canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+//        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
+//                bitmap.getWidth() / 2, paint);
+//        paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+//        canvas.drawBitmap(bitmap, rect, rect, paint);
+
         paint.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(color);
-        paint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        // canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
-                bitmap.getWidth() / 2, paint);
+        canvas.drawCircle(50, 50, 50, paint);
         paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
 

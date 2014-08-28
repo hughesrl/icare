@@ -114,7 +114,7 @@ public class LoginSignupActivity extends Activity {
                                         Drawable drawable= getResources().getDrawable(R.drawable.doctor_icon);
                                         Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
                                         ByteArrayOutputStream out = new ByteArrayOutputStream();
-                                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
                                         byte[] myPicture = out.toByteArray();
 

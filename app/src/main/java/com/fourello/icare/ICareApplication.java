@@ -48,7 +48,8 @@ public class ICareApplication extends Application {
         // Add your initialization code here
         Parse.enableLocalDatastore(this);
         ParseObject.registerSubclass(PatientCheckIn.class);
-        Parse.initialize(this, "mgjwXn2NpSfBlZenRbnWGYFqIOfZ0AdGUIqXxq9k", "RRw4cxwZG4wZryUuxqYHbzYLtof8fvizS7JhQ6PO");
+        //Parse.initialize(this, "mgjwXn2NpSfBlZenRbnWGYFqIOfZ0AdGUIqXxq9k", "RRw4cxwZG4wZryUuxqYHbzYLtof8fvizS7JhQ6PO"); // Robert
+        Parse.initialize(this, "85lVaxRqcrhlyzzWa3QckqBpP7GJiKolwT16MJnk", "Nz1kPiFcgMm6SadNGPXPgxV4RRpOKQVUwsDC6pEc"); // Icare Fourello
 
         //ParseUser.enableAutomaticUser();
         ParseACL defaultACL = new ParseACL();
