@@ -1,5 +1,6 @@
 package com.fourello.icare;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
@@ -45,6 +47,7 @@ import com.fourello.icare.fragments.PromosFragment;
 import com.fourello.icare.fragments.SettingsFragment;
 import com.fourello.icare.fragments.ValidateEmailFragment;
 import com.fourello.icare.view.CustomTextView;
+import com.fourello.icare.view.RoundedAvatarDrawable;
 import com.fourello.icare.view.RoundedImageView;
 import com.fourello.icare.widgets.FragmentUtils;
 import com.fourello.icare.widgets.ParseProxyObject;
@@ -196,6 +199,7 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
         dialog.dismiss();
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void showMenuContents(final View view) {
         view.setVisibility(View.VISIBLE);
         if (dialog.isShowing()) {
@@ -208,8 +212,13 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
 
             ImageView imgViewMyPicture = (ImageView) dialog.findViewById(R.id.btnMyPicture);
             Bitmap bMap = BitmapFactory.decodeByteArray(myPicture, 0, myPicture.length);
-            Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(bMap);
-            imgViewMyPicture.setImageBitmap(profileInCircle);
+
+            RoundedAvatarDrawable r = new RoundedAvatarDrawable(bMap);
+
+            imgViewMyPicture.setBackground(r);
+
+//            Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(bMap);
+//            imgViewMyPicture.setImageBitmap(r.getBitmap());
             imgViewMyPicture.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -63,20 +63,18 @@
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_menu_my_patients"
                 android:scaleType="fitCenter"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_centerInParent="true"/>
 
             <!--android:layout_width="230dp"-->
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="230dp"
+                android:layout_height="230dp"
                 android:id="@+id/btnMyPicture"
                 android:background="@android:color/transparent"
-                android:src="@drawable/doctor_icon_circle"
+
                 android:scaleType="fitCenter"
                 android:layout_centerInParent="true"
-                android:layout_toRightOf="@+id/btnMyPatients"
-                android:layout_toLeftOf="@+id/btnSettings"
                 />
 
             <ImageButton

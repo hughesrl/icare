@@ -93,6 +93,7 @@ public class LoginSignupActivity extends Activity {
 
                                     if(project.has("photoFile")) {
                                         final ParseFile myPhoto = (ParseFile) project.get("photoFile");
+                                        Log.d("ROBERT URL", myPhoto.getUrl()+" -URL");
                                         myPhoto.saveInBackground(new SaveCallback() {
                                             @Override
                                             public void done(ParseException e) {
