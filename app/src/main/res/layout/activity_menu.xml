@@ -72,7 +72,6 @@
                 android:layout_height="230dp"
                 android:id="@+id/btnMyPicture"
                 android:background="@android:color/transparent"
-
                 android:scaleType="fitCenter"
                 android:layout_centerInParent="true"
                 />

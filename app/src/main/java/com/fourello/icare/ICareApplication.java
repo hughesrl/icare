@@ -38,6 +38,7 @@ public class ICareApplication extends Application {
     public static String USERS_LABEL = "Users";
     public static String PATIENTS_LABEL = "Patients";
     public static String VISITS_LABEL = "Visits";
+    public static String PROMO_LABEL = "Promos";
 
     public static ParseProxyObject mLoginData;
 

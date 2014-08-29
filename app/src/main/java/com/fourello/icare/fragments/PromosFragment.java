@@ -1,13 +1,38 @@
 package com.fourello.icare.fragments;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Config;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.fourello.icare.DashboardDoctorFragmentActivity;
+import com.fourello.icare.ICareApplication;
 import com.fourello.icare.R;
+import com.fourello.icare.adapters.PatientQueueAdapter;
+import com.fourello.icare.datas.PatientQueue;
+import com.fourello.icare.view.RoundedAvatarDrawable;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.util.List;
 
 /**
  * A simple {@link android.app.Fragment} subclass.
@@ -64,7 +89,47 @@ public class PromosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_promos, container, false);
+        final ViewGroup myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_promos, container, false);
+
+        ((DashboardDoctorFragmentActivity)getActivity()).changePageTitle(getString(R.string.title_my_patients));
+        // The content view embeds two fragments; now retrieve them and attach
+        // their "hide" button.
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        final ImageView promoPhoto = (ImageView) myFragmentView.findViewById(R.id.promoPhoto);
+
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.PROMO_LABEL);
+        query.whereEqualTo("tag", "1");
+        query.setLimit(1);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects, ParseException e) {
+                if (e == null) {
+                    ParseObject patientQueueObject = parseObjects.get(0);
+                    ParseFile myPhoto = (ParseFile)patientQueueObject.get("photoFile");
+                    if(myPhoto!=null){
+                        try {
+                            byte[] data = myPhoto.getData();
+
+                            Bitmap photoPromo = BitmapFactory.decodeByteArray(data, 0, data.length);
+                            int w = photoPromo.getWidth(), h = photoPromo.getHeight();
+
+                            Bitmap roundBitmap =  getRoundedCornerBitmap( getActivity(), photoPromo, 10, w, h , true, true, false, false );
+
+                            promoPhoto.setImageBitmap(roundBitmap);
+                        } catch (ParseException e2) {
+                            // TODO Auto-generated catch block
+                            e2.printStackTrace();
+                        }
+
+                    }
+                }
+            }
+        });
+
+
+        return myFragmentView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -104,6 +169,47 @@ public class PromosFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+
+    public static Bitmap getRoundedCornerBitmap(Context context, Bitmap input, int pixels , int w , int h , boolean squareTL, boolean squareTR, boolean squareBL, boolean squareBR ) {
+        Bitmap output = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+        final float densityMultiplier = context.getResources().getDisplayMetrics().density;
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, w, h);
+        final RectF rectF = new RectF(rect);
+
+//make sure that our rounded corner is scaled appropriately
+        final float roundPx = pixels*densityMultiplier;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+
+//draw rectangles over the corners we want to be square
+        if (squareTL ){
+            canvas.drawRect(0, 0, w/2, h/2, paint);
+        }
+        if (squareTR ){
+            canvas.drawRect(w/2, 0, w, h/2, paint);
+        }
+        if (squareBL ){
+            canvas.drawRect(0, h/2, w/2, h, paint);
+        }
+        if (squareBR ){
+            canvas.drawRect(w/2, h/2, w, h, paint);
+        }
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(input, 0,0, paint);
+
+        return output;
+
     }
 
 }

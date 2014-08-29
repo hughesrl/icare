@@ -212,8 +212,10 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
 
             ImageView imgViewMyPicture = (ImageView) dialog.findViewById(R.id.btnMyPicture);
             Bitmap bMap = BitmapFactory.decodeByteArray(myPicture, 0, myPicture.length);
-
-            RoundedAvatarDrawable r = new RoundedAvatarDrawable(bMap);
+            int width=350;
+            int height=350;
+            Bitmap resizedbitmap=Bitmap.createScaledBitmap(bMap, width, height, true);
+            RoundedAvatarDrawable r = new RoundedAvatarDrawable(resizedbitmap);
 
             imgViewMyPicture.setBackground(r);
 

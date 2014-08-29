@@ -19,6 +19,7 @@ import com.fourello.icare.R;
 import com.fourello.icare.datas.PatientDatabase;
 import com.fourello.icare.datas.PatientQueue;
 import com.fourello.icare.view.CustomTextView;
+import com.fourello.icare.view.RoundedAvatarDrawable;
 import com.fourello.icare.view.RoundedImageView;
 
 import java.util.ArrayList;
@@ -82,8 +83,15 @@ public class PatientQueueAdapter extends BaseAdapter {
         byte[] myPicture = patientQueueList.get(position).getPatientphoto();
         if(myPicture!=null) {
             Bitmap bMap = BitmapFactory.decodeByteArray(myPicture, 0, myPicture.length);
-            Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(bMap);
-            holder.photoFile.setImageBitmap(profileInCircle);
+            int width=75;
+            int height=80;
+            Bitmap resizedbitmap=Bitmap.createScaledBitmap(bMap, width, height, true);
+            RoundedAvatarDrawable r = new RoundedAvatarDrawable(resizedbitmap);
+
+            holder.photoFile.setBackground(r);
+
+//            Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(bMap);
+//            holder.photoFile.setImageBitmap(profileInCircle);
         }
 
         return view;
