@@ -29,10 +29,17 @@ import java.util.GregorianCalendar;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.acra.*;
+import org.acra.annotation.*;
 
-/**
- * Created by Admin on 8/2/2014.
- */
+@ReportsCrashes(
+        formKey = "",
+        formUri = "https://robehughes.iriscouch.com/acra-icare/_design/acra-storage/_update/report",
+        reportType = org.acra.sender.HttpSender.Type.JSON,
+        httpMethod = org.acra.sender.HttpSender.Method.PUT,
+        formUriBasicAuthLogin="flipstop",
+        formUriBasicAuthPassword="flipstop"
+)
 public class ICareApplication extends Application {
 
     public static String DOCTORS_LABEL = "Doctors";
@@ -48,13 +55,16 @@ public class ICareApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        // ACRA
+        ACRA.init(this);
+
         // Add your initialization code here
         Parse.enableLocalDatastore(this);
         ParseObject.registerSubclass(PatientCheckIn.class);
         ParseObject.registerSubclass(ClinicSurvey.class);
 
-        Parse.initialize(this, "mgjwXn2NpSfBlZenRbnWGYFqIOfZ0AdGUIqXxq9k", "RRw4cxwZG4wZryUuxqYHbzYLtof8fvizS7JhQ6PO"); // Robert
-//        Parse.initialize(this, "85lVaxRqcrhlyzzWa3QckqBpP7GJiKolwT16MJnk", "Nz1kPiFcgMm6SadNGPXPgxV4RRpOKQVUwsDC6pEc"); // Icare Fourello
+//        Parse.initialize(this, "mgjwXn2NpSfBlZenRbnWGYFqIOfZ0AdGUIqXxq9k", "RRw4cxwZG4wZryUuxqYHbzYLtof8fvizS7JhQ6PO"); // Robert
+        Parse.initialize(this, "85lVaxRqcrhlyzzWa3QckqBpP7GJiKolwT16MJnk", "Nz1kPiFcgMm6SadNGPXPgxV4RRpOKQVUwsDC6pEc"); // Icare Fourello
 
         //ParseUser.enableAutomaticUser();
         ParseACL defaultACL = new ParseACL();
