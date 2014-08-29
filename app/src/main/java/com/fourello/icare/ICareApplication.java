@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.fourello.icare.datas.ClinicSurvey;
 import com.fourello.icare.datas.PatientCheckIn;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.widgets.ParseProxyObject;
@@ -38,6 +39,7 @@ public class ICareApplication extends Application {
     public static String USERS_LABEL = "Users";
     public static String PATIENTS_LABEL = "Patients";
     public static String VISITS_LABEL = "Visits";
+    public static String CLINIC_SURVEY_LABEL = "ClinicSurvey";
     public static String PROMO_LABEL = "Promos";
 
     public static ParseProxyObject mLoginData;
@@ -49,8 +51,10 @@ public class ICareApplication extends Application {
         // Add your initialization code here
         Parse.enableLocalDatastore(this);
         ParseObject.registerSubclass(PatientCheckIn.class);
-        //Parse.initialize(this, "mgjwXn2NpSfBlZenRbnWGYFqIOfZ0AdGUIqXxq9k", "RRw4cxwZG4wZryUuxqYHbzYLtof8fvizS7JhQ6PO"); // Robert
-        Parse.initialize(this, "85lVaxRqcrhlyzzWa3QckqBpP7GJiKolwT16MJnk", "Nz1kPiFcgMm6SadNGPXPgxV4RRpOKQVUwsDC6pEc"); // Icare Fourello
+        ParseObject.registerSubclass(ClinicSurvey.class);
+
+        Parse.initialize(this, "mgjwXn2NpSfBlZenRbnWGYFqIOfZ0AdGUIqXxq9k", "RRw4cxwZG4wZryUuxqYHbzYLtof8fvizS7JhQ6PO"); // Robert
+//        Parse.initialize(this, "85lVaxRqcrhlyzzWa3QckqBpP7GJiKolwT16MJnk", "Nz1kPiFcgMm6SadNGPXPgxV4RRpOKQVUwsDC6pEc"); // Icare Fourello
 
         //ParseUser.enableAutomaticUser();
         ParseACL defaultACL = new ParseACL();

@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.fourello.icare.DashboardDoctorFragmentActivity;
 import com.fourello.icare.ICareApplication;
 import com.fourello.icare.R;
+import com.fourello.icare.datas.ClinicSurvey;
 import com.fourello.icare.datas.PatientCheckIn;
 import com.fourello.icare.datas.PatientDatabase;
 import com.fourello.icare.datas.SpinnerItems;
@@ -71,6 +72,7 @@ public class CheckInFragment extends Fragment implements
     private static String mParamPatientObjectId;
 
     private PatientCheckIn patientCheckIn;
+    private ClinicSurvey clinicSurvery;
 
 
 
@@ -114,6 +116,8 @@ public class CheckInFragment extends Fragment implements
         }
 
         patientCheckIn = new PatientCheckIn();
+
+        clinicSurvery = new ClinicSurvey();
     }
 
     @Override
@@ -260,17 +264,17 @@ public class CheckInFragment extends Fragment implements
                 }
 
 //                String patientName = String.valueOf(pName.getText());
-                String accompaniedBy = String.valueOf(pAccompaniedBy.getText());
-                String momsNotes = String.valueOf(pMomsNotes.getText());
-                String growthTrackerWeight = String.valueOf(etGrowthTrackerWeight.getText());
-                String growthTrackerHeight = String.valueOf(etGrowthTrackerHeight.getText());
-                String growthTrackerHead = String.valueOf(etGrowthTrackerHead.getText());
-                String growthTrackerChest = String.valueOf(etGrowthTrackerChest.getText());
-                String growthTrackerTemperature = String.valueOf(etGrowthTrackerTemperature.getText());
+                final String accompaniedBy = String.valueOf(pAccompaniedBy.getText());
+                final String momsNotes = String.valueOf(pMomsNotes.getText());
+                final String growthTrackerWeight = String.valueOf(etGrowthTrackerWeight.getText());
+                final String growthTrackerHeight = String.valueOf(etGrowthTrackerHeight.getText());
+                final String growthTrackerHead = String.valueOf(etGrowthTrackerHead.getText());
+                final String growthTrackerChest = String.valueOf(etGrowthTrackerChest.getText());
+                final String growthTrackerTemperature = String.valueOf(etGrowthTrackerTemperature.getText());
 
-                String relationshipToPatient = String.valueOf(spinnerRelationshipToPatient.getSelectedItem());
-                String purpose = String.valueOf(spinnerPurpose.getSelectedItem());
-                String allergyRisk = String.valueOf(spinnerAllergyRisk.getSelectedItem());
+                final String relationshipToPatient = String.valueOf(spinnerRelationshipToPatient.getSelectedItem());
+                final String purpose = String.valueOf(spinnerPurpose.getSelectedItem());
+                final String allergyRisk = String.valueOf(spinnerAllergyRisk.getSelectedItem());
 
                 patientCheckIn.setAccompaniedBy(accompaniedBy);
                 patientCheckIn.setDoctorId(Integer.parseInt(mParamLoginData.getString("linked_doctorid").toString()));
@@ -287,13 +291,58 @@ public class CheckInFragment extends Fragment implements
                 patientCheckIn.setRelationshipToPatient(relationshipToPatient);
                 patientCheckIn.setAllergyRisk(allergyRisk);
 
+
+
+
                 // Save the meal and return
                 patientCheckIn.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
-                            mProgressDialog.dismiss();
-                            ((DashboardDoctorFragmentActivity) getActivity()).PatientDatabase();
+
+                            clinicSurvery.setAccompaniedBy(accompaniedBy);
+                            clinicSurvery.setDoctorId(mParamLoginData.getString("linked_doctorid"));
+                            clinicSurvery.setEmail(mParamPatientData.getParentEmail());
+                            clinicSurvery.setChest(growthTrackerChest);
+                            clinicSurvery.setHead(growthTrackerHead);
+                            clinicSurvery.setHeight(growthTrackerHeight);
+                            clinicSurvery.setTemperature(growthTrackerTemperature);
+                            clinicSurvery.setWeight(growthTrackerWeight);
+                            clinicSurvery.setPatientObjectId(mParamPatientData.getPatientObjectId());
+                            clinicSurvery.setPatientFullname(mParamPatientData.getFullName());
+                            clinicSurvery.setMomsNotes(momsNotes);
+                            clinicSurvery.setPurposeOfVisit(purpose);
+                            clinicSurvery.setRelationshipToPatient(relationshipToPatient);
+                            clinicSurvery.setAllergyRisk(allergyRisk);
+
+                            try {
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm");
+                                String birthdayAndTime = mParamPatientData.getbDate() + " 00:00";
+
+                                Date convertedDate = simpleDateFormat.parse(birthdayAndTime);
+
+                                clinicSurvery.setDateOfBirth(convertedDate);
+                            } catch (java.text.ParseException e1) {
+                                e1.printStackTrace();
+                            }
+
+                            clinicSurvery.setStatusTag("1");
+                            clinicSurvery.setVisitId(patientCheckIn.getObjectId());
+
+                            clinicSurvery.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException clinicSurveryError) {
+                                    if (clinicSurveryError == null) {
+                                        mProgressDialog.dismiss();
+                                        ((DashboardDoctorFragmentActivity) getActivity()).PatientDatabase();
+                                    } else {
+                                        Toast.makeText(
+                                                getActivity().getApplicationContext(),
+                                                "Error saving: " + clinicSurveryError.getMessage(),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         } else {
                             Toast.makeText(
                                     getActivity().getApplicationContext(),
