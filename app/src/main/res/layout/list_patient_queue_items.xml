@@ -9,7 +9,6 @@
 
     <ImageView
         android:layout_centerVertical="true"
-        android:textSize="@dimen/menu_font_size"
         android:id="@+id/patientPhoto"
         android:layout_width="@dimen/patient_queue_photo_size"
         android:layout_height="@dimen/patient_queue_photo_size"

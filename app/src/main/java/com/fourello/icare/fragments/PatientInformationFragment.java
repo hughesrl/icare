@@ -2,12 +2,15 @@ package com.fourello.icare.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -15,15 +18,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.fourello.icare.ICareApplication;
 import com.fourello.icare.R;
 import com.fourello.icare.datas.PatientDatabase;
+import com.fourello.icare.datas.Patients;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.view.CustomEditTextView;
+import com.fourello.icare.view.RoundedAvatarDrawable;
 import com.fourello.icare.widgets.ParseProxyObject;
+import com.fourello.icare.widgets.Utils;
+import com.parse.GetDataCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 
@@ -43,6 +55,8 @@ public class PatientInformationFragment extends Fragment {
     private final int CAMERA_CAPTURE = 1;
     private byte[] bytearray;
 
+    ImageView imgPatientPhoto;
+
     CustomEditTextView etPatientsFName, etPatientsMName, etPatientsLName,
             etIWasBornDate,etBornAt,
             etIWasDeliveredBy,
@@ -55,6 +69,7 @@ public class PatientInformationFragment extends Fragment {
 
     Spinner spinnerMyMomGaveBirthToMeThrough, spinnerAllergyRisk;
 
+    private Patients patients;
     public static Fragment newInstance(int position, PatientDatabase patientData, ParseProxyObject loginData, String patientObjectId) {
         PatientInformationFragment f = new PatientInformationFragment();
 
@@ -74,12 +89,15 @@ public class PatientInformationFragment extends Fragment {
             mParamPatientObjectId = getArguments().getString(PatientDatabaseActionsFragment.ARG_PATIENT_OBJECT_ID);
             mParamPatientData = getArguments().getParcelable(PatientDatabaseActionsFragment.ARG_PATIENT_DATA);
         }
+
+        patients = new Patients();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         ViewGroup myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_patient_information, container, false);
 
+        imgPatientPhoto         = (ImageView)myFragmentView.findViewById(R.id.patient_photo);
         etPatientsFName         = (CustomEditTextView)myFragmentView.findViewById(R.id.etPatientsFName);
         etPatientsMName         = (CustomEditTextView)myFragmentView.findViewById(R.id.etPatientsMName);
         etPatientsLName         = (CustomEditTextView)myFragmentView.findViewById(R.id.etPatientsLName);
@@ -118,6 +136,11 @@ public class PatientInformationFragment extends Fragment {
         spinnerAllergyRisk = (Spinner) myFragmentView.findViewById(R.id.spinnerAllergyRisk);
         CustomAdapter adapterAllergyRisk = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, ICareApplication.populateAllergyRisk());
         spinnerAllergyRisk.setAdapter(adapterAllergyRisk);
+
+        if(mParamPatientData.getPatientphoto().length > 0) {
+            Bitmap bMap = BitmapFactory.decodeByteArray(mParamPatientData.getPatientphoto(), 0, mParamPatientData.getPatientphoto().length);
+            imgPatientPhoto.setBackground(Utils.resizedBitmapDisplay(getActivity(), bMap));
+        }
 
         etPatientsFName.setText(mParamPatientData.getFirtname());
         etPatientsMName.setText(mParamPatientData.getMiddlename());

@@ -274,18 +274,18 @@ public class PatientDatabaseFragment extends ListFragment implements
 
                         map.setMobilenumbers(contactnumber);
 
-//                        if(patientDatabaseObject.get("photoFile")!=null) {
-//                            ParseFile myPhoto = (ParseFile) patientDatabaseObject.get("photoFile");
-//                            if (myPhoto != null) {
-//                                try {
-//                                    byte[] data = myPhoto.getData();
-//                                    map.setPatientphoto(data);
-//                                } catch (ParseException e2) {
-//                                    // TODO Auto-generated catch block
-//                                    e2.printStackTrace();
-//                                }
-//                            }
-//                        }
+                        if(patientDatabaseObject.has("photoFile")) {
+                            ParseFile myPhoto = (ParseFile) patientDatabaseObject.get("photoFile");
+                            if (myPhoto != null) {
+                                try {
+                                    byte[] data = myPhoto.getData();
+                                    map.setPatientphoto(data);
+                                } catch (ParseException e2) {
+                                    // TODO Auto-generated catch block
+                                    e2.printStackTrace();
+                                }
+                            }
+                        }
 //                        if(patientDatabaseObject.has("photoFile")) {
 //                            final ParseFile myPhoto = patientDatabaseObject.getParseFile("photoFile");
 //                            myPhoto.getDataInBackground(new GetDataCallback() {
@@ -374,8 +374,6 @@ public class PatientDatabaseFragment extends ListFragment implements
     }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        Toast.makeText(getActivity(), "yES", Toast.LENGTH_SHORT)
-//                .show();
         PatientDatabase itemAtPosition = patientDatabaselist.get(position);
 
         showPatientDatabaseActionsDialog(itemAtPosition, (ArrayList<PatientDatabase>) patientDatabaselist, position);
@@ -393,16 +391,6 @@ public class PatientDatabaseFragment extends ListFragment implements
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        Toast.makeText(getActivity(), requestCode+" - PatientDatabaseFragment", Toast.LENGTH_LONG).show();
-//        super.onActivityResult(requestCode,resultCode,data);
-
-//        List<Fragment> fragments = getChildFragmentManager().getFragments();
-//        if (fragments != null) {
-//            for (Fragment fragment : fragments) {
-//                Log.d("ROBERT", fragment.toString());
-//                fragment.onActivityResult(requestCode, resultCode, data);
-//            }
-//        }
     }
 
 //    private class LoadPatientDatabaseDataTask extends AsyncTask<Void, Void, Void> {

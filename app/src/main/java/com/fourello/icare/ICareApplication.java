@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import com.fourello.icare.datas.ClinicSurvey;
 import com.fourello.icare.datas.PatientCheckIn;
+import com.fourello.icare.datas.Patients;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.parse.Parse;
@@ -60,11 +61,12 @@ public class ICareApplication extends Application {
 
         // Add your initialization code here
         Parse.enableLocalDatastore(this);
+        ParseObject.registerSubclass(Patients.class);
         ParseObject.registerSubclass(PatientCheckIn.class);
         ParseObject.registerSubclass(ClinicSurvey.class);
 
-//        Parse.initialize(this, "mgjwXn2NpSfBlZenRbnWGYFqIOfZ0AdGUIqXxq9k", "RRw4cxwZG4wZryUuxqYHbzYLtof8fvizS7JhQ6PO"); // Robert
-        Parse.initialize(this, "85lVaxRqcrhlyzzWa3QckqBpP7GJiKolwT16MJnk", "Nz1kPiFcgMm6SadNGPXPgxV4RRpOKQVUwsDC6pEc"); // Icare Fourello
+        Parse.initialize(this, "mgjwXn2NpSfBlZenRbnWGYFqIOfZ0AdGUIqXxq9k", "RRw4cxwZG4wZryUuxqYHbzYLtof8fvizS7JhQ6PO"); // Robert
+//        Parse.initialize(this, "85lVaxRqcrhlyzzWa3QckqBpP7GJiKolwT16MJnk", "Nz1kPiFcgMm6SadNGPXPgxV4RRpOKQVUwsDC6pEc"); // Icare Fourello
 
         //ParseUser.enableAutomaticUser();
         ParseACL defaultACL = new ParseACL();

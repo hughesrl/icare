@@ -247,6 +247,7 @@ public class PatientDatabaseActionsFragment extends Fragment implements
 
                 case 2: // Patient Visit Calendar
                     PatientVisitsFragment patientVisitsFragment = new PatientVisitsFragment();
+//                    args.putByteArray();
 //                    args.putParcelableArrayList(PatientDatabaseActionsFragment.ARG_PATIENT_DATA, patientVisitsList);
                     patientVisitsFragment.setArguments(args);
                     return patientVisitsFragment;

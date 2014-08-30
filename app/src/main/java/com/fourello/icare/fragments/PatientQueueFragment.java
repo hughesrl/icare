@@ -113,8 +113,8 @@ public class PatientQueueFragment extends ListFragment implements
         elevenfiftynine.setMinutes(59);
         elevenfiftynine.setSeconds(59);
 
-        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.VISITS_LABEL);
-        query.whereEqualTo("doctorid", Integer.parseInt(mParamDoctorId));
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.CLINIC_SURVEY_LABEL);
+        query.whereEqualTo("doctorid", mParamDoctorId);
         query.whereGreaterThan("createdAt", midnight);
         query.whereLessThan("createdAt", elevenfiftynine);
 //        query.addDescendingOrder("createdAt");
@@ -131,7 +131,7 @@ public class PatientQueueFragment extends ListFragment implements
                         map.setPatientName(patientQueueObject.getString("patientname"));
 
                         ParseFile myPhoto = (ParseFile)patientQueueObject.get("photoFile");
-                        if(myPhoto!=null){
+                        if(myPhoto!=null) {
                             try {
                                 byte[] data = myPhoto.getData();
                                 map.setPatientphoto(data);

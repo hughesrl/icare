@@ -16,4 +16,7 @@
     <dimen name="menu_font_size">25sp</dimen>
 
     <dimen name="patient_queue_photo_size">50dp</dimen>
+
+    <dimen name="patient_photo_background_padding">10dp</dimen>
+    <dimen name="patient_photo_size">150dp</dimen>
 </resources>

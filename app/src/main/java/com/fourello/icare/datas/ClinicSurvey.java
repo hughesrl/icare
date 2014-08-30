@@ -13,18 +13,18 @@ public class ClinicSurvey extends ParseObject {
         // A default constructor is required.
     }
 
+    public ParseFile getPatientphoto() {
+        return getParseFile("photoFile");
+    }
+    public void setPatientphoto(ParseFile photoFile) {
+        put("photoFile", photoFile);
+    }
+
     public String getAccompaniedBy() {
         return getString("accompaniedby");
     }
     public void setAccompaniedBy(String accompaniedBy) {
         put("accompaniedby", accompaniedBy);
-    }
-
-    public String getAllergyRisk() {
-        return getString("allergyrisk");
-    }
-    public void setAllergyRisk(String allergyrisk) {
-        put("allergyrisk", allergyrisk);
     }
 
     public String getWeight() {
@@ -62,13 +62,6 @@ public class ClinicSurvey extends ParseObject {
         put("temperature", temperature);
     }
 
-    public Date getDateOfBirth() {
-        return getDate("dateofbirth");
-    }
-    public void setDateOfBirth(Date dateOfBirth) {
-        put("dateofbirth", dateOfBirth);
-    }
-
     public String getDoctorId() {
         return getString("doctorid");
     }
@@ -97,13 +90,6 @@ public class ClinicSurvey extends ParseObject {
         put("patientname", patientFullname);
     }
 
-    public String getPurposeOfVisit() {
-        return getString("purpose_of_visit");
-    }
-    public void setPurposeOfVisit(String purpose_of_visit) {
-        put("purpose_of_visit", purpose_of_visit);
-    }
-
     public String getMomsNotes() {
         return getString("personal_notes");
     }
@@ -111,32 +97,12 @@ public class ClinicSurvey extends ParseObject {
         put("personal_notes", personal_notes);
     }
 
-    public String getStatusTag() {
-        return getString("status_tag");
+    public String getPurposeOfVisit() {
+        return getString("purpose_of_visit");
     }
-    public void setStatusTag(String status_tag) {
-        put("status_tag", status_tag);
+    public void setPurposeOfVisit(String purpose_of_visit) {
+        put("purpose_of_visit", purpose_of_visit);
     }
-
-    public String getVisitId() {
-        return getString("visitid");
-    }
-    public void setVisitId(String visitid) {
-        put("visitid", visitid);
-    }
-
-    //---------------------------------
-
-
-
-
-
-
-
-
-
-
-
 
     public String getRelationshipToPatient() {
         return getString("relationship_to_patient");
@@ -145,18 +111,33 @@ public class ClinicSurvey extends ParseObject {
         put("relationship_to_patient", relationship_to_patient);
     }
 
-
-
-
-
-
-
-
-    public ParseFile getPatientphoto() {
-        return getParseFile("photoFile");
+    public String getAllergyRisk() {
+        return getString("allergyrisk");
     }
-    public void setPatientphoto(ParseFile photoFile) {
-        put("photoFile", photoFile);
+    public void setAllergyRisk(String allergyrisk) {
+        put("allergyrisk", allergyrisk);
     }
+
+    public Date getDateOfBirth() {
+        return getDate("dateofbirth");
+    }
+    public void setDateOfBirth(Date dateOfBirth) {
+        put("dateofbirth", dateOfBirth);
+    }
+
+
+    public String getStatusTag() {
+        return getString("status_tag");
+    }
+    public void setStatusTag(String status_tag) {
+        put("status_tag", status_tag);
+    }
+
+    /*public String getVisitId() {
+        return getString("visitid");
+    }
+    public void setVisitId(String visitid) {
+        put("visitid", visitid);
+    }*/
 
 }

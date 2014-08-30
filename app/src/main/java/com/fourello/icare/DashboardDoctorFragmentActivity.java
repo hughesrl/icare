@@ -52,6 +52,7 @@ import com.fourello.icare.view.RoundedImageView;
 import com.fourello.icare.widgets.FragmentUtils;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.fourello.icare.widgets.PasswordDialogFragment;
+import com.fourello.icare.widgets.Utils;
 import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -212,15 +213,8 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
 
             ImageView imgViewMyPicture = (ImageView) dialog.findViewById(R.id.btnMyPicture);
             Bitmap bMap = BitmapFactory.decodeByteArray(myPicture, 0, myPicture.length);
-            int width=350;
-            int height=350;
-            Bitmap resizedbitmap=Bitmap.createScaledBitmap(bMap, width, height, true);
-            RoundedAvatarDrawable r = new RoundedAvatarDrawable(resizedbitmap);
+            imgViewMyPicture.setBackground(Utils.resizedBitmapDisplayUserPhoto(DashboardDoctorFragmentActivity.this, bMap));
 
-            imgViewMyPicture.setBackground(r);
-
-//            Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(bMap);
-//            imgViewMyPicture.setImageBitmap(r.getBitmap());
             imgViewMyPicture.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

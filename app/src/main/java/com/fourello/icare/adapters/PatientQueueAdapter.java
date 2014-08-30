@@ -21,6 +21,7 @@ import com.fourello.icare.datas.PatientQueue;
 import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.view.RoundedAvatarDrawable;
 import com.fourello.icare.view.RoundedImageView;
+import com.fourello.icare.widgets.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +30,13 @@ public class PatientQueueAdapter extends BaseAdapter {
 
     ProgressDialog mProgressDialog;
     // Declare Variables
-    Context mContext;
+    Activity mContext;
     LayoutInflater inflater;
     private List<PatientQueue> patientQueueList = null;
     private ArrayList<PatientQueue> arraylist;
     protected int count;
 
-    public PatientQueueAdapter(Context context, List<PatientQueue> patientQueueList) {
+    public PatientQueueAdapter(Activity context, List<PatientQueue> patientQueueList) {
         mContext = context;
         this.patientQueueList = patientQueueList;
         inflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -83,15 +84,9 @@ public class PatientQueueAdapter extends BaseAdapter {
         byte[] myPicture = patientQueueList.get(position).getPatientphoto();
         if(myPicture!=null) {
             Bitmap bMap = BitmapFactory.decodeByteArray(myPicture, 0, myPicture.length);
-            int width=75;
-            int height=80;
-            Bitmap resizedbitmap=Bitmap.createScaledBitmap(bMap, width, height, true);
-            RoundedAvatarDrawable r = new RoundedAvatarDrawable(resizedbitmap);
 
-            holder.photoFile.setBackground(r);
+            holder.photoFile.setBackground(Utils.resizedBitmapDisplayPatientQueue(mContext, bMap));
 
-//            Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(bMap);
-//            holder.photoFile.setImageBitmap(profileInCircle);
         }
 
         return view;

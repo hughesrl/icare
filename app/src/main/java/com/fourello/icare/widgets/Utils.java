@@ -1,11 +1,13 @@
 package com.fourello.icare.widgets;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -17,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.fourello.icare.R;
+import com.fourello.icare.view.RoundedAvatarDrawable;
 
 public class Utils {
     public static void validatePassword(Context context) {
@@ -83,5 +86,31 @@ public class Utils {
         canvas.drawBitmap(bitmap, rect, rect, paint);
 
         return output;
+    }
+    public static RoundedAvatarDrawable resizedBitmapDisplayUserPhoto(Activity activity, Bitmap bitmap) {
+        int width = activity.getResources().getInteger(R.integer.resize_user_photo_size_size);
+        int height = activity.getResources().getInteger(R.integer.resize_user_photo_size_size);
+        Bitmap resizedbitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+        RoundedAvatarDrawable r = new RoundedAvatarDrawable(resizedbitmap);
+
+        return r;
+    }
+
+    public static RoundedAvatarDrawable resizedBitmapDisplayPatientQueue(Activity activity, Bitmap bitmap) {
+        int width = activity.getResources().getInteger(R.integer.resize_patient_queue_photo_size);
+        int height = activity.getResources().getInteger(R.integer.resize_patient_queue_photo_size);
+        Bitmap resizedbitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+        RoundedAvatarDrawable r = new RoundedAvatarDrawable(resizedbitmap);
+
+        return r;
+    }
+
+    public static RoundedAvatarDrawable resizedBitmapDisplay(Activity activity, Bitmap bitmap) {
+        int width = activity.getResources().getInteger(R.integer.resize_patient_photo_size);
+        int height = activity.getResources().getInteger(R.integer.resize_patient_photo_size);
+        Bitmap resizedbitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+        RoundedAvatarDrawable r = new RoundedAvatarDrawable(resizedbitmap);
+
+        return r;
     }
 }

@@ -91,7 +91,7 @@ public class CheckInFragment extends Fragment implements
 
     private CustomEditTextView pName, pAccompaniedBy, pMomsNotes, etGrowthTrackerWeight, etGrowthTrackerHeight, etGrowthTrackerHead, etGrowthTrackerChest, etGrowthTrackerTemperature;
     private Spinner spinnerRelationshipToPatient, spinnerPurpose, spinnerAllergyRisk;
-    private static ImageButton patient_photo;
+    private static ImageView patient_photo;
 
 
     public static Fragment newInstance(int position, PatientDatabase patientData, ParseProxyObject loginData, String patientObjectId) {
@@ -175,14 +175,14 @@ public class CheckInFragment extends Fragment implements
         etGrowthTrackerTemperature.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerTemperature, lblGrowthTrackerTemperatureValue));
 
         // PATIENT PHOTO
-        patient_photo = (ImageButton) myFragmentView.findViewById(R.id.patient_photo);
+        patient_photo = (ImageView) myFragmentView.findViewById(R.id.patient_photo);
 
-        if(mParamMyPicture != null) {
-            Bitmap bMap = BitmapFactory.decodeByteArray(mParamMyPicture, 0, mParamMyPicture.length);
-            Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(bMap);
-
-            patient_photo.setImageBitmap(profileInCircle);
-        }
+//        if(mParamMyPicture != null) {
+//            Bitmap bMap = BitmapFactory.decodeByteArray(mParamMyPicture, 0, mParamMyPicture.length);
+//            Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(bMap);
+//
+//            patient_photo.setImageBitmap(profileInCircle);
+//        }
         patient_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -217,8 +217,6 @@ public class CheckInFragment extends Fragment implements
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
-        Toast.makeText(getActivity(), requestCode+" - CheckInFragment", Toast.LENGTH_LONG).show();
-
         if( requestCode == CheckInFragment.CAMERA_CAPTURE ) { // 1 Checkin
             if(resultCode != 0) {
                 final Bitmap thePic = data.getExtras().getParcelable("data");
@@ -236,9 +234,10 @@ public class CheckInFragment extends Fragment implements
                                         "Error saving: " + e.getMessage(),
                                         Toast.LENGTH_LONG).show();
                             } else {
-                                patientCheckIn.setPatientphoto(photoFile);
-                                Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(thePic);
-                                patient_photo.setImageBitmap(profileInCircle);
+                                clinicSurvery.setPatientphoto(photoFile);
+//                                Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(thePic);
+                                patient_photo.setBackground(Utils.resizedBitmapDisplay(getActivity(), thePic));
+//                                patient_photo.setImageBitmap(profileInCircle);
                             }
                         }
                     });
@@ -276,81 +275,48 @@ public class CheckInFragment extends Fragment implements
                 final String purpose = String.valueOf(spinnerPurpose.getSelectedItem());
                 final String allergyRisk = String.valueOf(spinnerAllergyRisk.getSelectedItem());
 
-                patientCheckIn.setAccompaniedBy(accompaniedBy);
-                patientCheckIn.setDoctorId(Integer.parseInt(mParamLoginData.getString("linked_doctorid").toString()));
-                patientCheckIn.setEmail(mParamPatientData.getParentEmail());
-                patientCheckIn.setChest(growthTrackerChest);
-                patientCheckIn.setHead(growthTrackerHead);
-                patientCheckIn.setHeight(growthTrackerHeight);
-                patientCheckIn.setTemperature(growthTrackerTemperature);
-                patientCheckIn.setWeight(growthTrackerWeight);
-                patientCheckIn.setPatientObjectId(mParamPatientData.getPatientObjectId());
-                patientCheckIn.setPatientFullname(mParamPatientData.getFullName());
-                patientCheckIn.setMomsNotes(momsNotes);
-                patientCheckIn.setPurposeOfVisit(purpose);
-                patientCheckIn.setRelationshipToPatient(relationshipToPatient);
-                patientCheckIn.setAllergyRisk(allergyRisk);
+                clinicSurvery.setAccompaniedBy(accompaniedBy);
+                clinicSurvery.setDoctorId(mParamLoginData.getString("linked_doctorid"));
+                clinicSurvery.setEmail(mParamPatientData.getParentEmail());
+                clinicSurvery.setChest(growthTrackerChest);
+                clinicSurvery.setHead(growthTrackerHead);
+                clinicSurvery.setHeight(growthTrackerHeight);
+                clinicSurvery.setTemperature(growthTrackerTemperature);
+                clinicSurvery.setWeight(growthTrackerWeight);
+                clinicSurvery.setPatientObjectId(mParamPatientData.getPatientObjectId());
+                clinicSurvery.setPatientFullname(mParamPatientData.getFullName());
+                clinicSurvery.setMomsNotes(momsNotes+" "); // question
+                clinicSurvery.setPurposeOfVisit(purpose);
+                clinicSurvery.setRelationshipToPatient(relationshipToPatient);
+                clinicSurvery.setAllergyRisk(allergyRisk);
 
+                try {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm");
+                    String birthdayAndTime = mParamPatientData.getbDate() + " 00:00";
 
+                    Date convertedDate = simpleDateFormat.parse(birthdayAndTime);
 
+                    clinicSurvery.setDateOfBirth(convertedDate);
+                } catch (java.text.ParseException e1) {
+                    e1.printStackTrace();
+                }
 
-                // Save the meal and return
-                patientCheckIn.saveInBackground(new SaveCallback() {
+                clinicSurvery.setStatusTag("0");
+//                clinicSurvery.setVisitId(patientCheckIn.getObjectId()); // visit id will be inputted once the doctor view the data
+
+                clinicSurvery.saveInBackground(new SaveCallback() {
                     @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-
-                            clinicSurvery.setAccompaniedBy(accompaniedBy);
-                            clinicSurvery.setDoctorId(mParamLoginData.getString("linked_doctorid"));
-                            clinicSurvery.setEmail(mParamPatientData.getParentEmail());
-                            clinicSurvery.setChest(growthTrackerChest);
-                            clinicSurvery.setHead(growthTrackerHead);
-                            clinicSurvery.setHeight(growthTrackerHeight);
-                            clinicSurvery.setTemperature(growthTrackerTemperature);
-                            clinicSurvery.setWeight(growthTrackerWeight);
-                            clinicSurvery.setPatientObjectId(mParamPatientData.getPatientObjectId());
-                            clinicSurvery.setPatientFullname(mParamPatientData.getFullName());
-                            clinicSurvery.setMomsNotes(momsNotes);
-                            clinicSurvery.setPurposeOfVisit(purpose);
-                            clinicSurvery.setRelationshipToPatient(relationshipToPatient);
-                            clinicSurvery.setAllergyRisk(allergyRisk);
-
-                            try {
-                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm");
-                                String birthdayAndTime = mParamPatientData.getbDate() + " 00:00";
-
-                                Date convertedDate = simpleDateFormat.parse(birthdayAndTime);
-
-                                clinicSurvery.setDateOfBirth(convertedDate);
-                            } catch (java.text.ParseException e1) {
-                                e1.printStackTrace();
-                            }
-
-                            clinicSurvery.setStatusTag("1");
-                            clinicSurvery.setVisitId(patientCheckIn.getObjectId());
-
-                            clinicSurvery.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException clinicSurveryError) {
-                                    if (clinicSurveryError == null) {
-                                        mProgressDialog.dismiss();
-                                        ((DashboardDoctorFragmentActivity) getActivity()).PatientDatabase();
-                                    } else {
-                                        Toast.makeText(
-                                                getActivity().getApplicationContext(),
-                                                "Error saving: " + clinicSurveryError.getMessage(),
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
+                    public void done(ParseException clinicSurveryError) {
+                        if (clinicSurveryError == null) {
+                            mProgressDialog.dismiss();
+                            ((DashboardDoctorFragmentActivity) getActivity()).PatientDatabase();
                         } else {
                             Toast.makeText(
                                     getActivity().getApplicationContext(),
-                                    "Error saving: " + e.getMessage(),
+                                    "Error saving: " + clinicSurveryError.getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
-
                 });
             } else { // incorrect Password
                 Toast.makeText(getActivity(), "Incorrect Password", Toast.LENGTH_LONG).show();

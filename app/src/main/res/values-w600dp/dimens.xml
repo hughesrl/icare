@@ -1,0 +1,15 @@
+<resources>
+    <!-- Example customization of dimensions originally defined in res/values/dimens.xml
+         (such as screen margins) for screens with more than 820dp of available width. This
+         would include 7" and 10" devices in portrait (~960dp and ~1280dp respectively). -->
+
+    <dimen name="user_photo_size">230dp</dimen>
+    <integer name="resize_user_photo_size_size">230</integer>
+
+    <dimen name="patient_queue_photo_size">75dp</dimen>
+    <integer name="resize_patient_queue_photo_size">75</integer>
+
+    <dimen name="patient_photo_background_padding">33dp</dimen>
+    <dimen name="patient_photo_size">175dp</dimen>
+    <integer name="resize_patient_photo_size">175</integer>
+</resources>
