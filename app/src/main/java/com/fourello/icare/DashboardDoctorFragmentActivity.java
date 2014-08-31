@@ -478,9 +478,11 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
 
         String patientObjectId = patientDatabase.getPatientObjectId();
         String patientName = patientDatabase.getFullName();
+        byte[] patientPhoto = patientDatabase.getPatientphoto();
 
         Bundle bundle = getIntent().getExtras();
         bundle.putString(PatientDatabaseActionsFragment.ARG_PATIENT_OBJECT_ID, patientObjectId);
+        bundle.putByteArray(PatientDatabaseActionsFragment.ARG_MY_PICTURE, patientPhoto);
         bundle.putInt(PatientDatabaseActionsFragment.ARG_PATIENT_DATA_POSITION, position);
 //        bundle.putParcelableArrayList("test", patientDatabase.getVisits());
         bundle.putParcelable(PatientDatabaseActionsFragment.ARG_PATIENT_DATA, patientDatabase);
@@ -508,7 +510,7 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
         myFragment.setArguments(bundle);
 
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.alt_fragment_content_container, myFragment, "DOCTOR_DASHBOARD_FRAGMENT");
+        transaction.replace(R.id.alt_fragment_content_container, myFragment, "SETTINGS_FRAGMENT");
         transaction.commit();
         // Fragment must implement the callback.
         if (!(myFragment instanceof OpenMenuCallbacks)) {

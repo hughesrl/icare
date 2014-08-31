@@ -25,6 +25,18 @@
             android:shadowColor="@android:color/background_dark"
             android:background="@drawable/rounded_corners_container_title_bg" />
 
+        <com.fourello.icare.view.CustomTextView
+            android:layout_above="@+id/linearLayout"
+            icare:fontName="VAGRoundedLight.ttf"
+            icare:fontStyle="italics"
+            icare:fontColor="@color/white"
+            style="@style/text_Appearance_normal_light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:id="@+id/lblCheckingPIN"
+            android:text="@string/lblCheckingPIN"
+            />
         <!-- FIELDS -->
         <LinearLayout
             android:orientation="vertical"
@@ -36,6 +48,19 @@
             android:layout_marginRight="80dp"
             android:id="@+id/linearLayout"
             android:gravity="center_horizontal">
+
+            <com.fourello.icare.view.CustomButton
+                icare:fontName="VAGRoundedLight.ttf"
+                icare:fontStyle="bold"
+                icare:fontColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lblGetPINOfTheDay"
+                android:id="@+id/btnGetPINOfTheDay"
+                android:background="@drawable/custom_button"
+                android:layout_gravity="center_horizontal"
+                style="@style/button_appearance" />
+
             <com.fourello.icare.view.CustomTextView
                 icare:fontName="VAGRoundedLight.ttf"
                 icare:fontColor="@color/white"
@@ -47,6 +72,7 @@
                 android:layout_weight="3"
                 android:id="@+id/lblPINOfTheDay"
                 android:text="@string/lblPINOfTheDay"
+                android:visibility="gone"
                 />
 
             <com.fourello.icare.view.CustomEditTextView
@@ -63,7 +89,9 @@
                 android:singleLine="true"
                 android:hint="@string/lblPINOfTheDay"
                 android:layout_weight="1"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:visibility="gone" />
+
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"
@@ -79,6 +107,24 @@
                 android:layout_height="wrap_content"
                 android:text="@string/lblUpdateConfiguration"
                 android:id="@+id/btnUpdateConfiguration"
+                android:background="@drawable/custom_button"
+                android:layout_gravity="center_horizontal"
+                style="@style/button_appearance" />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp" />
+
+            <com.fourello.icare.view.CustomButton
+                icare:fontName="VAGRoundedLight.ttf"
+                icare:fontStyle="bold"
+                icare:fontColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lblChangePassword"
+                android:id="@+id/btnChangePassword"
                 android:background="@drawable/custom_button"
                 android:layout_gravity="center_horizontal"
                 style="@style/button_appearance" />

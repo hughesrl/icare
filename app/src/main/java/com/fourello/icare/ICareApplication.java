@@ -16,6 +16,7 @@ import android.widget.ListView;
 import com.fourello.icare.datas.ClinicSurvey;
 import com.fourello.icare.datas.PatientCheckIn;
 import com.fourello.icare.datas.Patients;
+import com.fourello.icare.datas.Settings;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.parse.Parse;
@@ -49,6 +50,7 @@ public class ICareApplication extends Application {
     public static String VISITS_LABEL = "Visits";
     public static String CLINIC_SURVEY_LABEL = "ClinicSurvey";
     public static String PROMO_LABEL = "Promos";
+    public static String SETTINGS_LABEL = "Settings";
 
     public static ParseProxyObject mLoginData;
 
@@ -64,6 +66,7 @@ public class ICareApplication extends Application {
         ParseObject.registerSubclass(Patients.class);
         ParseObject.registerSubclass(PatientCheckIn.class);
         ParseObject.registerSubclass(ClinicSurvey.class);
+        ParseObject.registerSubclass(Settings.class);
 
         Parse.initialize(this, "mgjwXn2NpSfBlZenRbnWGYFqIOfZ0AdGUIqXxq9k", "RRw4cxwZG4wZryUuxqYHbzYLtof8fvizS7JhQ6PO"); // Robert
 //        Parse.initialize(this, "85lVaxRqcrhlyzzWa3QckqBpP7GJiKolwT16MJnk", "Nz1kPiFcgMm6SadNGPXPgxV4RRpOKQVUwsDC6pEc"); // Icare Fourello

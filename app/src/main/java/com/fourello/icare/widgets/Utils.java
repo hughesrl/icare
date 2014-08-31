@@ -21,6 +21,10 @@ import android.widget.EditText;
 import com.fourello.icare.R;
 import com.fourello.icare.view.RoundedAvatarDrawable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+
 public class Utils {
     public static void validatePassword(Context context) {
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
@@ -112,5 +116,26 @@ public class Utils {
         RoundedAvatarDrawable r = new RoundedAvatarDrawable(resizedbitmap);
 
         return r;
+    }
+
+    private static final String ALLOWED_CHARACTERS ="0123456789QWERTYUIOPASDFGHJKLZXCVBNM";
+
+    public static String getRandomString(final int sizeOfRandomString, final ArrayList<String> allRandomPINS) {
+        final Random random=new Random();
+        final StringBuilder sb=new StringBuilder();
+        final Boolean noSamePIN = false;
+        for(int i=0;i<sizeOfRandomString;++i) {
+            sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
+            if((sizeOfRandomString-1) == i) {
+                if(allRandomPINS.contains(sb.toString())) {
+                    // Exists
+                    i = 0;
+                    sb.delete(0, sizeOfRandomString-1);
+                } else {
+                    // Nothing to do. continue
+                }
+            }
+        }
+        return sb.toString();
     }
 }

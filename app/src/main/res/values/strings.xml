@@ -96,7 +96,9 @@
 
 
     <string name="lblPINOfTheDay">PIN of the day</string>
+    <string name="lblGetPINOfTheDay">Get PIN of the day</string>
     <string name="lblUpdateConfiguration">Update Configuration</string>
+    <string name="lblChangePassword">Change Password</string>
 
     <string name="lblZero">0</string>
     <string name="lblKg">Kg</string>
@@ -115,6 +117,8 @@
     
     <string name="title_my_patients">My Patients</string>
     <string name="title_settings">Settings</string>
+    <string name="lblCheckingPIN">Checking PIN... Please wait.</string>
+    <string name="lblNoAvailablePIN">No Available PIN</string>
 
 
 </resources>

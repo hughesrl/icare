@@ -14,6 +14,8 @@ public class PatientDatabase implements Parcelable {
     public String mobilenumbers;
     public byte[] patientphoto;
 
+    public String photoFileUrl;
+
     public String parentEmail;
     public String accompaniedBy;
     public String parentRelationship;
@@ -64,6 +66,7 @@ public class PatientDatabase implements Parcelable {
         lastname = "";
         mobilenumbers = "";
         patientphoto = null;
+        photoFileUrl = "";
 
         parentEmail = "";
         accompaniedBy = "";
@@ -113,6 +116,8 @@ public class PatientDatabase implements Parcelable {
 
         patientphoto = new byte[in.readInt()];
         in.readByteArray(patientphoto);
+
+        photoFileUrl = in.readString();
 
         parentEmail = in.readString();
         accompaniedBy = in.readString();
@@ -254,11 +259,18 @@ public class PatientDatabase implements Parcelable {
         return firtname + " " + middlename + " " + lastname;
     }
 
+    public String getPhotoFileUrl() {
+        return photoFileUrl;
+    }
+
+    public void setPhotoFileUrl(String photoFileUrl) {
+        this.photoFileUrl = photoFileUrl;
+    }
+
 // ------------ FROM USERS
     public String getParentEmail() {
         return parentEmail;
     }
-
     public void setParentEmail(String parentEmail) {
         this.parentEmail = parentEmail;
     }
@@ -266,7 +278,6 @@ public class PatientDatabase implements Parcelable {
     public String getAccompaniedBy() {
         return accompaniedBy;
     }
-
     public void setAccompaniedBy(String accompaniedBy) {
         this.accompaniedBy = accompaniedBy;
     }
@@ -274,7 +285,6 @@ public class PatientDatabase implements Parcelable {
     public String getParentRelationship() {
         return parentRelationship;
     }
-
     public void setParentRelationship(String parentRelationship) {
         this.parentRelationship = parentRelationship;
     }
@@ -282,7 +292,6 @@ public class PatientDatabase implements Parcelable {
     public String getAllergyRisk() {
         return allergyRisk;
     }
-
     public void setAllergyRisk(String allergyRisk) {
         this.allergyRisk = allergyRisk;
     }
@@ -290,7 +299,6 @@ public class PatientDatabase implements Parcelable {
     public String getbDate() {
         return bDate;
     }
-
     public void setbDate(String bDate) {
         this.bDate = bDate;
     }
@@ -298,7 +306,6 @@ public class PatientDatabase implements Parcelable {
     public String getbPlace() {
         return bPlace;
     }
-
     public void setbPlace(String bPlace) {
         this.bPlace = bPlace;
     }
@@ -306,7 +313,6 @@ public class PatientDatabase implements Parcelable {
     public String getDrName() {
         return drName;
     }
-
     public void setDrName(String drName) {
         this.drName = drName;
     }
@@ -314,7 +320,6 @@ public class PatientDatabase implements Parcelable {
     public String getDeliveryType() {
         return deliveryType;
     }
-
     public void setDeliveryType(String deliveryType) {
         this.deliveryType = deliveryType;
     }
@@ -322,7 +327,6 @@ public class PatientDatabase implements Parcelable {
     public String getpWeight() {
         return pWeight;
     }
-
     public void setpWeight(String pWeight) {
         this.pWeight = pWeight;
     }
@@ -330,7 +334,6 @@ public class PatientDatabase implements Parcelable {
     public String getpHeight() {
         return pHeight;
     }
-
     public void setpHeight(String pHeight) {
         this.pHeight = pHeight;
     }
@@ -338,7 +341,6 @@ public class PatientDatabase implements Parcelable {
     public String getpHead() {
         return pHead;
     }
-
     public void setpHead(String pHead) {
         this.pHead = pHead;
     }
@@ -346,7 +348,6 @@ public class PatientDatabase implements Parcelable {
     public String getpChest() {
         return pChest;
     }
-
     public void setpChest(String pChest) {
         this.pChest = pChest;
     }
@@ -354,7 +355,6 @@ public class PatientDatabase implements Parcelable {
     public String getpAbdomen() {
         return pAbdomen;
     }
-
     public void setpAbdomen(String pAbdomen) {
         this.pAbdomen = pAbdomen;
     }
@@ -362,7 +362,6 @@ public class PatientDatabase implements Parcelable {
     public String getpCircumcisedOn() {
         return pCircumcisedOn;
     }
-
     public void setpCircumcisedOn(String pCircumcisedOn) {
         this.pCircumcisedOn = pCircumcisedOn;
     }
@@ -370,7 +369,6 @@ public class PatientDatabase implements Parcelable {
     public String getpEarPiercedOn() {
         return pEarPiercedOn;
     }
-
     public void setpEarPiercedOn(String pEarPiercedOn) {
         this.pEarPiercedOn = pEarPiercedOn;
     }
@@ -378,7 +376,6 @@ public class PatientDatabase implements Parcelable {
     public String getpDistinguishingMarks() {
         return pDistinguishingMarks;
     }
-
     public void setpDistinguishingMarks(String pDistinguishingMarks) {
         this.pDistinguishingMarks = pDistinguishingMarks;
     }
@@ -386,7 +383,6 @@ public class PatientDatabase implements Parcelable {
     public String getpNewbornScreening() {
         return pNewbornScreening;
     }
-
     public void setpNewbornScreening(String pNewbornScreening) {
         this.pNewbornScreening = pNewbornScreening;
     }

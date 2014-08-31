@@ -150,7 +150,7 @@ public class PatientDatabaseFragment extends ListFragment implements
         final int patientsCount = 0;
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.PATIENTS_LABEL);
         query.whereEqualTo("doctorid", mParamLoginData.getString("linked_doctorid"));
-        query.addDescendingOrder("createdAt");
+        query.addAscendingOrder("lastname");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
@@ -208,6 +208,10 @@ public class PatientDatabaseFragment extends ListFragment implements
                             Date earpiercedon = patientDatabaseObject.getDate("earpiercedon");
                             String earpiercedOn = df.format(earpiercedon);
                             map.setpCircumcisedOn(earpiercedOn);
+                        }
+
+                        if (patientDatabaseObject.getString("email") != null) {
+                            map.setParentEmail(patientDatabaseObject.getString("email"));
                         }
                         // Distinguishing Marks cannot found
 
@@ -275,8 +279,9 @@ public class PatientDatabaseFragment extends ListFragment implements
                         map.setMobilenumbers(contactnumber);
 
                         if(patientDatabaseObject.has("photoFile")) {
-                            ParseFile myPhoto = (ParseFile) patientDatabaseObject.get("photoFile");
+                            ParseFile myPhoto = patientDatabaseObject.getParseFile("photoFile");
                             if (myPhoto != null) {
+                                map.setPhotoFileUrl(myPhoto.getUrl());
                                 try {
                                     byte[] data = myPhoto.getData();
                                     map.setPatientphoto(data);
@@ -286,72 +291,6 @@ public class PatientDatabaseFragment extends ListFragment implements
                                 }
                             }
                         }
-//                        if(patientDatabaseObject.has("photoFile")) {
-//                            final ParseFile myPhoto = patientDatabaseObject.getParseFile("photoFile");
-//                            myPhoto.getDataInBackground(new GetDataCallback() {
-//                                @Override
-//                                public void done(byte[] bytes, ParseException e) {
-//                                    if (e == null) {
-//                                        Log.d("test", "We've got data in data.");
-//                                        // use data for something
-//                                        map.setPatientphoto(bytes);
-//                                    } else {
-//                                        Log.d("test", "There was a problem downloading the data.");
-//                                    }
-//                                }
-//                            });
-//                        }
-
-                        // Adding Contents from Users Class
-                        ParseQuery<ParseObject> queryUsers = new ParseQuery<ParseObject>(ICareApplication.USERS_LABEL);
-                        queryUsers.whereEqualTo("email", patientDatabaseObject.get("email"));
-                        queryUsers.findInBackground(new FindCallback<ParseObject>() {
-                            @Override
-                            public void done(List<ParseObject> usersDatabaseParseObject, ParseException e) {
-                                if (e == null) {
-                                    if (usersDatabaseParseObject.size() > 0) {
-                                        ParseObject usersDatabaseObject = usersDatabaseParseObject.get(0);
-
-                                        map.setParentEmail((String) usersDatabaseObject.get("email"));
-                                        String accompaniedBy = usersDatabaseObject.get("firstname") + " " + usersDatabaseObject.get("lastname");
-                                        map.setAccompaniedBy(accompaniedBy);
-                                        map.setParentRelationship((String) usersDatabaseObject.get("role"));
-                                    }
-                                }
-                            }
-                        });
-
-//                        /* Adding the Visits */
-//                        ParseQuery<ParseObject> queryVisits = new ParseQuery<ParseObject>(ICareApplication.VISITS_LABEL);
-//                        queryVisits.whereEqualTo("patientid", patientDatabaseObject.getObjectId());
-//                        queryVisits.addDescendingOrder("createdAt");
-//                        queryVisits.findInBackground(new FindCallback<ParseObject>() {
-//                            @Override
-//                            public void done(List<ParseObject> parseObjectsVisits, ParseException e) {
-//                                DateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
-//                                if (e == null) {
-//                                    if (parseObjectsVisits.size() > 0) {
-//                                        patientVisitsList = new ArrayList<PatientVisits>();
-//                                        for (int i = 0; i < parseObjectsVisits.size(); i++) {
-//                                            ParseObject patientDatabaseObject = parseObjectsVisits.get(i);
-//
-//                                            PatientVisits visitMap = new PatientVisits();
-//
-//                                            visitMap.setPatientObjectId(patientDatabaseObject.getObjectId());
-//                                            Date visitDateParse = patientDatabaseObject.getCreatedAt();
-//                                            String visitDate = df.format(visitDateParse);
-//                                            visitMap.setVisitDate(visitDate);
-//
-//                                            Log.d(ICareApplication.VISITS_LABEL + "  Found", visitDate);
-//
-//                                            patientVisitsList.add(visitMap);
-//                                        }
-//                                        map.setVisits(patientVisitsList);
-//                                        Log.d(ICareApplication.VISITS_LABEL + "  Found", "setVisits " + patientVisitsList.size());
-//                                    }
-//                                }
-//                            }
-//                        });
 
                         patientDatabaselist.add(map);
 
@@ -364,7 +303,6 @@ public class PatientDatabaseFragment extends ListFragment implements
                 setListAdapter(adapter);
                 getListView().setOnItemClickListener(PatientDatabaseFragment.this);
                 mProgressDialog.dismiss();
-//                Log.d("Patient Found", "# " + parseObjects.size()+" of "+i);
             }
         });
 

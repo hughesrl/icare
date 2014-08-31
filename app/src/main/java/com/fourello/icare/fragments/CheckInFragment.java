@@ -93,6 +93,9 @@ public class CheckInFragment extends Fragment implements
     private Spinner spinnerRelationshipToPatient, spinnerPurpose, spinnerAllergyRisk;
     private static ImageView patient_photo;
 
+    private String accompaniedBy = "";
+    private String relationship = "";
+
 
     public static Fragment newInstance(int position, PatientDatabase patientData, ParseProxyObject loginData, String patientObjectId) {
         CheckInFragment f = new CheckInFragment();
@@ -124,21 +127,40 @@ public class CheckInFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_checkin_patient, container, false);
 
+        // Adding Contents from Users Class
+        ParseQuery<ParseObject> queryUsers = new ParseQuery<ParseObject>(ICareApplication.USERS_LABEL);
+        queryUsers.whereEqualTo("email", mParamPatientData.getParentEmail());
+        queryUsers.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> usersDatabaseParseObject, ParseException e) {
+                if (e == null) {
+                    if (usersDatabaseParseObject.size() > 0) {
+                        ParseObject usersDatabaseObject = usersDatabaseParseObject.get(0);
+
+                        accompaniedBy = usersDatabaseObject.get("firstname") + " " + usersDatabaseObject.get("lastname");
+                        pAccompaniedBy = (CustomEditTextView) myFragmentView.findViewById(R.id.etAccompaniedBy);
+                        pAccompaniedBy.setText(accompaniedBy);
+
+                        relationship = usersDatabaseObject.getString("role");
+                        spinnerRelationshipToPatient = (Spinner) myFragmentView.findViewById(R.id.spinnerRelationshipToPatient);
+                        CustomAdapter adapterspinnerRelationshipToPatient = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, ICareApplication.populateRelationshipToPatient());
+                        spinnerRelationshipToPatient.setAdapter(adapterspinnerRelationshipToPatient);
+                        // Set Selection
+                        int spinnerPosition = adapterspinnerRelationshipToPatient.getPosition(relationship);
+                        spinnerRelationshipToPatient.setSelection(spinnerPosition);
+                    }
+                }
+            }
+        });
         pName = (CustomEditTextView) myFragmentView.findViewById(R.id.etPatientsName);
         pName.setText(mParamPatientData.getFullName());
 
-        pAccompaniedBy = (CustomEditTextView) myFragmentView.findViewById(R.id.etAccompaniedBy);
-        pAccompaniedBy.setText(mParamPatientData.getAccompaniedBy());
+
 
         pMomsNotes = (CustomEditTextView) myFragmentView.findViewById(R.id.etMomsNotes);
-//        pMomsNotes.setText(mParamPatientData.getAccompaniedBy());
+//        pMomsNotes.setText(mParamPatientData.getMoms());
 
-        spinnerRelationshipToPatient = (Spinner) myFragmentView.findViewById(R.id.spinnerRelationshipToPatient);
-        CustomAdapter adapterspinnerRelationshipToPatient = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, ICareApplication.populateRelationshipToPatient());
-        spinnerRelationshipToPatient.setAdapter(adapterspinnerRelationshipToPatient);
-        // Set Selection
-        int spinnerPosition = adapterspinnerRelationshipToPatient.getPosition(mParamPatientData.getParentRelationship());
-        spinnerRelationshipToPatient.setSelection(spinnerPosition);
+
 
         spinnerPurpose = (Spinner) myFragmentView.findViewById(R.id.spinnerPurpose);
         CustomAdapter adapterspinnerPurpose = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, ICareApplication.populatePurpose());

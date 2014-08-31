@@ -136,9 +136,9 @@ public class PatientInformationFragment extends Fragment {
         spinnerAllergyRisk = (Spinner) myFragmentView.findViewById(R.id.spinnerAllergyRisk);
         CustomAdapter adapterAllergyRisk = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, ICareApplication.populateAllergyRisk());
         spinnerAllergyRisk.setAdapter(adapterAllergyRisk);
-
-        if(mParamPatientData.getPatientphoto().length > 0) {
-            Bitmap bMap = BitmapFactory.decodeByteArray(mParamPatientData.getPatientphoto(), 0, mParamPatientData.getPatientphoto().length);
+//         Log.d("mParamPatientData.getPatientphoto().length", ""+mParamPatientData.getPatientphoto().length);
+        if(mParamMyPicture!=null) {
+            Bitmap bMap = BitmapFactory.decodeByteArray(mParamMyPicture, 0, mParamMyPicture.length);
             imgPatientPhoto.setBackground(Utils.resizedBitmapDisplay(getActivity(), bMap));
         }
 

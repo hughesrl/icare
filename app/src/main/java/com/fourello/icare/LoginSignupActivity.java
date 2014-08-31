@@ -151,19 +151,6 @@ public class LoginSignupActivity extends Activity {
 //                    });
 
                 }
-//                ParseUser.logInInBackground(usernameTxt, passwordTxt,
-//                        new LogInCallback() {
-//                            public void done(ParseUser user, ParseException e) {
-//                                if (e == null && user != null) {
-//                                    loginSuccessful();
-//                                } else if (user == null) {
-//                                    usernameOrPasswordIsInvalid();
-//                                } else {
-//                                    somethingWentWrong();
-//                                }
-//                            }
-//                        }
-//                );
             }
         });
 
