@@ -23,7 +23,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="40dp"
+        android:layout_margin="@dimen/menu_margin"
         android:layout_centerInParent="true"
         android:gravity="center">
         <RelativeLayout
@@ -57,13 +57,14 @@
                 android:layout_centerInParent="true" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/menu_button_icon_size"
+                android:layout_height="@dimen/menu_button_icon_size"
                 android:id="@+id/btnMyPatients"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_menu_my_patients"
                 android:scaleType="fitCenter"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"/>
 
             <!--android:layout_width="230dp"-->
@@ -77,15 +78,15 @@
                 />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/menu_button_icon_size"
+                android:layout_height="@dimen/menu_button_icon_size"
                 android:id="@+id/btnSettings"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_menu_settings"
                 android:scaleType="fitCenter"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
-
                  />
 
             <LinearLayout
@@ -93,41 +94,41 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="20dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
+                android:layout_marginBottom="@dimen/menu_second_layout_margin_bottom"
+                android:paddingLeft="@dimen/menu_second_layout_margin"
+                android:paddingRight="@dimen/menu_second_layout_margin">
                 <ImageButton
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/menu_button_icon_size"
+                    android:layout_height="@dimen/menu_button_icon_size"
                     android:id="@+id/btnMyClinic"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_menu_my_clinic"
                     android:scaleType="fitCenter"
-                    android:layout_weight="2" />
+                     />
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_weight=".1" />
                 <ImageButton
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/menu_button_icon_size"
+                    android:layout_height="@dimen/menu_button_icon_size"
                     android:id="@+id/btnMyReports"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_menu_my_reports"
                     android:scaleType="fitCenter"
-                    android:layout_weight="2" />
+                     />
             </LinearLayout>
         </RelativeLayout>
         <RelativeLayout
             android:layout_below="@+id/menuLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginLeft="@dimen/menu_submenu_margin"
+            android:layout_marginRight="@dimen/menu_submenu_margin"
             android:layout_centerInParent="true"
             android:gravity="center">
             <ListView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@null"
                 android:dividerHeight="0dp"

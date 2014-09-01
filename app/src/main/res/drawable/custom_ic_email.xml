@@ -12,7 +12,7 @@
                 android:bottomRightRadius="0.1dp" />
         </shape>
     </item>
-    <item android:right="15dp" android:left="10dp" android:top="10dp" android:bottom="10dp">
+    <item android:right="@dimen/drawable_right" android:left="@dimen/drawable_left" android:top="@dimen/drawable_top" android:bottom="@dimen/drawable_bottom">
         <bitmap android:src="@drawable/ic_email_large" />
     </item>
 </layer-list>

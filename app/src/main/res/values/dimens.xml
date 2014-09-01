@@ -1,22 +1,41 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- Example customization of dimensions originally defined in res/values/dimens.xml
+         (such as screen margins) for screens with more than 820dp of available width. This
+         would include 7" and 10" devices in portrait (~960dp and ~1280dp respectively). -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="login_margin">40dp</dimen>
 
-    <dimen name="dashboard_container_height">300dp</dimen>
-
-    <dimen name="rounded_padding">25dp</dimen>
+    <dimen name="rounded_padding">15dp</dimen>
     <dimen name="rounded_corners">6dp</dimen>
     <dimen name="rounded_corners_containers">15dp</dimen>
     <dimen name="rounded_padding_title_containers">15dp</dimen>
     <dimen name="rounded_padding_title_containers_line">38dp</dimen>
 
-    <dimen name="menu_layout_height">560dp</dimen>
+    <dimen name="user_photo_size">92dp</dimen>
+    <integer name="resize_user_photo_size_size">150</integer>
 
-    <dimen name="menu_font_size">25sp</dimen>
+    <dimen name="menu_margin">20dp</dimen>
+    <dimen name="menu_button_icon_size">90dp</dimen>
+    <dimen name="menu_layout_height">350dp</dimen>
+    <dimen name="menu_second_layout_margin">40dp</dimen>
+    <dimen name="menu_second_layout_margin_bottom">40dp</dimen>
+    <dimen name="menu_submenu_margin">20dp</dimen>
+
+    <dimen name="dashboard_container_height">200dp</dimen>
 
     <dimen name="patient_queue_photo_size">50dp</dimen>
+    <integer name="resize_patient_queue_photo_size">75</integer>
 
     <dimen name="patient_photo_background_padding">10dp</dimen>
-    <dimen name="patient_photo_size">150dp</dimen>
+    <dimen name="patient_photo_size">155dp</dimen>
+    <integer name="resize_patient_photo_size">125</integer>
+
+    <!--DRAWABLE CUSTOMS-->
+    <dimen name="drawable_top">5dp</dimen>
+    <dimen name="drawable_left">5dp</dimen>
+    <dimen name="drawable_bottom">5dp</dimen>
+    <dimen name="drawable_right">10dp</dimen>
+
+    <dimen name="menu_font_size">15sp</dimen>
 </resources>

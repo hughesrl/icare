@@ -16,8 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="80dp"
-        android:layout_marginRight="80dp"
+        android:layout_marginLeft="@dimen/login_margin"
+        android:layout_marginRight="@dimen/login_margin"
         android:id="@+id/linearLayout">
         <ImageView
             android:layout_width="wrap_content"
