@@ -291,9 +291,7 @@ public class PatientDatabaseFragment extends ListFragment implements
                                 }
                             }
                         }
-
                         patientDatabaselist.add(map);
-
                     }
 
                 } else {

@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">ICare</string>
+    <string name="lblPatientAlreadyCheckedIn">Patient already Checked In</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="hint_username">Username</string>
@@ -94,11 +95,25 @@
     <string name="lblAddress1">Address 1</string>
     <string name="lblAddress2">Address 2</string>
 
-
+    <!--SETTINGS-->
     <string name="lblPINOfTheDay">PIN of the day</string>
     <string name="lblGetPINOfTheDay">Get PIN of the day</string>
     <string name="lblUpdateConfiguration">Update Configuration</string>
     <string name="lblChangePassword">Change Password</string>
+
+    <!--DOCTOR INFORMATION-->
+    <string name="lblDoctorsName">Doctor\'s Name</string>
+    <string name="lblSpecialty">Specialty</string>
+    <string name="lblPRCLicNo">PRC Lic No.</string>
+    <string name="lblPRTNo">PRT No.</string>
+    <string name="lblClinicsName">Clinic\'s Name</string>
+    <string name="lblClinicAddress">Address</string>
+    <string name="lblClinicSchedule">Clinic Schedule</string>
+    <string name="lblDoctorContactNo">Contact No.</string>
+    <string name="lblDoctorMobileNo">Mobile No.</string>
+    <string name="lblClinicNotes">Clinic Notes</string>
+    <string name="lblSecretarysName">Secretary\' Name</string>
+    <string name="lblSecretarysContactNo">Contact No.</string>
 
     <string name="lblZero">0</string>
     <string name="lblKg">Kg</string>
@@ -122,3 +137,4 @@
 
 
 </resources>
+

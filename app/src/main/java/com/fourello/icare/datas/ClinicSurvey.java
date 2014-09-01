@@ -118,6 +118,13 @@ public class ClinicSurvey extends ParseObject {
         put("relationship_to_patient", relationship_to_patient);
     }
 
+    public String getTypeOfDeliveryType() {
+        return getString("typeofdelivery");
+    }
+    public void setTypeOfDeliveryType(String typeofdelivery) {
+        put("typeofdelivery", typeofdelivery);
+    }
+
     public String getAllergyRisk() {
         return getString("allergyrisk");
     }
