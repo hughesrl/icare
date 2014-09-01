@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.fourello.icare.DashboardDoctorFragmentActivity;
 import com.fourello.icare.ICareApplication;
@@ -90,7 +91,9 @@ public class PromosFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final ViewGroup myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_promos, container, false);
+        final ProgressBar progressBar1 = (ProgressBar) myFragmentView.findViewById(R.id.progressBar1);
 
+        progressBar1.setVisibility(View.VISIBLE);
         ((DashboardDoctorFragmentActivity)getActivity()).changePageTitle(getString(R.string.title_my_patients));
         // The content view embeds two fragments; now retrieve them and attach
         // their "hide" button.
@@ -118,6 +121,8 @@ public class PromosFragment extends Fragment {
                             Bitmap roundBitmap =  getRoundedCornerBitmap( getActivity(), photoPromo, 10, w, h , true, true, false, false );
 
                             promoPhoto.setImageBitmap(roundBitmap);
+
+                            progressBar1.setVisibility(View.GONE);
                         } catch (ParseException e2) {
                             // TODO Auto-generated catch block
                             e2.printStackTrace();

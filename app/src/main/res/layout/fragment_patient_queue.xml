@@ -7,7 +7,7 @@
     >
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/rounded_corners_container_wth_transparency"
@@ -28,6 +28,7 @@
             android:background="@drawable/rounded_corners_container_title_bg" />
 
         <ListView
+            android:layout_below="@+id/pageTitle"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:paddingLeft="3dp"
@@ -37,6 +38,14 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_gradient_shape_bus_title"
             android:scrollbars="none"/>
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            style="?android:attr/progressBarStyleLarge"
+            android:visibility="gone"
+            />
 
-    </LinearLayout>
+    </RelativeLayout>
 </FrameLayout>

@@ -6,26 +6,24 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -42,9 +40,7 @@ import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.view.CustomButton;
 import com.fourello.icare.view.CustomEditTextView;
 import com.fourello.icare.view.CustomTextView;
-import com.fourello.icare.view.RoundedImageView;
 import com.fourello.icare.widgets.FragmentUtils;
-import com.fourello.icare.widgets.HumanTime;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.fourello.icare.widgets.PasswordDialogFragment;
 import com.fourello.icare.widgets.Utils;
@@ -58,7 +54,6 @@ import com.parse.SaveCallback;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -98,6 +93,9 @@ public class CheckInFragment extends Fragment implements
     private String accompaniedBy = "";
     private String relationship = "";
 
+    private LinearLayout checkInLayoutEmpty;
+    private LinearLayout checkInLayout;
+
 
     public static Fragment newInstance(int position, PatientDatabase patientData, ParseProxyObject loginData, String patientObjectId) {
         CheckInFragment f = new CheckInFragment();
@@ -113,13 +111,7 @@ public class CheckInFragment extends Fragment implements
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        // Create a progressdialog
-        if (mProgressDialog == null) {
-            mProgressDialog = Utils.createProgressDialog(activity);
-            mProgressDialog.show();
-        } else {
-            mProgressDialog.show();
-        }
+
     }
 
 
@@ -138,142 +130,16 @@ public class CheckInFragment extends Fragment implements
 
         clinicSurvery = new ClinicSurvey();
 
-        Date midnight = new Date();
-        midnight.setHours(0);
-        midnight.setMinutes(0);
-        midnight.setSeconds(0);
-
-        Date elevenfiftynine = new Date();
-        elevenfiftynine.setHours(23);
-        elevenfiftynine.setMinutes(59);
-        elevenfiftynine.setSeconds(59);
-
-        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.CLINIC_SURVEY_LABEL);
-        query.whereEqualTo("patientid", mParamPatientData.getPatientObjectId());
-        query.whereGreaterThan("createdAt", midnight);
-        query.whereLessThan("createdAt", elevenfiftynine);
-        try {
-            mParamIsInClinicSurvey = query.count();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+        myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_checkin_patient, container, false);
+        checkInLayoutEmpty = (LinearLayout) myFragmentView.findViewById(R.id.checkInLayoutEmpty);
+        checkInLayout = (LinearLayout) myFragmentView.findViewById(R.id.checkInLayout);
 
-            if(mParamIsInClinicSurvey == 0) {
-                myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_checkin_patient, container, false);
+        new CheckPatientCheckedInDataTask(getActivity(), inflater, container).execute();
 
-                // Adding Contents from Users Class
-                ParseQuery<ParseObject> queryUsers = new ParseQuery<ParseObject>(ICareApplication.USERS_LABEL);
-                queryUsers.whereEqualTo("email", mParamPatientData.getParentEmail());
-                queryUsers.findInBackground(new FindCallback<ParseObject>() {
-                    @Override
-                    public void done(List<ParseObject> usersDatabaseParseObject, ParseException e) {
-                        if (e == null) {
-                            if (usersDatabaseParseObject.size() > 0) {
-                                ParseObject usersDatabaseObject = usersDatabaseParseObject.get(0);
-
-                                accompaniedBy = usersDatabaseObject.get("firstname") + " " + usersDatabaseObject.get("lastname");
-                                pAccompaniedBy = (CustomEditTextView) myFragmentView.findViewById(R.id.etAccompaniedBy);
-                                pAccompaniedBy.setText(accompaniedBy);
-
-                                relationship = usersDatabaseObject.getString("role");
-                                spinnerRelationshipToPatient = (Spinner) myFragmentView.findViewById(R.id.spinnerRelationshipToPatient);
-                                CustomAdapter adapterspinnerRelationshipToPatient = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, ICareApplication.populateRelationshipToPatient());
-                                spinnerRelationshipToPatient.setAdapter(adapterspinnerRelationshipToPatient);
-                                // Set Selection
-                                int spinnerPosition = adapterspinnerRelationshipToPatient.getPosition(relationship);
-                                spinnerRelationshipToPatient.setSelection(spinnerPosition);
-                            }
-                        }
-                    }
-                });
-                pName = (CustomEditTextView) myFragmentView.findViewById(R.id.etPatientsName);
-                pName.setText(mParamPatientData.getFullName());
-
-
-
-                pMomsNotes = (CustomEditTextView) myFragmentView.findViewById(R.id.etMomsNotes);
-                //        pMomsNotes.setText(mParamPatientData.getMoms());
-
-
-
-                spinnerPurpose = (Spinner) myFragmentView.findViewById(R.id.spinnerPurpose);
-                CustomAdapter adapterspinnerPurpose = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, ICareApplication.populatePurpose());
-                spinnerPurpose.setAdapter(adapterspinnerPurpose);
-
-                spinnerTypeOfDelivery = (Spinner) myFragmentView.findViewById(R.id.spinnerTypeOfDelivery);
-                CustomAdapter adapterspinnerTypeOfDelivery = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, ICareApplication.populateTypeOfDelivery());
-                spinnerTypeOfDelivery.setAdapter(adapterspinnerTypeOfDelivery);
-
-                spinnerAllergyRisk = (Spinner) myFragmentView.findViewById(R.id.spinnerAllergyRisk);
-                CustomAdapter adapterspinnerAllergyRisk = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, ICareApplication.populateAllergyRisk());
-                spinnerAllergyRisk.setAdapter(adapterspinnerAllergyRisk);
-
-
-                // GROWTH TRACKER
-                CustomTextView lblGrowthTrackerWeightValue = (CustomTextView) myFragmentView.findViewById(R.id.lblGrowthTrackerWeightValue);
-                CustomTextView lblGrowthTrackerHeightValue = (CustomTextView) myFragmentView.findViewById(R.id.lblGrowthTrackerHeightValue);
-                CustomTextView lblGrowthTrackerHeadValue = (CustomTextView) myFragmentView.findViewById(R.id.lblGrowthTrackerHeadValue);
-                CustomTextView lblGrowthTrackerChestValue = (CustomTextView) myFragmentView.findViewById(R.id.lblGrowthTrackerChestValue);
-                CustomTextView lblGrowthTrackerTemperatureValue = (CustomTextView) myFragmentView.findViewById(R.id.lblGrowthTrackerTemperatureValue);
-
-                etGrowthTrackerWeight = (CustomEditTextView) myFragmentView.findViewById(R.id.etGrowthTrackerWeight);
-                etGrowthTrackerHeight = (CustomEditTextView) myFragmentView.findViewById(R.id.etGrowthTrackerHeight);
-                etGrowthTrackerHead = (CustomEditTextView) myFragmentView.findViewById(R.id.etGrowthTrackerHead);
-                etGrowthTrackerChest = (CustomEditTextView) myFragmentView.findViewById(R.id.etGrowthTrackerChest);
-                etGrowthTrackerTemperature = (CustomEditTextView) myFragmentView.findViewById(R.id.etGrowthTrackerTemperature);
-
-                etGrowthTrackerWeight.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerWeight, lblGrowthTrackerWeightValue));
-                etGrowthTrackerHeight.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerHeight, lblGrowthTrackerHeightValue));
-                etGrowthTrackerHead.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerHead, lblGrowthTrackerHeadValue));
-                etGrowthTrackerChest.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerChest, lblGrowthTrackerChestValue));
-                etGrowthTrackerTemperature.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerTemperature, lblGrowthTrackerTemperatureValue));
-
-                etGrowthTrackerWeight.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerWeight, lblGrowthTrackerWeightValue));
-                etGrowthTrackerHeight.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerHeight, lblGrowthTrackerHeightValue));
-                etGrowthTrackerHead.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerHead, lblGrowthTrackerHeadValue));
-                etGrowthTrackerChest.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerChest, lblGrowthTrackerChestValue));
-                etGrowthTrackerTemperature.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerTemperature, lblGrowthTrackerTemperatureValue));
-
-                // PATIENT PHOTO
-                patient_photo = (ImageView) myFragmentView.findViewById(R.id.patient_photo);
-
-                //        if(mParamMyPicture != null) {
-                //            Bitmap bMap = BitmapFactory.decodeByteArray(mParamMyPicture, 0, mParamMyPicture.length);
-                //            Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(bMap);
-                //
-                //            patient_photo.setImageBitmap(profileInCircle);
-                //        }
-                patient_photo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            startActivityForResult(captureIntent, CAMERA_CAPTURE);
-                        } catch (ActivityNotFoundException anfe) {
-                            //display an error message
-                            String errorMessage = "Whoops - your device doesn't support capturing images!";
-                            Toast toast = Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-                    }
-                });
-
-
-                CustomButton btnQuickSurvey = (CustomButton) myFragmentView.findViewById(R.id.btnQuickSurvey);
-                btnQuickSurvey.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ((DashboardDoctorFragmentActivity)getActivity()).showPasswordDialog(CheckInFragment.this, PasswordDialogFragment.PASSWORD_DIALOG_CUSTOM);
-                    }
-                });
-            } else { // Patient is in clinic
-                myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_checkin_patient_already_checkedin, container, false);
-            }
-        mProgressDialog.dismiss();
         return myFragmentView;
     }
 
@@ -505,5 +371,162 @@ public class CheckInFragment extends Fragment implements
 
     public PatientCheckIn getCurrentPatientCheckIn() {
         return patientCheckIn;
+    }
+
+    private class CheckPatientCheckedInDataTask extends AsyncTask<Void, Void, Integer> {
+        Context context;
+        LayoutInflater inflater;
+        ViewGroup container;
+
+        public CheckPatientCheckedInDataTask(Context context, LayoutInflater inflater, ViewGroup container) {
+            this.context = context;
+            this.inflater = inflater;
+            this.container = container;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Create a progressdialog
+            if (mProgressDialog == null) {
+                mProgressDialog = Utils.createProgressDialog(context);
+                mProgressDialog.show();
+            } else {
+                mProgressDialog.show();
+            }
+        }
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            Date midnight = new Date();
+            midnight.setHours(0);
+            midnight.setMinutes(0);
+            midnight.setSeconds(0);
+
+            Date elevenfiftynine = new Date();
+            elevenfiftynine.setHours(23);
+            elevenfiftynine.setMinutes(59);
+            elevenfiftynine.setSeconds(59);
+
+            ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.CLINIC_SURVEY_LABEL);
+            query.whereEqualTo("patientid", mParamPatientData.getPatientObjectId());
+            query.whereGreaterThan("createdAt", midnight);
+            query.whereLessThan("createdAt", elevenfiftynine);
+            try {
+                mParamIsInClinicSurvey = query.find().size();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return mParamIsInClinicSurvey;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            if(mParamIsInClinicSurvey == 0) {
+                // Adding Contents from Users Class
+                ParseQuery<ParseObject> queryUsers = new ParseQuery<ParseObject>(ICareApplication.USERS_LABEL);
+                queryUsers.whereEqualTo("email", mParamPatientData.getParentEmail());
+                queryUsers.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> usersDatabaseParseObject, ParseException e) {
+                        if (e == null) {
+                            if (usersDatabaseParseObject.size() > 0) {
+                                ParseObject usersDatabaseObject = usersDatabaseParseObject.get(0);
+
+                                accompaniedBy = usersDatabaseObject.get("firstname") + " " + usersDatabaseObject.get("lastname");
+                                pAccompaniedBy = (CustomEditTextView) myFragmentView.findViewById(R.id.etAccompaniedBy);
+                                pAccompaniedBy.setText(accompaniedBy);
+
+                                relationship = usersDatabaseObject.getString("role");
+                                spinnerRelationshipToPatient = (Spinner) myFragmentView.findViewById(R.id.spinnerRelationshipToPatient);
+                                CustomAdapter adapterspinnerRelationshipToPatient = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, ICareApplication.populateRelationshipToPatient());
+                                spinnerRelationshipToPatient.setAdapter(adapterspinnerRelationshipToPatient);
+                                // Set Selection
+                                int spinnerPosition = adapterspinnerRelationshipToPatient.getPosition(relationship);
+                                spinnerRelationshipToPatient.setSelection(spinnerPosition);
+                            }
+                        }
+                        mProgressDialog.dismiss();
+                    }
+                });
+                pName = (CustomEditTextView) myFragmentView.findViewById(R.id.etPatientsName);
+                pName.setText(mParamPatientData.getFullName());
+
+                pMomsNotes = (CustomEditTextView) myFragmentView.findViewById(R.id.etMomsNotes);
+                //        pMomsNotes.setText(mParamPatientData.getMoms());
+
+                spinnerPurpose = (Spinner) myFragmentView.findViewById(R.id.spinnerPurpose);
+                CustomAdapter adapterspinnerPurpose = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, ICareApplication.populatePurpose());
+                spinnerPurpose.setAdapter(adapterspinnerPurpose);
+
+                spinnerTypeOfDelivery = (Spinner) myFragmentView.findViewById(R.id.spinnerTypeOfDelivery);
+                CustomAdapter adapterspinnerTypeOfDelivery = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, ICareApplication.populateTypeOfDelivery());
+                spinnerTypeOfDelivery.setAdapter(adapterspinnerTypeOfDelivery);
+
+                spinnerAllergyRisk = (Spinner) myFragmentView.findViewById(R.id.spinnerAllergyRisk);
+                CustomAdapter adapterspinnerAllergyRisk = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, ICareApplication.populateAllergyRisk());
+                spinnerAllergyRisk.setAdapter(adapterspinnerAllergyRisk);
+
+
+                // GROWTH TRACKER
+                CustomTextView lblGrowthTrackerWeightValue = (CustomTextView) myFragmentView.findViewById(R.id.lblGrowthTrackerWeightValue);
+                CustomTextView lblGrowthTrackerHeightValue = (CustomTextView) myFragmentView.findViewById(R.id.lblGrowthTrackerHeightValue);
+                CustomTextView lblGrowthTrackerHeadValue = (CustomTextView) myFragmentView.findViewById(R.id.lblGrowthTrackerHeadValue);
+                CustomTextView lblGrowthTrackerChestValue = (CustomTextView) myFragmentView.findViewById(R.id.lblGrowthTrackerChestValue);
+                CustomTextView lblGrowthTrackerTemperatureValue = (CustomTextView) myFragmentView.findViewById(R.id.lblGrowthTrackerTemperatureValue);
+
+                etGrowthTrackerWeight = (CustomEditTextView) myFragmentView.findViewById(R.id.etGrowthTrackerWeight);
+                etGrowthTrackerHeight = (CustomEditTextView) myFragmentView.findViewById(R.id.etGrowthTrackerHeight);
+                etGrowthTrackerHead = (CustomEditTextView) myFragmentView.findViewById(R.id.etGrowthTrackerHead);
+                etGrowthTrackerChest = (CustomEditTextView) myFragmentView.findViewById(R.id.etGrowthTrackerChest);
+                etGrowthTrackerTemperature = (CustomEditTextView) myFragmentView.findViewById(R.id.etGrowthTrackerTemperature);
+
+                etGrowthTrackerWeight.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerWeight, lblGrowthTrackerWeightValue));
+                etGrowthTrackerHeight.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerHeight, lblGrowthTrackerHeightValue));
+                etGrowthTrackerHead.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerHead, lblGrowthTrackerHeadValue));
+                etGrowthTrackerChest.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerChest, lblGrowthTrackerChestValue));
+                etGrowthTrackerTemperature.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerTemperature, lblGrowthTrackerTemperatureValue));
+
+                etGrowthTrackerWeight.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerWeight, lblGrowthTrackerWeightValue));
+                etGrowthTrackerHeight.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerHeight, lblGrowthTrackerHeightValue));
+                etGrowthTrackerHead.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerHead, lblGrowthTrackerHeadValue));
+                etGrowthTrackerChest.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerChest, lblGrowthTrackerChestValue));
+                etGrowthTrackerTemperature.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerTemperature, lblGrowthTrackerTemperatureValue));
+
+                // PATIENT PHOTO
+                patient_photo = (ImageView) myFragmentView.findViewById(R.id.patient_photo);
+
+                patient_photo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(captureIntent, CAMERA_CAPTURE);
+                        } catch (ActivityNotFoundException anfe) {
+                            //display an error message
+                            String errorMessage = "Whoops - your device doesn't support capturing images!";
+                            Toast toast = Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                    }
+                });
+
+
+                CustomButton btnQuickSurvey = (CustomButton) myFragmentView.findViewById(R.id.btnQuickSurvey);
+                btnQuickSurvey.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((DashboardDoctorFragmentActivity)getActivity()).showPasswordDialog(CheckInFragment.this, PasswordDialogFragment.PASSWORD_DIALOG_CUSTOM);
+                    }
+                });
+            } else { // Patient is in clinic
+//                myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_checkin_patient_already_checkedin, container, false);
+                checkInLayout.setVisibility(View.GONE);
+                checkInLayoutEmpty.setVisibility(View.VISIBLE);
+                mProgressDialog.dismiss();
+            }
+
+
+        }
     }
 }

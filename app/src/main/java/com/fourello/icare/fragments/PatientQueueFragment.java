@@ -1,6 +1,7 @@
 package com.fourello.icare.fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -14,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 //import com.fourello.icare.Dashboard_DoctorActivity;
@@ -95,7 +97,10 @@ public class PatientQueueFragment extends ListFragment implements
         // Inflate the layout for this fragment
         ViewGroup myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_patient_queue, container, false);
 
-        ((DashboardDoctorFragmentActivity)getActivity()).changePageTitle(getString(R.string.title_my_patients));
+        final ProgressBar progressBar1 = (ProgressBar) myFragmentView.findViewById(R.id.progressBar1);
+
+        progressBar1.setVisibility(View.VISIBLE);
+        ((DashboardDoctorFragmentActivity) getActivity()).changePageTitle(getString(R.string.title_my_patients));
         // The content view embeds two fragments; now retrieve them and attach
         // their "hide" button.
         FragmentManager fm = getFragmentManager();
@@ -168,6 +173,7 @@ public class PatientQueueFragment extends ListFragment implements
                             return true;
                         }
                     });
+                    progressBar1.setVisibility(View.GONE);
                 }
             }
         });
