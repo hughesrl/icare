@@ -13,21 +13,21 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.fourello.icare.R;
 
 public class PasswordDialogFragment extends DialogFragment {
     public static final String PASSWORD_DIALOG_MENU = "open_menu";
     public static final String PASSWORD_DIALOG_CUSTOM = "custom_display";
+    public static final String PURPOSE_TO_OPEN = "purposeToOpen";
 
     private ParseProxyObject loginData;
     private int isValid;
     private EditText etPassword;
     private String purposeToOpen;
 
-    public PasswordDialogFragment(String purpose) {
-        this.purposeToOpen = purpose;
-    }
+    public PasswordDialogFragment() { }
 
     /*In order to receive event callback, create a dialog box activity must implement this interface.
      * In case the host need to query the properties dialog box, each method will pass a DialogFragment instance.  */
@@ -39,11 +39,11 @@ public class PasswordDialogFragment extends DialogFragment {
     // Examples of the use of this interface to transmit motion events
     PasswordDialogListener mListener;
 
-    public static PasswordDialogFragment newInstance(int num) {
-        PasswordDialogFragment f = new PasswordDialogFragment(PASSWORD_DIALOG_CUSTOM);
+    public static PasswordDialogFragment newInstance(String purposeToOpen) {
+        PasswordDialogFragment f = new PasswordDialogFragment();
         // Supply num input as an argument.
         Bundle args = new Bundle();
-        args.putInt("num", num);
+        args.putString(PURPOSE_TO_OPEN, purposeToOpen);
         f.setArguments(args);
         return f;
     }
@@ -79,6 +79,8 @@ public class PasswordDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NORMAL, android.R.style.Theme_Light_Panel);
+
+
     }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -88,6 +90,11 @@ public class PasswordDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // GET PURPOSE TO OPEN
+        purposeToOpen = getArguments().getString(PURPOSE_TO_OPEN);
+
+//        Toast.makeText(getActivity(), purposeToOpen+" - toOPEN", Toast.LENGTH_LONG).show();
         loginData = (ParseProxyObject) getArguments().getSerializable("loginData");
 
         final View dialogView = inflater.inflate(R.layout.dialog_password, container, false);

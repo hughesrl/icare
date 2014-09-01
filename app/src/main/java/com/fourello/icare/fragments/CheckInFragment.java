@@ -307,7 +307,8 @@ public class CheckInFragment extends Fragment implements
                 clinicSurvery.setWeight(growthTrackerWeight);
                 clinicSurvery.setPatientObjectId(mParamPatientData.getPatientObjectId());
                 clinicSurvery.setPatientFullname(mParamPatientData.getFullName());
-                clinicSurvery.setMomsNotes(momsNotes+" "); // question
+                //clinicSurvery.setMomsNotes(momsNotes+" "); // question
+                clinicSurvery.setQuestion(momsNotes+" "); // question
                 clinicSurvery.setPurposeOfVisit(purpose);
                 clinicSurvery.setRelationshipToPatient(relationshipToPatient);
                 clinicSurvery.setAllergyRisk(allergyRisk);

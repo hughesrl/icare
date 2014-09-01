@@ -181,8 +181,12 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
 
     public void showPasswordDialog(Fragment fragment, String purpose) {
         // To create an instance of DialogFragment and displays
-        DialogFragment passwordDialog = new PasswordDialogFragment(purpose);
-        passwordDialog.setArguments(getIntent().getExtras());
+
+        DialogFragment passwordDialog = PasswordDialogFragment.newInstance(purpose);
+        Bundle args = getIntent().getExtras();
+        args.putString(PasswordDialogFragment.PURPOSE_TO_OPEN, purpose);
+
+        passwordDialog.setArguments(args);
         passwordDialog.setTargetFragment(fragment, MY_REQUEST_CODE);
         passwordDialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
     }

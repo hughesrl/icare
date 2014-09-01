@@ -90,11 +90,18 @@ public class ClinicSurvey extends ParseObject {
         put("patientname", patientFullname);
     }
 
-    public String getMomsNotes() {
+    public String getPersonalNotes() {
         return getString("personal_notes");
     }
-    public void setMomsNotes(String personal_notes) {
+    public void setPersonalNotes(String personal_notes) {
         put("personal_notes", personal_notes);
+    }
+
+    public String getQuestion() {
+        return getString("question");
+    }
+    public void setQuestion(String question) {
+        put("question", question);
     }
 
     public String getPurposeOfVisit() {
