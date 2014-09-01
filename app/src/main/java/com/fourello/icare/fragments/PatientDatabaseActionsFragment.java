@@ -65,6 +65,7 @@ public class PatientDatabaseActionsFragment extends Fragment implements
         DashboardDoctorFragmentActivity.OpenMenuCallbacks{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    public static final String ARG_IS_IN_CLINIC_SURVEY = "isInClinicSurvey";
     public static final String ARG_LOGIN_DATA = "loginData";
     public static final String ARG_MY_PICTURE = "myPicture";
     public static final String ARG_PATIENT_OBJECT_ID = "patientObjectId";
@@ -84,6 +85,7 @@ public class PatientDatabaseActionsFragment extends Fragment implements
 
     private String contactnumber = "";
 
+    private Boolean isInClinic;
 
     private final Handler handler = new Handler();
     private PagerSlidingTabStrip tabs;
@@ -211,6 +213,9 @@ public class PatientDatabaseActionsFragment extends Fragment implements
                 .getDisplayMetrics());
         pager.setPageMargin(pageMargin);
         tabs.setViewPager(pager);
+        if(mParamPatientData.getpIsInClinic() > 0) {
+            pager.setCurrentItem(1);
+        }
 
         return myFragmentView;
     }
@@ -235,6 +240,7 @@ public class PatientDatabaseActionsFragment extends Fragment implements
             switch(position){
                 case 0: // Check In
                     CheckInFragment checkInFragment = new CheckInFragment();
+                    args.putInt(ARG_IS_IN_CLINIC_SURVEY, mParamPatientData.getpIsInClinic());
                     args.putByteArray(ARG_MY_PICTURE, mParamPatientData.getPatientphoto());
                     checkInFragment.setArguments(args);
 

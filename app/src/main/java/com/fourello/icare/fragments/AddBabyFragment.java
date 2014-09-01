@@ -108,7 +108,7 @@ public class AddBabyFragment extends Fragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0) { //make sure fragment codes match up {
             String editText = data.getStringExtra("password");
-            Toast.makeText(getActivity(), editText, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), editText, Toast.LENGTH_LONG).show();
         }
     }
 

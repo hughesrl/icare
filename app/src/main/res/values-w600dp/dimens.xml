@@ -13,7 +13,7 @@
     <dimen name="rounded_padding_title_containers_line">38dp</dimen>-->
 
     <dimen name="user_photo_size">230dp</dimen>
-    <integer name="resize_user_photo_size_size">230</integer>
+    <integer name="resize_user_photo_size_size">320</integer>
 
     <dimen name="menu_margin">40dp</dimen>
     <dimen name="menu_button_icon_size">150dp</dimen>

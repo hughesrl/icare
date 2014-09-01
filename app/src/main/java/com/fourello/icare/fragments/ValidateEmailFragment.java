@@ -103,7 +103,7 @@ public class ValidateEmailFragment extends Fragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0) { //make sure fragment codes match up {
             String editText = data.getStringExtra("password");
-            Toast.makeText(getActivity(), editText, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), editText, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -140,16 +140,17 @@ public class ValidateEmailFragment extends Fragment implements
                 query.whereEqualTo("email", sEmail);
                 query.findInBackground(new FindCallback<ParseObject>() {
                     public void done(List<ParseObject> objects, ParseException e) {
-                        mProgressDialog.dismiss();
-                        final ParseObject project = objects.get(0);
-
-                        mParamNewUserRecordObjectId = project.getObjectId();
-                        Log.d("ObjectId", mParamNewUserRecordObjectId);
                         if (e == null) {
+                            mProgressDialog.dismiss();
                             if (objects.size() == 0) {
                                 Toast.makeText(getActivity(), "Invalid Email", Toast.LENGTH_LONG).show();
                             } else {
-                                ((DashboardDoctorFragmentActivity)getActivity()).AddBaby(mParamNewUserRecordObjectId, mParamNewPatientRecordObjectId);
+                                final ParseObject project = objects.get(0);
+
+                                mParamNewUserRecordObjectId = project.getObjectId();
+                                Log.d("ObjectId", mParamNewUserRecordObjectId);
+
+                                ((DashboardDoctorFragmentActivity) getActivity()).AddBaby(mParamNewUserRecordObjectId, mParamNewPatientRecordObjectId);
                             }
                         }
                     }

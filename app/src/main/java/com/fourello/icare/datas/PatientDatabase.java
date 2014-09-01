@@ -53,6 +53,7 @@ public class PatientDatabase implements Parcelable {
     public String pAddress1;
     public String pAddress2;
 
+    public int pIsInClinic; // 0=false, 1=true
     public List<PatientVisits> visits;
 
     public static Creator<PatientDatabase> getCreator() {
@@ -105,6 +106,8 @@ public class PatientDatabase implements Parcelable {
         pAddress2= "";
 
         visits = null;
+
+        pIsInClinic = 0;
     }
 
     public PatientDatabase(Parcel in) {
@@ -164,6 +167,8 @@ public class PatientDatabase implements Parcelable {
 //        in.readList(visits,null);
         visits = new ArrayList<PatientVisits>();
         in.readTypedList(visits, PatientVisits.CREATOR);
+
+        pIsInClinic = in.readInt();
     }
 
 
@@ -515,6 +520,12 @@ public class PatientDatabase implements Parcelable {
         this.visits = visits;
     }
 
+    public int getpIsInClinic() {
+        return pIsInClinic;
+    }
+    public void setpIsInClinic(int pIsInClinic) {
+        this.pIsInClinic = pIsInClinic;
+    }
     @Override
     public int describeContents() {
         return 0;
@@ -564,6 +575,8 @@ public class PatientDatabase implements Parcelable {
         dest.writeString(pAddress2);
 
         dest.writeTypedList(visits);
+
+        dest.writeInt(pIsInClinic);
 
     }
 

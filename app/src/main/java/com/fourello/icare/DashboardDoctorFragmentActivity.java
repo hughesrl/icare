@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import com.fourello.icare.fragments.AddUserFragment;
 import com.fourello.icare.fragments.CheckInFragment;
 import com.fourello.icare.fragments.CheckinPatientDialogFragment;
 import com.fourello.icare.fragments.DoctorDashboardFragment;
+import com.fourello.icare.fragments.DoctorInformationFragment;
 import com.fourello.icare.fragments.MyDashboardFragment;
 import com.fourello.icare.fragments.NoticeDialogFragment;
 import com.fourello.icare.fragments.PatientDatabaseActionsFragment;
@@ -168,7 +170,7 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
     @Override
     public void onStart() {
         super.onStart();
-        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        //overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
     }
     @Override
     public void onBackPressed() {
@@ -181,8 +183,12 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
 
     public void showPasswordDialog(Fragment fragment, String purpose) {
         // To create an instance of DialogFragment and displays
-        DialogFragment passwordDialog = new PasswordDialogFragment(purpose);
-        passwordDialog.setArguments(getIntent().getExtras());
+
+        DialogFragment passwordDialog = PasswordDialogFragment.newInstance(purpose);
+        Bundle args = getIntent().getExtras();
+        args.putString(PasswordDialogFragment.PURPOSE_TO_OPEN, purpose);
+
+        passwordDialog.setArguments(args);
         passwordDialog.setTargetFragment(fragment, MY_REQUEST_CODE);
         passwordDialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
     }
@@ -227,7 +233,19 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
                     startActivity(intent);
                 }
             });
-
+            LinearLayout layoutSecondMenu = (LinearLayout) dialog.findViewById(R.id.layoutSecondMenu);
+            int accessType = Integer.parseInt(loginData.getString("type"));
+            switch (accessType) {
+                case 1 : // Doctor
+                    layoutSecondMenu.setVisibility(View.VISIBLE);
+                    break;
+                case 2 : // Secretary
+                    layoutSecondMenu.setVisibility(View.INVISIBLE);
+                    break;
+                default:
+                    layoutSecondMenu.setVisibility(View.INVISIBLE);
+                    break;
+            }
             // Get ListView object from xml
             listSubMenu = (ListView) dialog.findViewById(R.id.listSubMenu);
 
@@ -290,6 +308,7 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
                                     break;
                                 case 1:
                                     // Doctor Information
+                                    DoctorInformation();
                                     break;
                                 case 2:
                                     ParseObject.unpinAllInBackground(new DeleteCallback() {
@@ -512,6 +531,27 @@ public class DashboardDoctorFragmentActivity extends FragmentActivity implements
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.replace(R.id.alt_fragment_content_container, myFragment, "SETTINGS_FRAGMENT");
         transaction.commit();
+        // Fragment must implement the callback.
+        if (!(myFragment instanceof OpenMenuCallbacks)) {
+            throw new IllegalStateException(
+                    "Fragment must implement the callbacks.");
+        }
+        mCallbacks = (OpenMenuCallbacks) myFragment;
+
+    }
+
+    public void DoctorInformation() {
+        mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        DoctorInformationFragment myFragment = new DoctorInformationFragment();
+
+        Bundle bundle = getIntent().getExtras();
+
+        myFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.alt_fragment_content_container, myFragment, "DOCTOR_INFORMATION_FRAGMENT");
+        transaction.commit();
+
         // Fragment must implement the callback.
         if (!(myFragment instanceof OpenMenuCallbacks)) {
             throw new IllegalStateException(
