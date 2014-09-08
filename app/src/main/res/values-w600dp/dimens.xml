@@ -38,4 +38,6 @@
     <dimen name="drawable_right">15dp</dimen>
 
     <dimen name="menu_font_size">25sp</dimen>
+
+    <dimen name="my_children_dropdown_photo_size">45dp</dimen>
 </resources>

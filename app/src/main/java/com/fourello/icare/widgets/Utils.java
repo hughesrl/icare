@@ -14,11 +14,13 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.fourello.icare.R;
+import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.view.RoundedAvatarDrawable;
 
 import java.util.ArrayList;
@@ -60,6 +62,31 @@ public class Utils {
         }
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.progressdialog);
+
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams windowParams = window.getAttributes();
+
+        windowParams.dimAmount = 0.90f;
+        windowParams.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        window.setAttributes(windowParams);
+        // dialog.setMessage(Message);
+        return dialog;
+    }
+    public static ProgressDialog createProgressDialogWithMessage(Context mContext, String msg) {
+        ProgressDialog dialog = new ProgressDialog(mContext);
+        try {
+            dialog.show();
+        } catch (WindowManager.BadTokenException e) {
+
+        }
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.progressdialog);
+
+        CustomTextView lblLoadingMessage = (CustomTextView) dialog.findViewById(R.id.lblLoadingMessage);
+        lblLoadingMessage.setVisibility(View.VISIBLE);
+
+        lblLoadingMessage.setText(msg);
+
         Window window = dialog.getWindow();
         WindowManager.LayoutParams windowParams = window.getAttributes();
 

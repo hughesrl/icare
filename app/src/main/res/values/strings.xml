@@ -28,6 +28,7 @@
     <string name="lbl_relationship">Relationship to Patient</string>
     <string name="lbl_contact_number">Contact Number</string>
     <string name="title_activity_login_signup">LoginSignupActivity</string>
+    <string name="title_activity_sync_data">SyncParentDataActivity</string>
     <string name="title_activity_signup">SignupActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -44,6 +45,7 @@
     <string name="lbl_settings">SETTINGS</string>
     <string name="lbl_doctors_information">DOCTOR\'S INFORMATION</string>
     <string name="title_activity_doctor_dashboard_fragment_activity">DoctorDashboardFragmentActivity</string>
+    <string name="title_activity_parent_dashboard_fragment_activity">ParentDashboardFragmentActivity</string>
     <string name="about">About</string>
     <string name="main_menu">Home</string>
     <string name="contact">Contact</string>

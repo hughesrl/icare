@@ -40,6 +40,12 @@
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
+            android:name=".SyncParentDataActivity"
+            android:label="@string/title_activity_sync_data"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
             android:name=".SignupActivity"
             android:label="@string/title_activity_signup"
             android:screenOrientation="portrait"
@@ -60,6 +66,12 @@
         <activity
             android:name=".AddUserActivity"
             android:label="@string/title_activity_add_user" >
+        </activity>
+
+        <activity
+            android:name=".DashboardParentFragmentActivity"
+            android:label="@string/title_activity_parent_dashboard_fragment_activity"
+            android:screenOrientation="portrait" >
         </activity>
 
     </application>
