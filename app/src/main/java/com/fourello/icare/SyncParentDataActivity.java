@@ -47,7 +47,7 @@ public class SyncParentDataActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         getActionBar().hide();
-        setContentView(R.layout.activity_login_signup);
+        setContentView(R.layout.sync_parent_children);
         Intent extras = getIntent();
         loginData = (ParseProxyObject) extras.getSerializableExtra("loginData");
 
