@@ -22,13 +22,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.fourello.icare.adapters.MenuItemsAdapter;
 import com.fourello.icare.adapters.MyChildrenAdapter;
 import com.fourello.icare.datas.MenuItems;
 import com.fourello.icare.datas.MyChildren;
 import com.fourello.icare.datas.PatientDatabase;
+import com.fourello.icare.datas.Patients;
 import com.fourello.icare.fragments.AddBabyFragment;
 import com.fourello.icare.fragments.AddUserFragment;
 import com.fourello.icare.fragments.CheckinPatientDialogFragment;
@@ -79,6 +79,8 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
     private Spinner mySpinnerChildren;
     private MyChildrenAdapter myChildrenAdapter;
 
+    private Patients myChild;
+
     @Override
     public void onDialogDoneClick(DialogFragment dialog) {
 
@@ -122,6 +124,8 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
 
         mFragmentManager = getSupportFragmentManager();
 
+        myChild = new Patients();
+
         final Intent extras = getIntent();
         loginData = (ParseProxyObject) extras.getSerializableExtra("loginData");
         myPicture = extras.getByteArrayExtra("myPicture");
@@ -156,6 +160,48 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                             //Log.d("ROBERT" +patientObjects.getObjectId(), "NoPhoto");
                         }
                         myChildrenInfo.setPatientName(patientObjects.getString("firstname")+" "+patientObjects.getString("lastname"));
+                        myChildrenInfo.setPatientFirstName(patientObjects.getString("firstname"));
+                        myChildrenInfo.setPatientMiddleName(patientObjects.getString("middlename"));
+                        myChildrenInfo.setPatientLastName(patientObjects.getString("lastname"));
+
+                        if (patientObjects.getString("placeofbirth") != null) {
+                            myChildrenInfo.setbPlace(patientObjects.getString("placeofbirth"));
+                        }
+                        if (patientObjects.getString("deliveredby") != null) {
+                            myChildrenInfo.setDrName(patientObjects.getString("deliveredby"));
+                        }
+                        if (patientObjects.getString("typeofdelivery") != null) {
+                            myChildrenInfo.setDeliveryType(patientObjects.getString("typeofdelivery"));
+                        }
+                        if (patientObjects.getString("weight") != null) {
+                            myChildrenInfo.setpWeight(patientObjects.getString("weight"));
+                        }
+                        if (patientObjects.getString("length") != null) {
+                            myChildrenInfo.setpHeight(patientObjects.getString("length"));
+                        }
+                        if (patientObjects.getString("headcircumference") != null) {
+                            myChildrenInfo.setpHead(patientObjects.getString("headcircumference"));
+                        }
+                        if (patientObjects.getString("chestcircumference") != null) {
+                            myChildrenInfo.setpChest(patientObjects.getString("chestcircumference"));
+                        }
+                        if (patientObjects.getString("abdomencircumference") != null) {
+                            myChildrenInfo.setpAbdomen(patientObjects.getString("abdomencircumference"));
+                        }
+//                        if (patientObjects.getString("allergyrisk") != null) {
+//                            myChildrenInfo.setAllergyRisk(patientObjects.getString("allergyrisk"));
+//                        }
+//                        if (patientObjects.getDate("circumcisedon") != null) {
+//                            Date circumcisedon = patientObjects.getDate("circumcisedon");
+//                            String circumcisedOn = df.format(circumcisedon);
+//                            map.setpCircumcisedOn(circumcisedOn);
+//                        }
+//                        if (patientObjects.getDate("earpiercedon") != null) {
+//                            map.setpEarPiercedOn(patientObjects.getString("earpiercedon"));
+//                            Date earpiercedon = patientDatabaseObject.getDate("earpiercedon");
+//                            String earpiercedOn = df.format(earpiercedon);
+//                            map.setpCircumcisedOn(earpiercedOn);
+//                        }
 
                         listMyChildren.add(myChildrenInfo);
                     }
@@ -247,15 +293,15 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
 
             mySpinnerChildren = (Spinner) dialog.findViewById(R.id.spinnerChildren);
 
+            mySpinnerChildren.setClickable(false); // disable the dropdown for version 1
             myChildrenAdapter = new MyChildrenAdapter(DashboardParentFragmentActivity.this, R.layout.spinner_row, (ArrayList<MyChildren>) listMyChildren);
             mySpinnerChildren.setAdapter(myChildrenAdapter);
             mySpinnerChildren.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String name = listMyChildren.get(position).getPatientName();
                     byte[] childPhoto = listMyChildren.get(position).getPatientphoto();
 
-                    txtUserName.setText("Baby "+name);
+                    txtUserName.setText("Baby "+listMyChildren.get(position).getPatientFirstName());
                     Bitmap bMap = BitmapFactory.decodeByteArray(childPhoto, 0, childPhoto.length);
                     imgViewMyPicture.setBackground(Utils.resizedBitmapDisplayUserPhoto(DashboardParentFragmentActivity.this, bMap));
 
@@ -303,6 +349,7 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnMyBaby:
+//                Toast.makeText(this, mySpinnerChildren.getSelectedItemPosition()+" selected item", Toast.LENGTH_LONG).show();
                 // Defined Array values to show in ListView
                 MenuItems menu_items_data_btnMyBaby[] = new MenuItems[]{
                         new MenuItems("Baby Info", true)
@@ -385,13 +432,14 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                                 // Doctor Information
                                 DoctorInformation();
                                 break;
-                            case 1:
+                            case 1:;
                                 ParseObject.unpinAllInBackground(new DeleteCallback() {
                                     public void done(ParseException e) {
                                         if (e != null) {
                                             // There was some error.
                                             return;
                                         } else {
+                                            ParseObject.unpinAllInBackground(ICareApplication.PATIENTS_LABEL);
                                             ParseObject.unpinAllInBackground(ICareApplication.USERS_LABEL, new DeleteCallback() {
                                                 public void done(ParseException e) {
                                                     if (e != null) {
@@ -422,8 +470,6 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
     // FRAGMENTS
     // -----------------------------------------------
     public void ParentDashboard(List<MyChildren> listMyChildren, int childPosition) {
-        Toast.makeText(getApplicationContext(), "FRAGMENT ACTIVITY "+childPosition, Toast.LENGTH_LONG).show();
-
         mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         ParentDashboardFragment myFragment = new ParentDashboardFragment();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
@@ -431,7 +477,8 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
             transaction.remove(myFragment);
             myFragment = new ParentDashboardFragment();
         }
-        Bundle bundle = new Bundle();
+
+        Bundle bundle = getIntent().getExtras();
 
         bundle.putInt(ParentDashboardFragment.ARG_CHILD_DATA, childPosition);
         bundle.putParcelableArrayList(ParentDashboardFragment.ARG_CHILD_DATA, (ArrayList<MyChildren>) listMyChildren);

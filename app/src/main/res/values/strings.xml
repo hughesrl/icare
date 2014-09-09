@@ -36,11 +36,13 @@
     <string name="lbl_news_feed">NEWS FEED</string>
     <string name="lbl_scheduler">SCHEDULER</string>
     <string name="lbl_my_dashboard">MY DASHBOARD</string>
+    <string name="lbl_my_baby">MY BABY</string>
     <string name="lbl_patient_database">PATIENT DATABASE</string>
     <string name="lbl_patient_visits">VISITS</string>
     <string name="lbl_patients_queue">PATIENTS QUEUE</string>
     <string name="lbl_add_user">ADD USER</string>
     <string name="lbl_add_baby">ADD BABY</string>
+    <string name="lbl_add_baby_lower">Add Baby</string>
     <string name="lbl_add_patient">ADD PATIENT</string>
     <string name="lbl_settings">SETTINGS</string>
     <string name="lbl_doctors_information">DOCTOR\'S INFORMATION</string>
@@ -72,6 +74,9 @@
     <string name="lblGrowthTrackerChest">Chest</string>
     <string name="lblGrowthTrackerAbdomen">Abdomen</string>
     <string name="lblGrowthTrackerTemperature">Temperature</string>
+
+    <string name="lblMedicine">Medicine</string>
+    <string name="lblNextVisit">Next Visit</string>
 
     <string name="lblMyNameIs">My name is</string>
     <string name="lblIWasBorn">I was born</string>

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="none">
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,32 +12,27 @@
         android:layout_marginRight="10dp"
         android:id="@+id/linearLayout">
 
-        <!--<fragment class="com.fourello.icare.fragments.MyDashboardFragment"
-            android:id="@+id/my_dashboard_frag"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dashboard_container_height"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            tools:layout="@layout/fragment_my_dashboard" />-->
-
-        <!--<fragment class="com.fourello.icare.fragments.SchedulerFragment"
-            android:id="@+id/scheduler_frag"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dashboard_container_height"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            tools:layout="@layout/fragment_scheduler" />-->
-
-        <!--<fragment
-            android:id="@+id/patient_queue_frag"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dashboard_container_height"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            tools:layout="@layout/fragment_patient_queue" />-->
         <FrameLayout
-            android:id="@+id/patient_queue_frag"
+            android:id="@+id/my_baby"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dashboard_container_height"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            />
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
+
+        <FrameLayout
+            android:id="@+id/my_baby_visit_tracker"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dashboard_container_height"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
+        <FrameLayout
+            android:id="@+id/previous_visits"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dashboard_container_height"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
+        <FrameLayout
+            android:id="@+id/symptoms_tracker"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dashboard_container_height"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
 
         <!--<fragment class="com.fourello.icare.fragments.NewsFeedFragment"
             android:id="@+id/news_feed_frag"

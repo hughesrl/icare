@@ -1,0 +1,44 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:icare="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal|top"
+    android:descendantFocusability="blocksDescendants">
+    <com.fourello.icare.view.HoloCircleSeekBar
+        android:layout_width="@dimen/seek_bar_size"
+        android:layout_height="@dimen/seek_bar_size"
+        android:id="@+id/heightSeekBar"
+        icare:font_name="VAGRoundedLight.ttf"
+        icare:is_enable="false"
+        icare:text_unit="ml"
+        icare:max="100"
+        icare:pointer_color="#00000000"
+        icare:pointer_halo_color="#00000000"
+        icare:pointer_size="@integer/seek_bar_pointer_size"
+        icare:text_color="#FFFFFF"
+        icare:text_size="@integer/seek_bar_text_size"
+        icare:wheel_active_color="#00BFFF"
+        icare:wheel_unactive_color="#FFCCCCCC"
+        />
+    <com.fourello.icare.view.CustomTextView
+        icare:fontName="VAGRoundedLight.ttf"
+        icare:fontColor="@color/white"
+        style="@style/text_Appearance_large_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:id="@+id/lblMedicineName"
+        android:text="@string/lblGrowthTrackerHeight"
+        />
+    <com.fourello.icare.view.CustomTextView
+        icare:fontName="VAGRoundedLight.ttf"
+        icare:fontColor="@color/white"
+        style="@style/text_Appearance_large_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Additional Content"
+        />
+</LinearLayout>

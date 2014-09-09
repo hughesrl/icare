@@ -2,10 +2,11 @@ package com.fourello.icare.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.fourello.icare.DashboardParentFragmentActivity;
 import com.fourello.icare.R;
@@ -19,10 +20,10 @@ public class ParentDashboardFragment extends Fragment implements
         DashboardParentFragmentActivity.OpenMenuCallbacks {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_LOGIN_DATA = "loginData";
+    public static final String ARG_LOGIN_DATA = "loginData";
     public static final String ARG_CHILD_DATA = "childData";
     public static final String ARG_CHILD_DATA_POS = "childDataPosition";
-    private static final String ARG_MY_PICTURE = "myPicture";
+    public static final String ARG_MY_PICTURE = "myPicture";
 
     // TODO: Rename and change types of parameters
     private ParseProxyObject mParamLoginData;
@@ -70,12 +71,29 @@ public class ParentDashboardFragment extends Fragment implements
         // Inflate the layout for this fragment
         ViewGroup myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_dashboard_parent, container, false);
 
-        Toast.makeText(getActivity(), "POS "+mParamChildDataPosition, Toast.LENGTH_LONG).show();
-        ((DashboardParentFragmentActivity)getActivity()).changePageTitle(mParamChildData.get(mParamChildDataPosition).getPatientName());
-//        // The content view embeds two fragments; now retrieve them and attach
-//        // their "hide" button.
-//        FragmentManager fm = getFragmentManager();
-//        FragmentTransaction ft = fm.beginTransaction();
+        ((DashboardParentFragmentActivity)getActivity()).changePageTitle(mParamChildData.get(mParamChildDataPosition).getPatientFirstName()+"'s snapshot");
+
+        // The content view embeds two fragments; now retrieve them and attach
+        // their "hide" button.
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+//        int height = getResources().getDisplayMetrics().heightPixels - 120;
+//        int patientsHeight = height - (height/4); // 3/4
+//        int promosHeight = height - patientsHeight; // 1/4
+
+        /* MY BABY */
+//        FrameLayout frame = (FrameLayout) myFragmentView.findViewById(R.id.my_baby);
+//        ViewGroup.LayoutParams myBabyParams = frame.getLayoutParams();
+//        myBabyParams.height = patientsHeight;
+//        frame.setLayoutParams(myBabyParams);
+
+        ParentMyBabyFragment myBabyFragment = new ParentMyBabyFragment();
+        Bundle bundle = getArguments();
+        myBabyFragment.setArguments(bundle);
+        ft.replace(R.id.my_baby, myBabyFragment, "MY_BABY_FRAGMENT");
+        ft.commit();
+
 //
 //        int accessType = Integer.parseInt(mParamLoginData.getString("type"));
 //        switch (accessType) {

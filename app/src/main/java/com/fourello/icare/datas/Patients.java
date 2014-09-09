@@ -132,6 +132,14 @@ public class Patients extends ParseObject {
         put("earpiercedon", earpiercedon);
     }
 
+    public String getEmail() {
+        return getString("email");
+    }
+    public void setEmail(String email) {
+        put("email", email);
+    }
+
+
     public String getFatherBirthday() {
         return getString("fatherbirthday");
     }
