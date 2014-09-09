@@ -1,19 +1,18 @@
 package com.fourello.icare.fragments;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.Toast;
 
-import com.fourello.icare.DashboardDoctorFragmentActivity;
 import com.fourello.icare.DashboardParentFragmentActivity;
 import com.fourello.icare.R;
+import com.fourello.icare.datas.MyChildren;
 import com.fourello.icare.widgets.ParseProxyObject;
+
+import java.util.ArrayList;
 
 
 public class ParentDashboardFragment extends Fragment implements
@@ -21,13 +20,17 @@ public class ParentDashboardFragment extends Fragment implements
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_LOGIN_DATA = "loginData";
+    public static final String ARG_CHILD_DATA = "childData";
+    public static final String ARG_CHILD_DATA_POS = "childDataPosition";
     private static final String ARG_MY_PICTURE = "myPicture";
 
     // TODO: Rename and change types of parameters
     private ParseProxyObject mParamLoginData;
+    private ArrayList<MyChildren> mParamChildData;
+    private int mParamChildDataPosition;
     private byte[] mParamMyPicture;
 
-    private OnFragmentInteractionListener mListener;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -55,6 +58,8 @@ public class ParentDashboardFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParamLoginData = (ParseProxyObject) getArguments().getSerializable(ARG_LOGIN_DATA);
+            mParamChildData = getArguments().getParcelableArrayList(ARG_CHILD_DATA);
+            mParamChildDataPosition = getArguments().getInt(ARG_CHILD_DATA_POS);
             mParamMyPicture = getArguments().getByteArray(ARG_MY_PICTURE);
         }
     }
@@ -65,7 +70,8 @@ public class ParentDashboardFragment extends Fragment implements
         // Inflate the layout for this fragment
         ViewGroup myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_dashboard_parent, container, false);
 
-//        ((DashboardDoctorFragmentActivity)getActivity()).changePageTitle(mParamLoginData.getString("firstname")+" "+mParamLoginData.getString("lastname"));
+        Toast.makeText(getActivity(), "POS "+mParamChildDataPosition, Toast.LENGTH_LONG).show();
+        ((DashboardParentFragmentActivity)getActivity()).changePageTitle(mParamChildData.get(mParamChildDataPosition).getPatientName());
 //        // The content view embeds two fragments; now retrieve them and attach
 //        // their "hide" button.
 //        FragmentManager fm = getFragmentManager();
@@ -116,27 +122,5 @@ public class ParentDashboardFragment extends Fragment implements
     @Override
     public void onMenuPressedCallback() {
         ((DashboardParentFragmentActivity) getActivity()).showMenuContents(getView());
-    }
-
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
-
-    void hideFragmentListener(Fragment fragment) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.hide(fragment);
-        ft.commit();
     }
 }

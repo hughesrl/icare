@@ -1,29 +1,21 @@
 package com.fourello.icare.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fourello.icare.R;
 import com.fourello.icare.datas.MyChildren;
-import com.fourello.icare.datas.PatientVisits;
-import com.fourello.icare.datas.Patients;
 import com.fourello.icare.widgets.Utils;
-import com.parse.ParseException;
-import com.parse.ParseFile;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MyChildrenAdapter extends ArrayAdapter<MyChildren> {
     private Activity context;
@@ -93,5 +85,4 @@ public class MyChildrenAdapter extends ArrayAdapter<MyChildren> {
         }
         return 0;
     }
-
 }

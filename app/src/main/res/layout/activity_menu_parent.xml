@@ -29,10 +29,10 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:background="@android:color/transparent"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginRight="5dp"
         android:layout_marginEnd="5dp"
-
+        android:spinnerMode="dropdown"
         />
 
     <LinearLayout
@@ -75,7 +75,7 @@
             <ImageButton
                 android:layout_width="@dimen/menu_button_icon_size"
                 android:layout_height="@dimen/menu_button_icon_size"
-                android:id="@+id/btnMyPatients"
+                android:id="@+id/btnMyBaby"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_menu_my_baby"
                 android:scaleType="fitCenter"
@@ -117,7 +117,7 @@
                 <ImageButton
                     android:layout_width="@dimen/menu_button_icon_size"
                     android:layout_height="@dimen/menu_button_icon_size"
-                    android:id="@+id/btnMyClinic"
+                    android:id="@+id/btnMyTracker"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_menu_my_tracker"
                     android:scaleType="fitCenter"
@@ -129,7 +129,7 @@
                 <ImageButton
                     android:layout_width="@dimen/menu_button_icon_size"
                     android:layout_height="@dimen/menu_button_icon_size"
-                    android:id="@+id/btnMyReports"
+                    android:id="@+id/btnMyClinicVisits"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_menu_my_visits"
                     android:scaleType="fitCenter"
