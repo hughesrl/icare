@@ -1,0 +1,37 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:icare="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.MyDashboardFragment"
+    >
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_corners_container_wth_transparency">
+
+        <com.fourello.icare.view.CustomTextView
+            icare:fontName="VAGRoundedLight.ttf"
+            icare:fontStyle="bold"
+            icare:fontColor="@color/white"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_my_baby"
+            android:id="@+id/pageTitle"
+            android:layout_gravity="center_horizontal"
+            style="@style/text_Appearance_large_container_title_light"
+            android:shadowColor="@android:color/background_dark"
+            android:background="@drawable/rounded_corners_container_title_bg" />
+        <LinearLayout
+            android:layout_below="@+id/pageTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="10dp">
+            <include layout="@layout/visit_tracker"/>
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

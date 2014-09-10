@@ -28,6 +28,7 @@
     <string name="lbl_relationship">Relationship to Patient</string>
     <string name="lbl_contact_number">Contact Number</string>
     <string name="title_activity_login_signup">LoginSignupActivity</string>
+    <string name="title_activity_sync_data">SyncParentDataActivity</string>
     <string name="title_activity_signup">SignupActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -35,16 +36,19 @@
     <string name="lbl_news_feed">NEWS FEED</string>
     <string name="lbl_scheduler">SCHEDULER</string>
     <string name="lbl_my_dashboard">MY DASHBOARD</string>
+    <string name="lbl_my_baby">MY BABY</string>
     <string name="lbl_patient_database">PATIENT DATABASE</string>
     <string name="lbl_patient_visits">VISITS</string>
     <string name="lbl_visit_tracker">VISIT TRACKER</string>
     <string name="lbl_patients_queue">PATIENTS QUEUE</string>
     <string name="lbl_add_user">ADD USER</string>
     <string name="lbl_add_baby">ADD BABY</string>
+    <string name="lbl_add_baby_lower">Add Baby</string>
     <string name="lbl_add_patient">ADD PATIENT</string>
     <string name="lbl_settings">SETTINGS</string>
     <string name="lbl_doctors_information">DOCTOR\'S INFORMATION</string>
     <string name="title_activity_doctor_dashboard_fragment_activity">DoctorDashboardFragmentActivity</string>
+    <string name="title_activity_parent_dashboard_fragment_activity">ParentDashboardFragmentActivity</string>
     <string name="about">About</string>
     <string name="main_menu">Home</string>
     <string name="contact">Contact</string>
@@ -73,14 +77,11 @@
     <string name="lblGrowthTrackerChest">Chest</string>
     <string name="lblGrowthTrackerAbdomen">Abdomen</string>
     <string name="lblGrowthTrackerTemperature">Temperature</string>
-
-
-    <string name="lblVaccinationsTaken">Vaccinations Taken</string>
-    <string name="lblMedicationsTaken">Medications Taken</string>
-    <string name="lblInstructions">Instructions</string>
-    <string name="lblNextVisit">Next Visit</string>
-
-    <string name="lblMyNameIs">My name is</string>
+	<string name="lblMedicine">Medicine</string>
+	<string name="lblNextVisit">Next Visit</string>	<string name="lblVaccinationsTaken">Vaccinations Taken</string>
+	<string name="lblMedicationsTaken">Medications Taken</string>
+	<string name="lblInstructions">Instructions</string>
+	<string name="lblNextVisit">Next Visit</string>    <string name="lblMyNameIs">My name is</string>
     <string name="lblIWasBorn">I was born</string>
     <string name="lblAt">at</string>
     <string name="lblIWasDeliveredBy">I was delivered by</string>

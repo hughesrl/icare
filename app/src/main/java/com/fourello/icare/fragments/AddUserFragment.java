@@ -32,10 +32,7 @@ import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
-import java.util.Map;
 
-import ua.org.zasadnyy.zvalidations.Form;
-import ua.org.zasadnyy.zvalidations.ValidationFailedRenderer;
 
 public class AddUserFragment extends Fragment implements
         PasswordDialogFragment.PasswordDialogListener,
@@ -52,10 +49,6 @@ public class AddUserFragment extends Fragment implements
 //    private OnFragmentInteractionListener mListener;
 
 
-    private Map<Integer, ValidationFailedRenderer> mVaildationRenderers;
-
-    // Form used for validation
-    private Form mForm;
 
     private Activity mActivity;
     private CustomEditTextView etFirstname;

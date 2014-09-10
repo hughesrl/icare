@@ -34,9 +34,6 @@ public class Dashboard_ParentActivity extends Activity {
 
         showMenu(btnShowMenu);
 
-
-
-
     }
 
     @Override
@@ -81,7 +78,7 @@ public class Dashboard_ParentActivity extends Activity {
         if(dialog.isShowing()) {
             dialog.dismiss();
         } else {
-            dialog.setContentView(R.layout.activity_menu);
+            dialog.setContentView(R.layout.activity_menu_parent);
 
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -112,10 +109,10 @@ public class Dashboard_ParentActivity extends Activity {
 //                                    }
 //                                }
 //                            });
-                            Bitmap myProfilePic = BitmapFactory.decodeResource(getResources(), R.drawable.doctor_icon);
-                            ImageView profilPic = (ImageView) dialog.findViewById(R.id.btnMyPicture);
-                            Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(myProfilePic);
-                            profilPic.setImageBitmap(profileInCircle);
+//                            Bitmap myProfilePic = BitmapFactory.decodeResource(getResources(), R.drawable.doctor_icon);
+//                            ImageView profilPic = (ImageView) dialog.findViewById(R.id.btnMyPicture);
+//                            Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(myProfilePic);
+//                            profilPic.setImageBitmap(profileInCircle);
                         }
                     });
                 }

@@ -40,16 +40,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         // Determine whether the current user is an anonymous user
-        ParseQuery<ParseObject> queryDoctors = ParseQuery.getQuery("Doctors");
+        ParseQuery<ParseObject> queryDoctors = ParseQuery.getQuery(ICareApplication.DOCTORS_LABEL);
         queryDoctors.fromLocalDatastore();
         queryDoctors.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> objects, ParseException e) {
+            public void done(List<ParseObject> objectsDoctor, ParseException e) {
                 if (e == null) {
-                    doctor_or_user_count += objects.size();
+                    int doctorInTable = objectsDoctor.size();
+                    doctor_or_user_count += objectsDoctor.size();
 
-                    if(objects.size() > 0) {
-                        final ParseObject project = objects.get(0);
-                        if(project.has("photoFile") == true) {
+                    if(doctorInTable > 0) {
+                        final ParseObject project = objectsDoctor.get(0);
+                        if(project.has("photoFile")) {
                             ParseFile myPhoto = (ParseFile) project.get("photoFile");
 
                             myPhoto.getDataInBackground(new GetDataCallback() {
@@ -70,49 +71,68 @@ public class MainActivity extends Activity {
                             myPicture = out.toByteArray();
 
                             loginData = new ParseProxyObject(project);
-
                         }
-                    }
 
-                    ParseQuery<ParseObject> queryUsers = ParseQuery.getQuery("Users");
-                    queryUsers.fromLocalDatastore();
-                    queryUsers.findInBackground(new FindCallback<ParseObject>() {
-                        public void done(List<ParseObject> objects, ParseException e) {
-                            if (e == null) {
-                                doctor_or_user_count += objects.size();
+                        // Doctor
+                        Intent intent = new Intent(MainActivity.this, DashboardDoctorFragmentActivity.class);
+                        intent.putExtra("loginData", loginData);
+                        intent.putExtra("myPicture", myPicture);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        ParseQuery<ParseObject> queryUsers = ParseQuery.getQuery(ICareApplication.USERS_LABEL);
+                        queryUsers.fromLocalDatastore();
+                        queryUsers.findInBackground(new FindCallback<ParseObject>() {
+                            public void done(List<ParseObject> objectUsers, ParseException e) {
+                                if (e == null) {
+                                    int userInTable = objectUsers.size();
+                                    doctor_or_user_count += objectUsers.size();
+                                    if (userInTable > 0) {
+                                        ParseObject users = objectUsers.get(0);
+                                        ParseProxyObject userLoginData = new ParseProxyObject(users);
 
-                                if (doctor_or_user_count == 0) {
-                                    Intent intent = new Intent(MainActivity.this, LoginSignupActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else if (doctor_or_user_count == 1) {
-                                    //Login success for Doctors / Secretary
-//                                    Intent intent = new Intent(MainActivity.this, Dashboard_DoctorActivity.class);
-                                    Intent intent = new Intent(MainActivity.this, DashboardDoctorFragmentActivity.class);
-                                    intent.putExtra("loginData", loginData);
-                                    intent.putExtra("myPicture", myPicture);
-                                    startActivity(intent);
-                                    finish();
-                                } else if (doctor_or_user_count == 2) {
-                                    //Login success for Parents
-                                    Intent intent = new Intent(MainActivity.this, Dashboard_ParentActivity.class);
-                                    startActivity(intent);
-                                    finish();
+                                        Intent intent = new Intent(MainActivity.this, DashboardParentFragmentActivity.class);
+                                        intent.putExtra("loginData", userLoginData);
+
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        Intent intent = new Intent(MainActivity.this, LoginSignupActivity.class);
+                                        startActivity(intent);
+                                        finish();
+
+//                                        if (doctor_or_user_count == 0) {
+//                                            Intent intent = new Intent(MainActivity.this, LoginSignupActivity.class);
+//                                            startActivity(intent);
+//                                            finish();
+//                                        } else if (doctor_or_user_count == 1) {
+//                                            //Login success for Doctors / Secretary
+//                                            Intent intent = new Intent(MainActivity.this, DashboardDoctorFragmentActivity.class);
+//                                            intent.putExtra("loginData", loginData);
+//                                            intent.putExtra("myPicture", myPicture);
+//                                            startActivity(intent);
+//                                            finish();
+//                                        } else if (doctor_or_user_count == 2) {
+//                                            //Login success for Parents
+//                                            Intent intent = new Intent(MainActivity.this, DashboardParentFragmentActivity.class);
+//                                            startActivity(intent);
+//                                            finish();
+//                                        } else {
+//                                            Intent intent = new Intent(MainActivity.this, LoginSignupActivity.class);
+//                                            startActivity(intent);
+//                                            finish();
+//                                        }
+                                    }
                                 } else {
+                                    Log.d("robert", e.getLocalizedMessage());
                                     Intent intent = new Intent(MainActivity.this, LoginSignupActivity.class);
                                     startActivity(intent);
                                     finish();
                                 }
 
-                            } else {
-                                Log.d("robert", e.getLocalizedMessage());
-                                Intent intent = new Intent(MainActivity.this, LoginSignupActivity.class);
-                                startActivity(intent);
-                                finish();
                             }
-
-                        }
-                    });
+                        });
+                    }
 
                 } else {
 //                    Intent intent = new Intent(MainActivity.this, LoginSignupActivity.class);

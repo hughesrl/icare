@@ -132,6 +132,14 @@ public class Patients extends ParseObject {
         put("earpiercedon", earpiercedon);
     }
 
+    public String getEmail() {
+        return getString("email");
+    }
+    public void setEmail(String email) {
+        put("email", email);
+    }
+
+
     public String getFatherBirthday() {
         return getString("fatherbirthday");
     }
@@ -198,42 +206,42 @@ public class Patients extends ParseObject {
     public String getFirstName() {
         return getString("firstname");
     }
-    public void getFirstName(String firstname) {
+    public void setFirstName(String firstname) {
         put("firstname", firstname);
     }
 
     public String getGender() {
         return getString("gender");
     }
-    public void getGender(String gender) {
+    public void setGender(String gender) {
         put("gender", gender);
     }
 
     public String getHeadCircumference() {
         return getString("headcircumference");
     }
-    public void getHeadCircumference(String headcircumference) {
+    public void setHeadCircumference(String headcircumference) {
         put("headcircumference", headcircumference);
     }
 
     public String getLastName() {
         return getString("lastname");
     }
-    public void getLastName(String lastname) {
+    public void setLastName(String lastname) {
         put("lastname", lastname);
     }
 
     public String getLength() {
         return getString("length");
     }
-    public void getLength(String length) {
+    public void setLength(String length) {
         put("length", length);
     }
 
     public String getMiddleName() {
         return getString("middlename");
     }
-    public void getMiddleName(String middlename) {
+    public void setMiddleName(String middlename) {
         put("middlename", middlename);
     }
 

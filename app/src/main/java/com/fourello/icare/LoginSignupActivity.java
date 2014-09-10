@@ -18,19 +18,25 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.fourello.icare.adapters.MyChildrenAdapter;
+import com.fourello.icare.datas.MyChildren;
+import com.fourello.icare.datas.PatientDatabase;
 import com.fourello.icare.view.CustomButton;
 import com.fourello.icare.view.CustomEditTextView;
 import com.fourello.icare.widgets.ParseProxyObject;
+import com.fourello.icare.widgets.Utils;
 import com.parse.FindCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ProgressCallback;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -42,10 +48,11 @@ public class LoginSignupActivity extends Activity {
 //    private DoctorInfoOperations mDoctorOperationsHelper;
 //    private UserInfoOperations mUsersOperationsHelper;
 
-    private ProgressDialog progress;
-    private ProgressBar mProgressSpinner;
+    private ProgressDialog mProgressDialog;
 
     public ParseProxyObject loginData;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,28 +61,27 @@ public class LoginSignupActivity extends Activity {
         getActionBar().hide();
         setContentView(R.layout.activity_login_signup);
 
-//        mUsersOperationsHelper = new UserInfoOperations(this);
-//        mUsersOperationsHelper.open();
 
 
-        progress = new ProgressDialog(this);
-        progress.setMessage("Loading...");
-        progress.setCanceledOnTouchOutside(false);
 
         CustomButton btnLogin = (CustomButton)findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progress.show();
+                if (mProgressDialog == null) {
+                    mProgressDialog = Utils.createProgressDialog(LoginSignupActivity.this);
+                    mProgressDialog.show();
+                } else {
+                    mProgressDialog.show();
+                }
                 eTxtUsername = (CustomEditTextView)findViewById(R.id.etUsername);
                 eTxtPassword = (CustomEditTextView)findViewById(R.id.etPassword);
 
                 String usernameTxt = eTxtUsername.getText().toString();
                 String passwordTxt = eTxtPassword.getText().toString();
 
-                ICareApplication iCare_App = (ICareApplication)getApplication();
-                Boolean is_email = iCare_App.isEmailValid(usernameTxt);
-                if(is_email == false) {
+                Boolean is_email = ICareApplication.isEmailValid(usernameTxt);
+                if(!is_email) {
                     // input data is for Doctors or Secretary
                     ParseQuery<ParseObject> query = ParseQuery.getQuery(ICareApplication.DOCTORS_LABEL);
                     query.whereEqualTo("username", usernameTxt);
@@ -131,24 +137,31 @@ public class LoginSignupActivity extends Activity {
                     });
                 } else {
                     // input data is for Parents
-//                    ParseQuery<ParseObject> query = ParseQuery.getQuery(ICareApplication.USERS_LABEL);
-//                    query.whereEqualTo("username", usernameTxt);
-//                    query.whereEqualTo("password", passwordTxt);
-//                    query.findInBackground(new FindCallback<ParseObject>() {
-//                        public void done(List<ParseObject> objects, ParseException e) {
-//                            if (e == null) {
-//                                if(objects.size() == 0) {
-//                                    usernameOrPasswordIsInvalid();
-//                                } else {
-//                                    //Login success
-//                                    loginSuccessful(loginData, file);
-//                                }
-//                            } else {
-//                                somethingWentWrong();
-//                            }
-//
-//                        }
-//                    });
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery(ICareApplication.USERS_LABEL);
+                    query.whereEqualTo("email", usernameTxt);
+                    query.whereEqualTo("password", passwordTxt);
+                    query.findInBackground(new FindCallback<ParseObject>() {
+                        public void done(List<ParseObject> objects, ParseException e) {
+                            if (e == null) {
+                                if(objects.size() == 0) {
+                                    usernameOrPasswordIsInvalid();
+                                } else {
+                                    //Login success
+                                    ParseObject.pinAllInBackground(ICareApplication.USERS_LABEL, objects);
+
+                                    final ParseObject project = objects.get(0);
+
+                                    loginData = new ParseProxyObject(project);
+
+
+                                    loginSuccessfulParent(loginData);
+                                }
+                            } else {
+                                somethingWentWrong();
+                            }
+
+                        }
+                    });
 
                 }
             }
@@ -198,22 +211,34 @@ public class LoginSignupActivity extends Activity {
 
     public void somethingWentWrong() {
         Toast.makeText(getApplicationContext(), "Oops! Something went wrong.", Toast.LENGTH_LONG).show();
-        progress.dismiss();
+        mProgressDialog.dismiss();
     }
 
     public void usernameOrPasswordIsInvalid() {
         Toast.makeText(getApplicationContext(), "No such user exist, please signup", Toast.LENGTH_LONG).show();
-        progress.dismiss();
+        mProgressDialog.dismiss();
     }
 
     public void loginSuccessful(ParseProxyObject loginData, byte[] myPicture) {
-        progress.dismiss();
+        mProgressDialog.dismiss();
         Intent intent = new Intent(LoginSignupActivity.this, DashboardDoctorFragmentActivity.class);
         intent.putExtra("loginData", loginData);
-        intent.putExtra("myPicture", myPicture);
+        if(myPicture != null) {
+            intent.putExtra("myPicture", myPicture);
+        }
         startActivity(intent);
 
         Toast.makeText(getApplicationContext(), "Successfully Logged in", Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    public void loginSuccessfulParent(ParseProxyObject loginData) {
+        mProgressDialog.dismiss();
+        // Get Children Sync
+        Intent intent = new Intent(LoginSignupActivity.this, SyncParentDataActivity.class);
+        intent.putExtra("loginData", loginData);
+        startActivity(intent);
+        //Toast.makeText(getApplicationContext(), "Successfully Logged in", Toast.LENGTH_LONG).show();
         finish();
     }
 

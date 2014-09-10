@@ -58,8 +58,8 @@ public class ICareApplication extends Application {
         ParseObject.registerSubclass(ClinicSurvey.class);
         ParseObject.registerSubclass(Settings.class);
 
-//        Parse.initialize(this, "mgjwXn2NpSfBlZenRbnWGYFqIOfZ0AdGUIqXxq9k", "RRw4cxwZG4wZryUuxqYHbzYLtof8fvizS7JhQ6PO"); // Robert
-        Parse.initialize(this, "85lVaxRqcrhlyzzWa3QckqBpP7GJiKolwT16MJnk", "Nz1kPiFcgMm6SadNGPXPgxV4RRpOKQVUwsDC6pEc"); // Icare Fourello
+        Parse.initialize(this, "mgjwXn2NpSfBlZenRbnWGYFqIOfZ0AdGUIqXxq9k", "RRw4cxwZG4wZryUuxqYHbzYLtof8fvizS7JhQ6PO"); // Robert
+//        Parse.initialize(this, "85lVaxRqcrhlyzzWa3QckqBpP7GJiKolwT16MJnk", "Nz1kPiFcgMm6SadNGPXPgxV4RRpOKQVUwsDC6pEc"); // Icare Fourello
 
         //ParseUser.enableAutomaticUser();
         ParseACL defaultACL = new ParseACL();
@@ -339,6 +339,14 @@ public class ICareApplication extends Application {
         spinnerItems.add(new SpinnerItems("At Risk", true));
         spinnerItems.add(new SpinnerItems("Medium Risk (15%-40%)", true));
         spinnerItems.add(new SpinnerItems("High Risk (50%-80%)", true));
+        return spinnerItems;
+    }
+
+    public static ArrayList<SpinnerItems> populateGender(){
+        final ArrayList<SpinnerItems> spinnerItems = new ArrayList<SpinnerItems>();
+        spinnerItems.add(new SpinnerItems("", false));
+        spinnerItems.add(new SpinnerItems("Male", true));
+        spinnerItems.add(new SpinnerItems("Female", true));
         return spinnerItems;
     }
 }

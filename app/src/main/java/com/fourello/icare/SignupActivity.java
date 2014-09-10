@@ -1,26 +1,42 @@
 package com.fourello.icare;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.view.CustomButton;
 import com.fourello.icare.view.CustomEditTextView;
+import com.fourello.icare.widgets.Utils;
 import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
+import com.parse.ParseObject;
+import com.parse.SaveCallback;
+
+import java.util.ArrayList;
 
 public class SignupActivity extends Activity {
+
+    private ProgressDialog mProgressDialog;
 
     private CustomEditTextView eTxtFirstname;
     private CustomEditTextView eTxtLastname;
     private CustomEditTextView eTxtEmail;
-    //private CustomEditTextView eTxtUsername;
+    private Spinner customSpinnerRelationship;
+
     private CustomEditTextView eTxtPassword;
     private CustomEditTextView eTxtConfirmPassword;
 
@@ -31,21 +47,33 @@ public class SignupActivity extends Activity {
         getActionBar().hide();
         setContentView(R.layout.activity_signup);
 
+        eTxtFirstname = (CustomEditTextView)findViewById(R.id.etFirstname);
+        eTxtLastname = (CustomEditTextView)findViewById(R.id.etLastname);
+        customSpinnerRelationship = (Spinner) findViewById(R.id.spinnerRelationship);
+
+        CustomAdapter adapter = new CustomAdapter(SignupActivity.this, android.R.layout.simple_spinner_item, ICareApplication.populateRelationshipToPatient());
+        customSpinnerRelationship.setAdapter(adapter);
+
+        eTxtEmail = (CustomEditTextView)findViewById(R.id.etEmail);
+        eTxtPassword = (CustomEditTextView)findViewById(R.id.etPassword);
+        eTxtConfirmPassword = (CustomEditTextView)findViewById(R.id.etConfirmPassword);
+
         CustomButton btnSing_up = (CustomButton)findViewById(R.id.btnSign_up);
         btnSing_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                eTxtFirstname = (CustomEditTextView)findViewById(R.id.etFirstname);
-                eTxtLastname = (CustomEditTextView)findViewById(R.id.etLastname);
-                eTxtEmail = (CustomEditTextView)findViewById(R.id.etEmail);
-                eTxtPassword = (CustomEditTextView)findViewById(R.id.etPassword);
-                //eTxtUsername = (CustomEditTextView)findViewById(R.id.etUsername);
-                eTxtConfirmPassword = (CustomEditTextView)findViewById(R.id.etConfirmPassword);
+                if (mProgressDialog == null) {
+                    mProgressDialog = Utils.createProgressDialog(SignupActivity.this);
+                    mProgressDialog.show();
+                } else {
+                    mProgressDialog.show();
+                }
 
                 // Retrieve the text entered from the EditText
                 String firstnameTxt = eTxtFirstname.getText().toString();
                 String lastnameTxt = eTxtLastname.getText().toString();
+
+                final String strRelationship = customSpinnerRelationship.getSelectedItem().toString();
                 final String emailTxt = eTxtEmail.getText().toString();
                 String passwordTxt = eTxtPassword.getText().toString();
                 final String confirmpasswordTxt = eTxtConfirmPassword.getText().toString();
@@ -54,41 +82,38 @@ public class SignupActivity extends Activity {
                 // Force user to fill up the form
                 if (firstnameTxt.equals("") &&
                         lastnameTxt.equals("") &&
+                        strRelationship.equals("") &&
                         emailTxt.equals("")  &&
                         passwordTxt.equals("") &&
                         confirmpasswordTxt.equals("")) {
+                    mProgressDialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Please complete the sign up form", Toast.LENGTH_LONG).show();
-
                 } else {
-                    // Save new user data into Parse.com Data Storage
-                    ParseUser user = new ParseUser();
-                    user.setEmail(emailTxt);
-                    user.setUsername(emailTxt);
-                    user.setPassword(confirmpasswordTxt);
+                    if (passwordTxt.trim().equals(confirmpasswordTxt)) {
+                        // Save new user data into Parse.com Data Storage
+                        final ParseObject newUser = new ParseObject(ICareApplication.USERS_LABEL);
+                        newUser.put("firstname", firstnameTxt);
+                        newUser.put("lastname", lastnameTxt);
+                        newUser.put("email", emailTxt);
+                        newUser.put("password", confirmpasswordTxt);
+                        newUser.put("role", strRelationship);
 
-                    user.put("firstname", firstnameTxt);
-                    user.put("lastname", lastnameTxt);
-
-//                    if(passwordTxt.equalsIgnoreCase(confirmpasswordTxt)) {
-//                        Toast.makeText(getApplicationContext(), "Password does not match!", Toast.LENGTH_LONG).show();
-//                    } else {
-                        user.signUpInBackground(new SignUpCallback() {
+                        newUser.saveInBackground(new SaveCallback() {
+                            @Override
                             public void done(ParseException e) {
                                 if (e == null) {
-                                    Intent intent = new Intent(SignupActivity.this, DashboardDoctorFragmentActivity.class);
+                                    mProgressDialog.dismiss();
+                                    Intent intent = new Intent(SignupActivity.this, LoginSignupActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
-
-                                    // Show a simple Toast message upon successful registration
-                                    Toast.makeText(getApplicationContext(), "Successfully Signed up, logging in.", Toast.LENGTH_LONG).show();
-
                                     finish();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Sign up Error", Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
-//                    }
+                    } else {
+                        mProgressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "Password not the same.", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -123,5 +148,56 @@ public class SignupActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class CustomAdapter extends ArrayAdapter<SpinnerItems> {
+        private Activity context;
+        ArrayList<SpinnerItems> spinnerItems;
+
+        public CustomAdapter(Activity context, int resource, ArrayList<SpinnerItems> spinnerItems) {
+            super(context, resource, spinnerItems);
+            this.context = context;
+            this.spinnerItems = spinnerItems;
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            SpinnerItems current = spinnerItems.get(position);
+
+            LayoutInflater inflater = LayoutInflater.from(SignupActivity.this);
+            View row = inflater.inflate(R.layout.spinner_row, parent, false);
+            TextView name = (TextView) row.findViewById(R.id.spinnerTxtTitle);
+            Typeface myTypeFace = Typeface.createFromAsset(context.getAssets(), "fonts/VAGRoundedLight.ttf");
+
+            name.setTypeface(myTypeFace, Typeface.NORMAL);
+            name.setGravity(Gravity.LEFT);
+            name.setTextSize(18);
+            if(current.getSpinnerStatus() == false) {
+                name.setTextColor(Color.GRAY);
+            } else {
+                name.setTextColor(Color.BLACK);
+            }
+
+            name.setText(current.getSpinnerTitle());
+
+            return row;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            View row = convertView;
+            if (row == null) {
+                LayoutInflater inflater = context.getLayoutInflater();
+                row = inflater.inflate(R.layout.spinner_row, parent, false);
+            }
+            SpinnerItems current = spinnerItems.get(position);
+            TextView name = (TextView) row.findViewById(R.id.spinnerTxtTitle);
+            if(current.getSpinnerStatus() == false) {
+                name.setTextColor(Color.GRAY);
+            } else {
+                name.setTextColor(Color.BLACK);
+            }
+            name.setText(current.getSpinnerTitle());
+            return row;
+        }
     }
 }
