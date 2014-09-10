@@ -1,35 +1,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:icare="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@android:color/transparent"
-    android:gravity="center_horizontal">
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnClosePatientCheckin"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_close"
-        android:layout_marginStart="-5dp"
-        android:layout_marginLeft="-5dp"
-        android:layout_marginTop="10dp"
-        />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
-        android:layout_below="@+id/btnClosePatientCheckin"
+        android:layout_below="@+id/btnShowMenu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:src="@drawable/login_bg"
-            android:id="@+id/bg_img" />
-
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/rounded_corners_container_wth_transparency">
         <com.fourello.icare.view.CustomTextView
             icare:fontName="VAGRoundedLight.ttf"
             icare:fontStyle="bold"
@@ -124,7 +105,6 @@
 
                     <com.fourello.icare.view.CustomEditTextView
                         icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/etAge"
@@ -156,7 +136,6 @@
 
                     <com.fourello.icare.view.CustomEditTextView
                         icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/etAccompaniedBy"
@@ -188,7 +167,6 @@
 
                     <com.fourello.icare.view.CustomEditTextView
                         icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/etPurpose"
@@ -219,7 +197,6 @@
                         />
                     <com.fourello.icare.view.CustomEditTextView
                         icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/etPatientNotes"
@@ -250,7 +227,6 @@
                         />
                     <com.fourello.icare.view.CustomEditTextView
                         icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/etTypeOfDelivery"
@@ -281,7 +257,6 @@
                         />
                     <com.fourello.icare.view.CustomEditTextView
                         icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/etAllergyRisk"
@@ -299,7 +274,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginBottom="10dp">
-                    <include layout="@layout/visit_tracker_growth_tracker"/>
+                    <include layout="@layout/growth_tracker"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -315,24 +290,20 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:layout_marginBottom="5dp"
+                        android:layout_weight="3"
                         android:id="@+id/lblVaccinationsTaken"
                         android:text="@string/lblVaccinationsTaken"
                         />
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:minHeight="200dp"
-                        android:orientation="vertical"
-                        android:background="@drawable/rounded_corners_container_wth_transparency"
-                        android:gravity="center_horizontal">
-                        <ListView
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:id="@+id/vaccinationsTaken"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_gradient_shape_bus_title_left_round"/>
-                    </RelativeLayout>
+                    <ListView
+                        android:layout_weight="1"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:paddingLeft="3dp"
+                        android:paddingRight="3dp"
+                        android:id="@+id/vaccinationsTaken"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_gradient_shape_bus_title"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -347,25 +318,20 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:layout_marginBottom="5dp"
+                        android:layout_weight="3"
                         android:id="@+id/lblMedicationsTaken"
                         android:text="@string/lblMedicationsTaken"
                         />
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:minHeight="200dp"
-                        android:orientation="vertical"
-                        android:background="@drawable/rounded_corners_container_wth_transparency"
-                        android:gravity="center_horizontal">
-                        <ListView
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:id="@+id/medicationsTaken"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_gradient_shape_bus_title_left_round"/>
-                    </RelativeLayout>
-
+                    <ListView
+                        android:layout_weight="1"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:paddingLeft="3dp"
+                        android:paddingRight="3dp"
+                        android:id="@+id/medicationsTaken"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_gradient_shape_bus_title"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -385,7 +351,6 @@
                         />
                     <com.fourello.icare.view.CustomEditTextView
                         icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/etInstructions"
@@ -415,7 +380,6 @@
                         />
                     <com.fourello.icare.view.CustomEditTextView
                         icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/etNextVisit"
