@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">iCare</string>
+    <string name="loading">Loading…</string>
     <string name="lblPatientAlreadyCheckedIn">Patient already Checked In</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -37,6 +38,7 @@
     <string name="lbl_scheduler">SCHEDULER</string>
     <string name="lbl_my_dashboard">MY DASHBOARD</string>
     <string name="lbl_my_baby">MY BABY</string>
+    <string name="lbl_previous_visit">PREVIOUS VISIT</string>
     <string name="lbl_patient_database">PATIENT DATABASE</string>
     <string name="lbl_patient_visits">VISITS</string>
     <string name="lbl_visit_tracker">VISIT TRACKER</string>

@@ -25,111 +25,127 @@
             android:shadowColor="@android:color/background_dark"
             android:background="@drawable/rounded_corners_container_title_bg" />
 
-        <!-- FIELDS -->
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="80dp"
-            android:layout_marginRight="80dp"
-            android:id="@+id/linearLayout">
-            <com.fourello.icare.view.CustomEditTextView
-                icare:fontName="VAGRoundedLight.ttf"
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scrollbars="none"
+            android:layout_below="@+id/pageTitle"
+            >
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:padding="@dimen/activity_vertical_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/etFirstname"
-                android:drawableStart="@drawable/custom_ic_user"
-                android:drawableLeft="@drawable/custom_ic_user"
-                android:background="@drawable/rounded_corners"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:singleLine="true"
-                android:hint="@string/lblFirstname" />
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+                <!-- FIELDS -->
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginLeft="@dimen/content_left_right_margin"
+                    android:layout_marginRight="@dimen/content_left_right_margin"
+                    android:id="@+id/linearLayout">
+                    <com.fourello.icare.view.CustomEditTextView
+                        icare:fontName="VAGRoundedLight.ttf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/etFirstname"
+                        android:drawableStart="@drawable/custom_ic_user"
+                        android:drawableLeft="@drawable/custom_ic_user"
+                        android:background="@drawable/rounded_corners"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:singleLine="true"
+                        android:hint="@string/lblFirstname" />
 
-            <com.fourello.icare.view.CustomEditTextView
-                icare:fontName="VAGRoundedLight.ttf"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/etMiddlename"
-                android:drawableStart="@drawable/custom_ic_user"
-                android:drawableLeft="@drawable/custom_ic_user"
-                android:background="@drawable/rounded_corners"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:singleLine="true"
-                android:hint="@string/lbl_middlename" />
+                    <com.fourello.icare.view.CustomEditTextView
+                        icare:fontName="VAGRoundedLight.ttf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/etMiddlename"
+                        android:drawableStart="@drawable/custom_ic_user"
+                        android:drawableLeft="@drawable/custom_ic_user"
+                        android:background="@drawable/rounded_corners"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:singleLine="true"
+                        android:hint="@string/lbl_middlename" />
 
-            <com.fourello.icare.view.CustomEditTextView
-                icare:fontName="VAGRoundedLight.ttf"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/etLastname"
-                android:drawableStart="@drawable/custom_ic_user"
-                android:drawableLeft="@drawable/custom_ic_user"
-                android:background="@drawable/rounded_corners"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:singleLine="true"
-                android:hint="@string/lbl_lastname" />
+                    <com.fourello.icare.view.CustomEditTextView
+                        icare:fontName="VAGRoundedLight.ttf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/etLastname"
+                        android:drawableStart="@drawable/custom_ic_user"
+                        android:drawableLeft="@drawable/custom_ic_user"
+                        android:background="@drawable/rounded_corners"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:singleLine="true"
+                        android:hint="@string/lbl_lastname" />
 
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinnerGender"
-                android:background="@drawable/rounded_corners_spinner"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:singleLine="true"
-                android:hint="@string/lbl_gender"
-                android:paddingLeft="60dp"/>
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinnerGender"
+                        android:background="@drawable/rounded_corners_spinner"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:singleLine="true"
+                        android:hint="@string/lbl_gender"
+                        android:paddingStart="60dp"
+                        android:paddingLeft="60dp" />
 
-            <com.fourello.icare.widgets.DateDisplayPicker
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinnerBirthday"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:singleLine="true"
-                android:hint="@string/lbl_birthday"
-                style="@android:style/Widget.Holo.Spinner"
-                android:drawableStart="@drawable/custom_ic_spinner"
-                android:drawableLeft="@drawable/custom_ic_spinner"
-                android:background="@drawable/rounded_corners"
-                />
-
-
-            <!--<com.fourello.icare.widgets.DateDisplayPicker
-                android:id="@+id/clientEditCreate_BirthDateDayPicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@android:style/Widget.Holo.Spinner"
-                android:hint="Date"/>-->
+                    <com.fourello.icare.widgets.DateDisplayPicker
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinnerBirthday"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:singleLine="true"
+                        android:hint="@string/lbl_birthday"
+                        style="@android:style/Widget.Holo.Spinner"
+                        android:drawableStart="@drawable/custom_ic_spinner"
+                        android:drawableLeft="@drawable/custom_ic_spinner"
+                        android:background="@drawable/rounded_corners"
+                        />
 
 
-            <!--<Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinnerBirthday"
-                android:background="@drawable/rounded_corners_spinner"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:singleLine="true"
-                android:hint="@string/lbl_birthday"
-                android:paddingLeft="60dp"/>-->
+                    <!--<com.fourello.icare.widgets.DateDisplayPicker
+                        android:id="@+id/clientEditCreate_BirthDateDayPicker"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@android:style/Widget.Holo.Spinner"
+                        android:hint="Date"/>-->
 
-            <com.fourello.icare.view.CustomButton
-                icare:fontName="VAGRoundedLight.ttf"
-                icare:fontStyle="bold"
-                icare:fontColor="@color/white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/lbl_done"
-                android:id="@+id/btnAddBabyDone"
-                android:background="@drawable/custom_button"
-                android:layout_gravity="center_horizontal"
-                style="@style/button_appearance" />
-        </LinearLayout>
+
+                    <!--<Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinnerBirthday"
+                        android:background="@drawable/rounded_corners_spinner"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:singleLine="true"
+                        android:hint="@string/lbl_birthday"
+                        android:paddingLeft="60dp"/>-->
+
+                    <com.fourello.icare.view.CustomButton
+                        icare:fontName="VAGRoundedLight.ttf"
+                        icare:fontStyle="bold"
+                        icare:fontColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_done"
+                        android:id="@+id/btnAddBabyDone"
+                        android:background="@drawable/custom_button"
+                        android:layout_gravity="center_horizontal"
+                        style="@style/button_appearance" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
     </RelativeLayout>
 </RelativeLayout>

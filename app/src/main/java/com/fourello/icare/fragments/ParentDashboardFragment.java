@@ -88,10 +88,18 @@ public class ParentDashboardFragment extends Fragment implements
 //        myBabyParams.height = patientsHeight;
 //        frame.setLayoutParams(myBabyParams);
 
-        ParentMyBabyFragment myBabyFragment = new ParentMyBabyFragment();
         Bundle bundle = getArguments();
+
+        ParentMyBabyFragment myBabyFragment = new ParentMyBabyFragment();
         myBabyFragment.setArguments(bundle);
         ft.replace(R.id.my_baby, myBabyFragment, "MY_BABY_FRAGMENT");
+        //ft.commit();
+
+        ParentPreviousVisitFragment previousVisitFragment = new ParentPreviousVisitFragment();
+        previousVisitFragment.setArguments(bundle);
+        ft.replace(R.id.previous_visits, previousVisitFragment, "PREVIOUS_VISIT_FRAGMENT");
+
+
         ft.commit();
 
 //

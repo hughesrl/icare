@@ -5,8 +5,25 @@
     android:orientation="vertical"
     android:background="@android:color/transparent"
     android:gravity="center_horizontal">
-
+    <LinearLayout
+        android:id="@+id/nodata"
+        android:baselineAligned="false"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+        <com.fourello.icare.view.CustomTextView
+            icare:fontName="VAGRoundedLight.ttf"
+            icare:fontColor="@color/white"
+            style="@style/text_Appearance_large_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="No data to display"
+            />
+    </LinearLayout>
     <HorizontalScrollView
+        android:id="@+id/visitrackerdata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scrollbars="none">
@@ -153,6 +170,7 @@
                     />
             </LinearLayout>
         <LinearLayout
+            android:id="@+id/medicineLayout"
             android:layout_width="@dimen/dashboard_my_baby_containers"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
@@ -194,7 +212,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:id="@+id/lblNextVisit"
-                    android:text="@string/lblGrowthTrackerHead"
+                    android:text="@string/lblNextVisit"
                     />
                 <com.fourello.icare.view.HoloCircleSeekBar
                     android:layout_width="@dimen/seek_bar_size"
@@ -224,108 +242,6 @@
                     />
             </LinearLayout>
 
-            <!--change to medicine-->
-            <!--CHEST-->
-            <!--<LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp">
-                <com.fourello.icare.view.CustomTextView
-                    icare:fontName="VAGRoundedLight.ttf"
-                    icare:fontColor="@color/white"
-                    style="@style/text_Appearance_large_light"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:id="@+id/lblGrowthTrackerChest"
-                    android:text="@string/lblGrowthTrackerChest"
-                    />
-                <com.fourello.icare.view.HoloCircleSeekBar
-                    android:layout_width="@dimen/seek_bar_size"
-                    android:layout_height="@dimen/seek_bar_size"
-                    android:id="@+id/seekbar"
-                    android:layout_below="@+id/pageTitle"
-                    android:layout_centerHorizontal="true"
-                    icare:font_name="VAGRoundedLight.ttf"
-                    icare:is_enable="false"
-                    icare:text_unit="Cm"
-                    icare:max="100"
-                    icare:pointer_color="#00000000"
-                    icare:pointer_halo_color="#00000000"
-                    icare:pointer_size="34"
-                    icare:text_color="#FFFFFF"
-                    icare:text_size="50"
-                    icare:wheel_active_color="#00BFFF"
-                    icare:wheel_unactive_color="#FFCCCCCC"
-                    />
-                <com.fourello.icare.view.CustomEditTextView
-                    icare:fontName="VAGRoundedLight.ttf"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/etGrowthTrackerChest"
-                    android:drawableStart="@drawable/custom_edittext_no_drawable_left"
-                    android:background="@drawable/rounded_corners"
-                    android:layout_gravity="center_horizontal"
-                    android:singleLine="true"
-                    android:inputType="number|numberDecimal"
-                    android:maxLength="5"
-                    />
-            </LinearLayout>
-
-            &lt;!&ndash;TEMPERATURE&ndash;&gt;
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp">
-                <com.fourello.icare.view.CustomTextView
-                    icare:fontName="VAGRoundedLight.ttf"
-                    icare:fontColor="@color/white"
-                    style="@style/text_Appearance_large_light"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:id="@+id/lblGrowthTrackerTemperature"
-                    android:text="@string/lblGrowthTrackerTemperature"
-                    />
-                <com.fourello.icare.view.HoloCircleSeekBar
-                    android:layout_width="@dimen/seek_bar_size"
-                    android:layout_height="@dimen/seek_bar_size"
-                    android:id="@+id/seekbar"
-                    android:layout_below="@+id/pageTitle"
-                    android:layout_centerHorizontal="true"
-                    icare:font_name="VAGRoundedLight.ttf"
-                    icare:is_enable="false"
-                    icare:text_unit="Cm"
-                    icare:max="100"
-                    icare:pointer_color="#00000000"
-                    icare:pointer_halo_color="#00000000"
-                    icare:pointer_size="34"
-                    icare:text_color="#FFFFFF"
-                    icare:text_size="50"
-                    icare:wheel_active_color="#00BFFF"
-                    icare:wheel_unactive_color="#FFCCCCCC"
-                    />
-                <com.fourello.icare.view.CustomEditTextView
-                    icare:fontName="VAGRoundedLight.ttf"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/etGrowthTrackerTemperature"
-                    android:drawableStart="@drawable/custom_edittext_no_drawable_left"
-                    android:background="@drawable/rounded_corners"
-                    android:layout_gravity="center_horizontal"
-                    android:singleLine="true"
-                    android:inputType="number|numberDecimal"
-                    android:maxLength="5"
-                    />
-            </LinearLayout>-->
         </LinearLayout>
     </HorizontalScrollView>
 </RelativeLayout>
