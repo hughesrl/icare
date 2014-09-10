@@ -16,6 +16,8 @@ public class ParentMyBabyMedicinesFragment extends Fragment  {
     TextView mLabel;
     BTFragmentGridPager.GridIndex mGridIndex;
     String medName;
+    String additionalData;
+    String dose;
     private ViewGroup myFragmentView;
 
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -30,6 +32,9 @@ public class ParentMyBabyMedicinesFragment extends Fragment  {
         CustomTextView lblMedicineName = (CustomTextView) myFragmentView.findViewById(R.id.lblMedicineName);
         lblMedicineName.setText(medName);
 
+        CustomTextView lblAdditionalData = (CustomTextView) myFragmentView.findViewById(R.id.lblAdditionalData);
+        lblAdditionalData.setText(additionalData);
+
         return myFragmentView;
     }
     public void setTxtRow(BTFragmentGridPager.GridIndex gridIndex) {
@@ -40,5 +45,9 @@ public class ParentMyBabyMedicinesFragment extends Fragment  {
     }
     public void setMedName(String medName){
         this.medName = medName;
+    }
+
+    public void setAdditionalData(String additionalData){
+        this.additionalData = additionalData;
     }
 }

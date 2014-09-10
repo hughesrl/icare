@@ -20,6 +20,10 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,6 +56,7 @@ public class ParentMyBabyFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private BTFragmentGridPager.FragmentGridPagerAdapter mFragmentGridPagerAdapter;
+    private JSONArray arrayMedications;
 
     /**
      * Use this factory method to create a new instance of
@@ -90,7 +95,18 @@ public class ParentMyBabyFragment extends Fragment {
         // Inflate the layout for this fragment
         myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_parent_my_baby, container, false);
 
-        Log.d("ROBERT", "PATIENT : "+mParamChildData.get(mParamChildDataPosition).getPatientObjectId());
+
+        final HoloCircleSeekBar weightSeekBar = (HoloCircleSeekBar) myFragmentView.findViewById(R.id.weightSeekBar);
+        final HoloCircleSeekBar heightSeekBar = (HoloCircleSeekBar) myFragmentView.findViewById(R.id.heightSeekBar);
+        final HoloCircleSeekBar headSeekBar = (HoloCircleSeekBar) myFragmentView.findViewById(R.id.headSeekBar);
+        final HoloCircleSeekBar nextVisitSeekBar = (HoloCircleSeekBar) myFragmentView.findViewById(R.id.nextVisiSeekBar);
+        final CustomTextView lblNextVisitDate = (CustomTextView) myFragmentView.findViewById(R.id.lblNextVisitDate);
+
+        weightSeekBar.setIsEnable(false);
+        heightSeekBar.setIsEnable(false);
+        headSeekBar.setIsEnable(false);
+        nextVisitSeekBar.setIsEnable(false);
+
         ParseQuery<ParseObject> queryVisits = new ParseQuery<ParseObject>(ICareApplication.VISITS_LABEL);
         queryVisits.setSkip(0);
         queryVisits.whereEqualTo("patientid", mParamChildData.get(mParamChildDataPosition).getPatientObjectId());
@@ -99,33 +115,54 @@ public class ParentMyBabyFragment extends Fragment {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
                 if(e == null) {
-                    HoloCircleSeekBar weightSeekBar = (HoloCircleSeekBar) myFragmentView.findViewById(R.id.weightSeekBar);
+
                     weightSeekBar.setMaxPosition(Integer.parseInt(parseObject.getString("weight"))); // position starts from zero
                     weightSeekBar.setInitPosition(Integer.parseInt(parseObject.getString("weight"))); // position starts from zero
-                    weightSeekBar.setIsEnable(false);
 
-                    HoloCircleSeekBar heightSeekBar = (HoloCircleSeekBar) myFragmentView.findViewById(R.id.heightSeekBar);
                     heightSeekBar.setMaxPosition(Integer.parseInt(parseObject.getString("height")));
                     heightSeekBar.setInitPosition(Integer.parseInt(parseObject.getString("height"))); // position starts from zero
-                    heightSeekBar.setIsEnable(false);
 
-                    HoloCircleSeekBar headSeekBar = (HoloCircleSeekBar) myFragmentView.findViewById(R.id.headSeekBar);
                     headSeekBar.setMaxPosition(Integer.parseInt(parseObject.getString("head")));
                     headSeekBar.setInitPosition(Integer.parseInt(parseObject.getString("head"))); // position starts from zero
-                    headSeekBar.setIsEnable(false);
 
                     DateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
                     int totalDays  = getDaysDifference(parseObject.getCreatedAt(), parseObject.getDate("nextvisit"));
                     int remainingDays = getDaysDifference(new Date(), parseObject.getDate("nextvisit"));
 
-                    HoloCircleSeekBar nextVisitSeekBar = (HoloCircleSeekBar) myFragmentView.findViewById(R.id.nextVisiSeekBar);
                     nextVisitSeekBar.setMaxPosition(totalDays);
                     nextVisitSeekBar.setInitPositionCountdown(totalDays-remainingDays); // position starts from zero
-                    nextVisitSeekBar.setIsEnable(false);
 
-                    CustomTextView lblNextVisitDate = (CustomTextView) myFragmentView.findViewById(R.id.lblNextVisitDate);
                     String nextVisitDate = df.format(parseObject.getDate("nextvisit"));
                     lblNextVisitDate.setText(nextVisitDate);
+
+                    arrayMedications = parseObject.getJSONArray("medications");
+
+                    final BTFragmentGridPager mFragmentGridPager = (BTFragmentGridPager) myFragmentView.findViewById(R.id.fragmentGridPager);
+                    mFragmentGridPagerAdapter = new BTFragmentGridPager.FragmentGridPagerAdapter() {
+                        @Override
+                        public int rowCount() {
+                            return arrayMedications.length();
+                        }
+                        @Override
+                        public int columnCount(int row) {
+                            return arrayMedications.length();
+                        }
+                        @Override
+                        public Fragment getItem(BTFragmentGridPager.GridIndex index) {
+                            ParentMyBabyMedicinesFragment panelFrag1 = new ParentMyBabyMedicinesFragment();
+                            panelFrag1.setGridIndex(index);
+                            try {
+                                JSONObject jsonObjectMedications = arrayMedications.getJSONObject(index.getRow());
+                                panelFrag1.setMedName(jsonObjectMedications.getString("brandname"));
+                                panelFrag1.setAdditionalData(jsonObjectMedications.getString("frequency"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            return panelFrag1;
+                        }
+                    };
+                    mFragmentGridPager.setGridPagerAdapter(mFragmentGridPagerAdapter);
                 } else {
                     Log.d("ROBERT", e.toString());
                 }
@@ -133,27 +170,6 @@ public class ParentMyBabyFragment extends Fragment {
         });
 
 
-
-
-        final BTFragmentGridPager mFragmentGridPager = (BTFragmentGridPager) myFragmentView.findViewById(R.id.fragmentGridPager);
-        mFragmentGridPagerAdapter = new BTFragmentGridPager.FragmentGridPagerAdapter() {
-            @Override
-            public int rowCount() {
-                return 10;
-            }
-            @Override
-            public int columnCount(int row) {
-                return 10;
-            }
-            @Override
-            public Fragment getItem(BTFragmentGridPager.GridIndex index) {
-                ParentMyBabyMedicinesFragment panelFrag1 = new ParentMyBabyMedicinesFragment();
-                panelFrag1.setGridIndex(index);
-                panelFrag1.setMedName(index.toString());
-                return panelFrag1;
-            }
-        };
-        mFragmentGridPager.setGridPagerAdapter(mFragmentGridPagerAdapter);
 
         return myFragmentView;
     }
@@ -196,6 +212,7 @@ public class ParentMyBabyFragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
+
 
     public static int getDaysDifference(Date fromDate, Date toDate) {
         if(fromDate==null||toDate==null)
