@@ -24,22 +24,32 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fourello.icare.R;
 import com.fourello.icare.datas.PatientDatabase;
+import com.fourello.icare.datas.PatientVisits;
 import com.fourello.icare.datas.SpinnerItems;
+import com.fourello.icare.view.CustomEditTextView;
+import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.view.RoundedImageView;
 import com.fourello.icare.widgets.Utils;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -71,13 +81,13 @@ public class VisitTrackerDialogFragment extends DialogFragment {
 
     private List<PatientDatabase> patientDatabaseArrayList;
 
+    PatientVisits patientVisits;
+
     /*In order to receive event callback, create a dialog box activity must implement this interface.
          * In case the host need to query the properties dialog box, each method will pass a DialogFragment instance.  */
     public interface CheckinPatientDialogListener {
         public void onDialogDoneClick(DialogFragment dialog);
         public void onDialogCancelClick(DialogFragment dialog);
-
-
     }
 
     // Examples of the use of this interface to transmit motion events
@@ -133,298 +143,144 @@ public class VisitTrackerDialogFragment extends DialogFragment {
             mParamPatientPhoto = getArguments().getByteArray(ARG_PATIENT_PHOTO);
             mParamPatientArrayListPosition = getArguments().getInt(ARG_PATIENT_ARRAY_LIST_POSITION);
         }
-
     }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return super.onCreateDialog(savedInstanceState);
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        inflatedView = inflater.inflate(R.layout.dialog_visit_tracker, container, true);
 
-        inflatedView = inflater.inflate(R.layout.dialog_visit_tracker,
-                container, true);
+        setCancelable(true);
 
-        setCancelable(false);
+        byte[] myPicture = patientVisits.getPhotoFile();
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg_image);
-        ImageView image = (ImageView) inflatedView.findViewById(R.id.bg_img);
-        image.setImageBitmap(Utils.getRoundedCornerBitmap(bitmap, 30));
+        if(myPicture!=null) {
+            Bitmap bMap = BitmapFactory.decodeByteArray(myPicture, 0, myPicture.length);
+            ImageView image = (ImageView) inflatedView.findViewById(R.id.patient_photo);
+            image.setBackground(Utils.resizedBitmapDisplayPatientQueue(getActivity(), bMap));
+        }
 
-        ImageButton btnClosePatientCheckin = (ImageButton) inflatedView.findViewById(R.id.btnClosePatientCheckin);
-        btnClosePatientCheckin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onDialogCancelClick(VisitTrackerDialogFragment.this);
-            }
-        });
+        TextView etPatientsName = (TextView) inflatedView.findViewById(R.id.etPatientsName);
+        etPatientsName.setText(patientVisits.getPatientname());
+
+        TextView etAge = (TextView) inflatedView.findViewById(R.id.etAge);
+        etAge.setText(patientVisits.getAge());
+
+        TextView etAccompaniedBy = (TextView) inflatedView.findViewById(R.id.etAccompaniedBy);
+        etAccompaniedBy.setText(patientVisits.getAccompaniedBy());
+
+        TextView etPurpose = (TextView) inflatedView.findViewById(R.id.etPurpose);
+        etPurpose.setText(patientVisits.getPupose_of_visit());
+
+        // MORE HERE
+        // PATIENT NOTES
+        // MORE HERE
+        TextView etAllergyRisk = (TextView) inflatedView.findViewById(R.id.etAllergyRisk);
+        etAllergyRisk.setText(patientVisits.getAllergyrisk());
+
+        TextView etTypeOfDelivery = (TextView) inflatedView.findViewById(R.id.etTypeOfDelivery);
+        etTypeOfDelivery.setText(patientVisits.getTypeofdelivery());
 
 
-        TextView pName = (TextView) inflatedView.findViewById(R.id.etPatientsName);
-        pName.setText(mParamPatientFullName);
+        TextView etInstructions = (TextView) inflatedView.findViewById(R.id.etInstructions);
+        etInstructions.setText(patientVisits.getInstructions());
 
+        TextView etNextVisit = (TextView) inflatedView.findViewById(R.id.etNextVisit);
+        etNextVisit.setText(patientVisits.getNextvisit());
 
-        Spinner spinnerPurpose = (Spinner) inflatedView.findViewById(R.id.spinnerPurpose);
-        CustomAdapter adapterspinnerPurpose = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, populatePurpose());
-        spinnerPurpose.setAdapter(adapterspinnerPurpose);
+        try {
+            String medications = patientVisits.getMedications();
+            JSONArray newJArrayMedications = new JSONArray(medications);
 
-        Spinner spinnerTypeOfDelivery = (Spinner) inflatedView.findViewById(R.id.spinnerTypeOfDelivery);
-        CustomAdapter adapterspinnerTypeOfDelivery = new CustomAdapter(getActivity(), android.R.layout.simple_spinner_item, populateTypeOfDelivery());
-        spinnerTypeOfDelivery.setAdapter(adapterspinnerTypeOfDelivery);
+            ListView listMedicationsTaken = (ListView)inflatedView.findViewById(R.id.medicationsTaken);
+            JSONAdapterMedications jSONAdapterMedications = new JSONAdapterMedications(getActivity(), newJArrayMedications);
 
+            listMedicationsTaken.setAdapter(jSONAdapterMedications);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         // GROWTH TRACKER
-        TextView lblGrowthTrackerWeightValue = (TextView) inflatedView.findViewById(R.id.lblGrowthTrackerWeightValue);
-        TextView lblGrowthTrackerHeightValue = (TextView) inflatedView.findViewById(R.id.lblGrowthTrackerHeightValue);
-        TextView lblGrowthTrackerHeadValue = (TextView) inflatedView.findViewById(R.id.lblGrowthTrackerHeadValue);
-        TextView lblGrowthTrackerChestValue = (TextView) inflatedView.findViewById(R.id.lblGrowthTrackerChestValue);
-        TextView lblGrowthTrackerTemperatureValue = (TextView) inflatedView.findViewById(R.id.lblGrowthTrackerTemperatureValue);
+        CustomTextView lblGrowthTrackerWeightValue = (CustomTextView) inflatedView.findViewById(R.id.lblGrowthTrackerWeightValue);
+        CustomTextView lblGrowthTrackerHeightValue = (CustomTextView) inflatedView.findViewById(R.id.lblGrowthTrackerHeightValue);
+        CustomTextView lblGrowthTrackerHeadValue = (CustomTextView) inflatedView.findViewById(R.id.lblGrowthTrackerHeadValue);
+        CustomTextView lblGrowthTrackerChestValue = (CustomTextView) inflatedView.findViewById(R.id.lblGrowthTrackerChestValue);
+        CustomTextView lblGrowthTrackerTemperatureValue = (CustomTextView) inflatedView.findViewById(R.id.lblGrowthTrackerTemperatureValue);
 
-        final EditText etGrowthTrackerWeight = (EditText) inflatedView.findViewById(R.id.etGrowthTrackerWeight);
-        EditText etGrowthTrackerHeight = (EditText) inflatedView.findViewById(R.id.etGrowthTrackerHeight);
-        EditText etGrowthTrackerHead = (EditText) inflatedView.findViewById(R.id.etGrowthTrackerHead);
-        EditText etGrowthTrackerChest = (EditText) inflatedView.findViewById(R.id.etGrowthTrackerChest);
-        EditText etGrowthTrackerTemperature = (EditText) inflatedView.findViewById(R.id.etGrowthTrackerTemperature);
+        CustomEditTextView etGrowthTrackerWeight = (CustomEditTextView) inflatedView.findViewById(R.id.etGrowthTrackerWeight);
+        CustomEditTextView etGrowthTrackerHeight = (CustomEditTextView) inflatedView.findViewById(R.id.etGrowthTrackerHeight);
+        CustomEditTextView etGrowthTrackerHead = (CustomEditTextView) inflatedView.findViewById(R.id.etGrowthTrackerHead);
+        CustomEditTextView etGrowthTrackerChest = (CustomEditTextView) inflatedView.findViewById(R.id.etGrowthTrackerChest);
+        CustomEditTextView etGrowthTrackerTemperature = (CustomEditTextView) inflatedView.findViewById(R.id.etGrowthTrackerTemperature);
 
-        etGrowthTrackerWeight.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerWeight, lblGrowthTrackerWeightValue));
-        etGrowthTrackerHeight.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerHeight, lblGrowthTrackerHeightValue));
-        etGrowthTrackerHead.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerHead, lblGrowthTrackerHeadValue));
-        etGrowthTrackerChest.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerChest, lblGrowthTrackerChestValue));
-        etGrowthTrackerTemperature.addTextChangedListener(new CustomTextWatcher(etGrowthTrackerTemperature, lblGrowthTrackerTemperatureValue));
+        lblGrowthTrackerWeightValue.setText(patientVisits.getWeight());
+        lblGrowthTrackerHeightValue.setText(patientVisits.getHeight());
+        lblGrowthTrackerHeadValue.setText(patientVisits.getHead());
+        lblGrowthTrackerChestValue.setText(patientVisits.getChest());
+        lblGrowthTrackerTemperatureValue.setText(patientVisits.getTemperature());
 
-
-        etGrowthTrackerWeight.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerWeight, lblGrowthTrackerWeightValue));
-        etGrowthTrackerHeight.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerHeight, lblGrowthTrackerHeightValue));
-        etGrowthTrackerHead.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerHead, lblGrowthTrackerHeadValue));
-        etGrowthTrackerChest.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerChest, lblGrowthTrackerChestValue));
-        etGrowthTrackerTemperature.setOnKeyListener(new CustomOnKeyListener(etGrowthTrackerTemperature, lblGrowthTrackerTemperatureValue));
-
-        // PATIENT PHOTO
-        ImageButton patient_photo = (ImageButton) inflatedView.findViewById(R.id.patient_photo);
-
-        if(mParamPatientPhoto != null) {
-            Bitmap bMap = BitmapFactory.decodeByteArray(mParamPatientPhoto, 0, mParamPatientPhoto.length);
-            Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(bMap);
-
-            patient_photo.setImageBitmap(profileInCircle);
-        }
-        patient_photo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    //use standard intent to capture an image
-                    Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    //we will handle the returned data in onActivityResult
-                    startActivityForResult(captureIntent, CAMERA_CAPTURE);
-                } catch (ActivityNotFoundException anfe) {
-                    //display an error message
-                    String errorMessage = "Whoops - your device doesn't support capturing images!";
-                    Toast toast = Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-        });
+        etGrowthTrackerWeight.setText(patientVisits.getWeight());
+        etGrowthTrackerHeight.setText(patientVisits.getHeight());
+        etGrowthTrackerHead.setText(patientVisits.getHead());
+        etGrowthTrackerChest.setText(patientVisits.getChest());
+        etGrowthTrackerTemperature.setText(patientVisits.getTemperature());
 
         return inflatedView;
     }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d("resultCode", resultCode+" ");
-        if( requestCode == CAMERA_CAPTURE ) {
-            if(resultCode != 0) {
-                final Bitmap thePic = data.getExtras().getParcelable("data");
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                thePic.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                bytearray = stream.toByteArray();// get byte array here
-                Log.d(ARG_PATIENT_RECORD_OBJECT_ID, mParamPatientRecordObjectId);
-                ParseObject updatePatient = ParseObject.createWithoutData("Patients", mParamPatientRecordObjectId);
-                if (bytearray != null) {
-                    System.out.println("BYTESSS");  //test case
-                    System.out.println(bytearray.toString());  //test case
-                    ParseFile file = new ParseFile("UserProfile.jpg", bytearray);
-                    file.saveInBackground();
-                    updatePatient.put("babypicture", file);
+
+
+    public void setVisitContent(PatientVisits patientVisits) {
+        this.patientVisits = patientVisits;
+    }
+
+
+    public class JSONAdapterMedications extends BaseAdapter implements ListAdapter {
+        private final Activity activity;
+        private final JSONArray jsonArray;
+
+        private JSONAdapterMedications (Activity activity, JSONArray jsonArray) {
+            assert activity != null;
+            assert jsonArray != null;
+
+            this.jsonArray = jsonArray;
+            this.activity = activity;
+        }
+
+
+        @Override public int getCount() {
+            return jsonArray.length();
+        }
+
+        @Override public JSONObject getItem(int position) {
+            return jsonArray.optJSONObject(position);
+        }
+
+        @Override public long getItemId(int position) {
+            JSONObject jsonObject = getItem(position);
+
+            return jsonObject.optLong("id");
+        }
+
+        @Override public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null)
+                convertView = activity.getLayoutInflater().inflate(R.layout.list_visit_tracker_items, null);
+                CustomTextView text =(CustomTextView) convertView.findViewById(R.id.txtVisitDate);
+
+                JSONObject json_data = getItem(position);
+            if(null!=json_data ){
+                String jj = null;
+                try {
+                    jj = json_data.getString("brandname");
+                    text.setText(jj);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                if (mProgressDialog == null) {
-                    mProgressDialog = Utils.createProgressDialog(getActivity());
-                    mProgressDialog.show();
-                } else {
-                    mProgressDialog.show();
-                }
-                updatePatient.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        mProgressDialog.dismiss();
-                        if (e == null) {
-                            mProgressDialog.dismiss();
 
-                            //                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            //                        thePic.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                            //                        byte[] byteArray = stream.toByteArray();
-                            //
-                            //                        PatientDatabase map = new PatientDatabase();
-                            //                        map.setPatientphoto(byteArray);
-                            //
-                            //                        patientDatabaseArrayList.set(mParamPatientArrayListPosition, map);
-
-                            Bitmap profileInCircle = RoundedImageView.getRoundedCornerBitmap(thePic);
-
-                            ImageButton patient_photo = (ImageButton) inflatedView.findViewById(R.id.patient_photo);
-                            patient_photo.setImageBitmap(profileInCircle);
-                        } else {
-                            Log.e("ERROR", e.toString());
-                        }
-                    }
-
-                });
             }
 
-
-            //carry out the crop operation
-//            performCrop();
-
-        }
-    }
-//
-//    private void performCrop(){
-//        try {
-////call the standard crop action intent (the user device may not support it)
-//            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-//            //indicate image type and Uri
-//            //cropIntent.setDataAndType(picUri, "image/*");
-//            cropIntent.setType("image/*");
-//            cropIntent.setData(picUri); // Uri to the image you want to crop
-//
-//            //set crop properties
-//            cropIntent.putExtra("crop", "true");
-//            //indicate aspect of desired crop
-//            cropIntent.putExtra("aspectX", 1);
-//            cropIntent.putExtra("aspectY", 1);
-//            //indicate output X and Y
-//            cropIntent.putExtra("outputX", 256);
-//            cropIntent.putExtra("outputY", 256);
-//            //retrieve data on return
-//            cropIntent.putExtra("return-data", true);
-//            //start the activity - we handle returning in onActivityResult
-//            startActivityForResult(cropIntent, PIC_CROP);
-//        }
-//        catch(ActivityNotFoundException anfe){
-//            //display an error message
-//            String errorMessage = "Whoops - your device doesn't support the crop action!";
-//            Toast toast = Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_SHORT);
-//            toast.show();
-//        }
-//    }
-
-    private ArrayList<SpinnerItems> populatePurpose(){
-        final ArrayList<SpinnerItems> spinnerItems = new ArrayList<SpinnerItems>();
-        //spinnerItems.add(new SpinnerItems("Purpose", false));
-        spinnerItems.add(new SpinnerItems("Checkup", true));
-        spinnerItems.add(new SpinnerItems("Follow-up", true));
-        spinnerItems.add(new SpinnerItems("Vaccination", true));
-        return spinnerItems;
-    }
-    private ArrayList<SpinnerItems> populateTypeOfDelivery(){
-        final ArrayList<SpinnerItems> spinnerItems = new ArrayList<SpinnerItems>();
-        //spinnerItems.add(new SpinnerItems("Purpose", false));
-        spinnerItems.add(new SpinnerItems("Normal", true));
-        spinnerItems.add(new SpinnerItems("CS", true));
-        return spinnerItems;
-    }
-
-    private class CustomAdapter extends ArrayAdapter<SpinnerItems> {
-        private Activity context;
-        ArrayList<SpinnerItems> spinnerItems;
-
-        public CustomAdapter(Activity context, int resource, ArrayList<SpinnerItems> spinnerItems) {
-            super(context, resource, spinnerItems);
-            this.context = context;
-            this.spinnerItems = spinnerItems;
-        }
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            SpinnerItems current = spinnerItems.get(position);
-
-            LayoutInflater inflater = getLayoutInflater(getArguments());
-            View row = inflater.inflate(R.layout.spinner_row, parent, false);
-            TextView name = (TextView) row.findViewById(R.id.spinnerTxtTitle);
-            Typeface myTypeFace = Typeface.createFromAsset(context.getAssets(), "fonts/VAGRoundedLight.ttf");
-
-            name.setTypeface(myTypeFace, Typeface.NORMAL);
-            name.setGravity(Gravity.LEFT);
-            name.setTextSize(18);
-            if(current.getSpinnerStatus() == false) {
-                name.setTextColor(Color.GRAY);
-            } else {
-                name.setTextColor(Color.BLACK);
-            }
-
-            name.setText(current.getSpinnerTitle());
-
-            return row;
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            View row = convertView;
-            if (row == null) {
-                LayoutInflater inflater = context.getLayoutInflater();
-                row = inflater.inflate(R.layout.spinner_row, parent, false);
-            }
-            SpinnerItems current = spinnerItems.get(position);
-            TextView name = (TextView) row.findViewById(R.id.spinnerTxtTitle);
-            if(current.getSpinnerStatus() == false) {
-                name.setTextColor(Color.GRAY);
-            } else {
-                name.setTextColor(Color.BLACK);
-            }
-            name.setText(current.getSpinnerTitle());
-            return row;
-        }
-    }
-
-    private class CustomTextWatcher implements TextWatcher {
-        private EditText mEditText;
-        private TextView mTextView;
-
-        public CustomTextWatcher(EditText e, TextView textView) {
-            mEditText = e;
-            mTextView = textView;
-        }
-
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            mTextView.setText(s);
-        }
-
-        public void afterTextChanged(Editable s) {
-        }
-    }
-
-    private class CustomOnKeyListener implements View.OnKeyListener {
-
-        private EditText mEditText;
-        private TextView mTextView;
-
-        public CustomOnKeyListener(EditText e, TextView textView) {
-            mEditText = e;
-            mTextView = textView;
-        }
-
-        @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-            //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-            if(keyCode == KeyEvent.KEYCODE_DEL){
-                //this is for backspace
-                if(mEditText.getText().toString().equals("")) {
-                    mTextView.setText(getString(R.string.lblZero));
-                }
-            }
-            return false;
+            return convertView;
         }
     }
 }

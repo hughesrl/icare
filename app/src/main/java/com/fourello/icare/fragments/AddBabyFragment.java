@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.fourello.icare.DashboardDoctorFragmentActivity;
 import com.fourello.icare.ICareApplication;
 import com.fourello.icare.R;
+import com.fourello.icare.datas.Patients;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.view.CustomButton;
 import com.fourello.icare.view.CustomEditTextView;
@@ -249,7 +250,8 @@ public class AddBabyFragment extends Fragment implements
                                 if (objects.size() == 0) {
                                     Toast.makeText(getActivity(), "Invalid Email", Toast.LENGTH_LONG).show();
                                 } else {
-                                    final ParseObject initialPatientData = new ParseObject(ICareApplication.PATIENTS_LABEL);
+                                    //final ParseObject initialPatientData = new ParseObject(ICareApplication.PATIENTS_LABEL);
+                                    final Patients initialPatientData = new Patients();
 //----------------------
                                     initialPatientData.put("firstname", etFirstname.getText().toString());
                                     initialPatientData.put("middlename", etMiddlename.getText().toString());

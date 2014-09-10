@@ -39,6 +39,7 @@
     <string name="lbl_my_baby">MY BABY</string>
     <string name="lbl_patient_database">PATIENT DATABASE</string>
     <string name="lbl_patient_visits">VISITS</string>
+    <string name="lbl_visit_tracker">VISIT TRACKER</string>
     <string name="lbl_patients_queue">PATIENTS QUEUE</string>
     <string name="lbl_add_user">ADD USER</string>
     <string name="lbl_add_baby">ADD BABY</string>
@@ -61,7 +62,9 @@
 
 
     <string name="lblPatientsName">Patient\'s Name</string>
+    <string name="lblAge">Age</string>
     <string name="lblAccompaniedBy">Accompanied By</string>
+    <string name="lblPatientNotes">Patient Note\s</string>
     <string name="lblRelationshipToPatient">Relationship to Patient</string>
     <string name="lblPurpose">Purpose</string>
     <string name="lblTypeOfDelivery">Type of Delivery</string>
@@ -74,11 +77,11 @@
     <string name="lblGrowthTrackerChest">Chest</string>
     <string name="lblGrowthTrackerAbdomen">Abdomen</string>
     <string name="lblGrowthTrackerTemperature">Temperature</string>
-
-    <string name="lblMedicine">Medicine</string>
-    <string name="lblNextVisit">Next Visit</string>
-
-    <string name="lblMyNameIs">My name is</string>
+	<string name="lblMedicine">Medicine</string>
+	<string name="lblNextVisit">Next Visit</string>	<string name="lblVaccinationsTaken">Vaccinations Taken</string>
+	<string name="lblMedicationsTaken">Medications Taken</string>
+	<string name="lblInstructions">Instructions</string>
+	<string name="lblNextVisit">Next Visit</string>    <string name="lblMyNameIs">My name is</string>
     <string name="lblIWasBorn">I was born</string>
     <string name="lblAt">at</string>
     <string name="lblIWasDeliveredBy">I was delivered by</string>

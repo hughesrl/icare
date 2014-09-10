@@ -31,6 +31,8 @@
     <dimen name="patient_photo_size">155dp</dimen>
     <integer name="resize_patient_photo_size">125</integer>
 
+    <dimen name="content_left_right_margin">10dp</dimen>
+
     <!--DRAWABLE CUSTOMS-->
     <dimen name="drawable_top">5dp</dimen>
     <dimen name="drawable_left">5dp</dimen>
