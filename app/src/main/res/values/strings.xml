@@ -78,10 +78,11 @@
     <string name="lblGrowthTrackerAbdomen">Abdomen</string>
     <string name="lblGrowthTrackerTemperature">Temperature</string>
 	<string name="lblMedicine">Medicine</string>
-	<string name="lblNextVisit">Next Visit</string>	<string name="lblVaccinationsTaken">Vaccinations Taken</string>
+	<string name="lblNextVisit">Next Visit</string>
+    <string name="lblVaccinationsTaken">Vaccinations Taken</string>
 	<string name="lblMedicationsTaken">Medications Taken</string>
 	<string name="lblInstructions">Instructions</string>
-	<string name="lblNextVisit">Next Visit</string>    <string name="lblMyNameIs">My name is</string>
+    <string name="lblMyNameIs">My name is</string>
     <string name="lblIWasBorn">I was born</string>
     <string name="lblAt">at</string>
     <string name="lblIWasDeliveredBy">I was delivered by</string>
