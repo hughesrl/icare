@@ -159,7 +159,7 @@ public class VisitTrackerDialogFragment extends DialogFragment {
         if(myPicture!=null) {
             Bitmap bMap = BitmapFactory.decodeByteArray(myPicture, 0, myPicture.length);
             ImageView image = (ImageView) inflatedView.findViewById(R.id.patient_photo);
-            image.setBackground(Utils.resizedBitmapDisplayPatientQueue(getActivity(), bMap));
+            image.setBackground(Utils.resizedBitmapDisplayUserPhoto(getActivity(), bMap));
         }
 
         TextView etPatientsName = (TextView) inflatedView.findViewById(R.id.etPatientsName);

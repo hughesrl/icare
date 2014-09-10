@@ -49,36 +49,26 @@ public class MainActivity extends Activity {
                     doctor_or_user_count += objectsDoctor.size();
 
                     if(doctorInTable > 0) {
-                        final ParseObject project = objectsDoctor.get(0);
-                        if(project.has("photoFile")) {
-                            ParseFile myPhoto = (ParseFile) project.get("photoFile");
+                        ParseObject project = objectsDoctor.get(0);
+                        loginData = new ParseProxyObject(project);
 
-                            myPhoto.getDataInBackground(new GetDataCallback() {
-                                @Override
-                                public void done(byte[] bytes, ParseException e) {
-                                    if (e == null) {
-                                        myPicture = bytes;
-                                    }
-                                    loginData = new ParseProxyObject(project);
-                                }
-                            });
+                        ParseFile myPhoto = (ParseFile)project.get("photoFile");
+                        if(myPhoto!=null) {
+                            try {
+                                myPicture = myPhoto.getData();
+                            } catch (ParseException e2) {
+                                // TODO Auto-generated catch block
+                                e2.printStackTrace();
+                            }
                         } else {
                             Drawable drawable= getResources().getDrawable(R.drawable.doctor_icon);
                             Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
                             ByteArrayOutputStream out = new ByteArrayOutputStream();
                             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-
                             myPicture = out.toByteArray();
-
-                            loginData = new ParseProxyObject(project);
                         }
 
-                        // Doctor
-                        Intent intent = new Intent(MainActivity.this, DashboardDoctorFragmentActivity.class);
-                        intent.putExtra("loginData", loginData);
-                        intent.putExtra("myPicture", myPicture);
-                        startActivity(intent);
-                        finish();
+                        loginSuccessful(loginData, myPicture);
                     } else {
                         ParseQuery<ParseObject> queryUsers = ParseQuery.getQuery(ICareApplication.USERS_LABEL);
                         queryUsers.fromLocalDatastore();
@@ -93,7 +83,9 @@ public class MainActivity extends Activity {
 
                                         Intent intent = new Intent(MainActivity.this, DashboardParentFragmentActivity.class);
                                         intent.putExtra("loginData", userLoginData);
-
+                                        if(myPicture != null) {
+                                            intent.putExtra("myPicture", myPicture);
+                                        }
                                         startActivity(intent);
                                         finish();
                                     } else {
@@ -188,6 +180,18 @@ public class MainActivity extends Activity {
 //            }
 //        }
 
+    }
+
+    public void loginSuccessful(ParseProxyObject loginData, byte[] myPicture) {
+        Intent intent = new Intent(MainActivity.this, DashboardDoctorFragmentActivity.class);
+        intent.putExtra("loginData", loginData);
+        if(myPicture != null) {
+            intent.putExtra("myPicture", myPicture);
+        }
+        startActivity(intent);
+
+        Toast.makeText(getApplicationContext(), "Successfully Logged in", Toast.LENGTH_LONG).show();
+        finish();
     }
 
 
