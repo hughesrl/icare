@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.fourello.icare.DashboardDoctorFragmentActivity;
 import com.fourello.icare.ICareApplication;
 import com.fourello.icare.R;
+import com.fourello.icare.datas.Patients;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.view.CustomButton;
 import com.fourello.icare.view.CustomEditTextView;
@@ -227,7 +228,8 @@ public class AddUserFragment extends Fragment implements
                         if (e == null) {
                             newUserRecordObjectId = (String) newUser.get("objectId");
 
-                            final ParseObject initialPatientData = new ParseObject(ICareApplication.PATIENTS_LABEL);
+                            //final ParseObject initialPatientData = new ParseObject(ICareApplication.PATIENTS_LABEL);
+                            final Patients initialPatientData = new Patients();
                             initialPatientData.put("doctorid", mParamLoginData.getString("linked_doctorid"));
                             initialPatientData.put("email", etEmail.getText().toString());
                             initialPatientData.put("username", etFirstname.getText().toString());

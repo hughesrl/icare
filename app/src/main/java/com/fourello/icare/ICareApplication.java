@@ -1,17 +1,11 @@
 package com.fourello.icare;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Application;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ListView;
 
 import com.fourello.icare.datas.ClinicSurvey;
 import com.fourello.icare.datas.PatientCheckIn;
@@ -22,17 +16,13 @@ import com.fourello.icare.widgets.ParseProxyObject;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseObject;
-import com.parse.ParseAnalytics;
+
+import org.acra.ACRA;
+import org.acra.annotation.ReportsCrashes;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.acra.*;
-import org.acra.annotation.*;
 
 @ReportsCrashes(
         formKey = "",
