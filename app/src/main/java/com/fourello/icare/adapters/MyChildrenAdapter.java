@@ -12,16 +12,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fourello.icare.R;
-import com.fourello.icare.datas.MyChildren;
+import com.fourello.icare.datas.PatientChildData;
 import com.fourello.icare.widgets.Utils;
 
 import java.util.ArrayList;
 
-public class MyChildrenAdapter extends ArrayAdapter<MyChildren> {
+public class MyChildrenAdapter extends ArrayAdapter<PatientChildData> {
     private Activity context;
-    ArrayList<MyChildren> spinnerItems;
+    ArrayList<PatientChildData> spinnerItems;
 
-    public MyChildrenAdapter(Activity context, int resource, ArrayList<MyChildren> spinnerItems) {
+    public MyChildrenAdapter(Activity context, int resource, ArrayList<PatientChildData> spinnerItems) {
         super(context, resource, spinnerItems);
         this.context = context;
         this.spinnerItems = spinnerItems;
@@ -31,7 +31,7 @@ public class MyChildrenAdapter extends ArrayAdapter<MyChildren> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        MyChildren current = spinnerItems.get(position);
+        PatientChildData current = spinnerItems.get(position);
 
         LayoutInflater inflater = context.getLayoutInflater();
         View row = inflater.inflate(R.layout.spinner_row_my_children_photo, parent, false);
@@ -56,14 +56,14 @@ public class MyChildrenAdapter extends ArrayAdapter<MyChildren> {
             row = inflater.inflate(R.layout.spinner_row_my_children, parent, false);
         }
 
-        MyChildren item = spinnerItems.get(position);
+        PatientChildData item = spinnerItems.get(position);
 
         if(item != null) {   // Parse the data from each object and set it.
             TextView myChildName = (TextView) row.findViewById(R.id.spinnerTxtTitle);
             ImageView patientPhoto = (ImageView) row.findViewById(R.id.patientPhoto);
 
             if(myChildName != null)
-                myChildName.setText(item.getPatientName());
+                myChildName.setText(item.getFirtname()+" "+item.getLastname());
 
             byte[] childPhotoData = item.getPatientphoto();
 
@@ -79,7 +79,7 @@ public class MyChildrenAdapter extends ArrayAdapter<MyChildren> {
     }
     public int getPosition(String text) {
         for(int s=0;s<=(spinnerItems.size()-1);s++) {
-            if(spinnerItems.get(s).getPatientName().equalsIgnoreCase(text.trim())) {
+            if(spinnerItems.get(s).getFirtname().equalsIgnoreCase(text.trim())) {
                 return s;
             }
         }

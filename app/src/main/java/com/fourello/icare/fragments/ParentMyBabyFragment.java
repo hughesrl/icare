@@ -11,15 +11,15 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.fourello.icare.BTGridPager.BTFragmentGridPager;
-import com.fourello.icare.ICareApplication;
+import com.fourello.icare.DashboardParentFragmentActivity;
 import com.fourello.icare.R;
-import com.fourello.icare.datas.MyChildren;
+import com.fourello.icare.datas.PatientChildData;
+import com.fourello.icare.datas.Visits;
 import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.view.HoloCircleSeekBar;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import org.json.JSONArray;
@@ -48,7 +48,7 @@ public class ParentMyBabyFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private ParseProxyObject mParamLoginData;
-    private ArrayList<MyChildren> mParamChildData;
+    private ArrayList<PatientChildData> mParamChildData;
     private int mParamChildDataPosition;
     private byte[] mParamMyPicture;
     private String mParam1;
@@ -85,10 +85,10 @@ public class ParentMyBabyFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParamLoginData = (ParseProxyObject) getArguments().getSerializable(ParentDashboardFragment.ARG_LOGIN_DATA);
-            mParamChildData = getArguments().getParcelableArrayList(ParentDashboardFragment.ARG_CHILD_DATA);
-            mParamChildDataPosition = getArguments().getInt(ParentDashboardFragment.ARG_CHILD_DATA_POS);
-            mParamMyPicture = getArguments().getByteArray(ParentDashboardFragment.ARG_MY_PICTURE);
+            mParamLoginData = (ParseProxyObject) getArguments().getSerializable(DashboardParentFragmentActivity.ARG_LOGIN_DATA);
+            mParamChildData = getArguments().getParcelableArrayList(DashboardParentFragmentActivity.ARG_CHILD_DATA);
+            mParamChildDataPosition = getArguments().getInt(DashboardParentFragmentActivity.ARG_CHILD_DATA_POS);
+            mParamMyPicture = getArguments().getByteArray(DashboardParentFragmentActivity.ARG_MY_PICTURE);
         }
     }
 
@@ -109,9 +109,8 @@ public class ParentMyBabyFragment extends Fragment {
         headSeekBar.setIsEnable(false);
         nextVisitSeekBar.setIsEnable(false);
 
-        ParseQuery<ParseObject> queryVisits = new ParseQuery<ParseObject>(ICareApplication.VISITS_LABEL);
-        queryVisits.setSkip(0);
-        queryVisits.whereEqualTo("patientid", mParamChildData.get(mParamChildDataPosition).getPatientObjectId());
+        ParseQuery<Visits> queryVisits = Visits.getQuery();
+        queryVisits.fromLocalDatastore();
         queryVisits.addDescendingOrder("updatedAt");
         try {
             if(queryVisits.count() == 0) {
@@ -120,75 +119,83 @@ public class ParentMyBabyFragment extends Fragment {
 
                 HorizontalScrollView visitrackerdata = (HorizontalScrollView) myFragmentView.findViewById(R.id.visitrackerdata);
                 visitrackerdata.setVisibility(View.GONE);
+            } else {
+                queryVisits.getFirstInBackground(new GetCallback<Visits>() {
+                    @Override
+                    public void done(Visits parseObject, ParseException e) {
+                        DateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
+                        if(e == null) {
+                            if(parseObject.has("weight")) {
+                                weightSeekBar.setMaxPosition(Integer.parseInt(parseObject.getWeight())); // position starts from zero
+                                weightSeekBar.setInitPosition(Integer.parseInt(parseObject.getWeight())); // position starts from zero
+                            }
+
+                            if(parseObject.has("height")) {
+                                heightSeekBar.setMaxPosition(Integer.parseInt(parseObject.getHeight()));
+                                heightSeekBar.setInitPosition(Integer.parseInt(parseObject.getHeight())); // position starts from zero
+                            }
+
+                            if(parseObject.has("head")) {
+                                headSeekBar.setMaxPosition(Integer.parseInt(parseObject.getHead()));
+                                headSeekBar.setInitPosition(Integer.parseInt(parseObject.getHead())); // position starts from zero
+                            }
+
+                            if(parseObject.has("nextvisit")) {
+                                int totalDays  = getDaysDifference(parseObject.getCreatedAt(), parseObject.getNextVisit());
+                                int remainingDays = getDaysDifference(new Date(), parseObject.getNextVisit());
+
+                                nextVisitSeekBar.setMaxPosition(totalDays);
+                                nextVisitSeekBar.setInitPositionCountdown(totalDays-remainingDays); // position starts from zero
+
+                                String nextVisitDate = df.format(parseObject.getNextVisit());
+                                lblNextVisitDate.setText(nextVisitDate);
+                            }
+
+                            if(parseObject.has("medications")) {
+                                arrayMedications = parseObject.getMedications();
+                                if (arrayMedications != null) {
+                                    final BTFragmentGridPager mFragmentGridPager = (BTFragmentGridPager) myFragmentView.findViewById(R.id.fragmentGridPager);
+                                    mFragmentGridPagerAdapter = new BTFragmentGridPager.FragmentGridPagerAdapter() {
+                                        @Override
+                                        public int rowCount() {
+                                            return arrayMedications.length();
+                                        }
+
+                                        @Override
+                                        public int columnCount(int row) {
+                                            return arrayMedications.length();
+                                        }
+
+                                        @Override
+                                        public Fragment getItem(BTFragmentGridPager.GridIndex index) {
+                                            ParentMyBabyMedicinesFragment panelFrag1 = new ParentMyBabyMedicinesFragment();
+                                            panelFrag1.setGridIndex(index);
+                                            try {
+                                                JSONObject jsonObjectMedications = arrayMedications.getJSONObject(index.getRow());
+                                                panelFrag1.setMedName(jsonObjectMedications.getString("brandname"));
+                                                panelFrag1.setAdditionalData(jsonObjectMedications.getString("frequency"));
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            return panelFrag1;
+                                        }
+                                    };
+                                    mFragmentGridPager.setGridPagerAdapter(mFragmentGridPagerAdapter);
+                                } else {
+                                    LinearLayout medicineLayout = (LinearLayout) myFragmentView.findViewById(R.id.medicineLayout);
+                                    medicineLayout.setVisibility(View.GONE);
+                                }
+                            }
+                        } else {
+                            Log.d("ROBERT", e.toString());
+                        }
+                    }
+                });
             }
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        queryVisits.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject parseObject, ParseException e) {
-                if(e == null) {
-                    weightSeekBar.setMaxPosition(Integer.parseInt(parseObject.getString("weight"))); // position starts from zero
-                    weightSeekBar.setInitPosition(Integer.parseInt(parseObject.getString("weight"))); // position starts from zero
-
-                    heightSeekBar.setMaxPosition(Integer.parseInt(parseObject.getString("height")));
-                    heightSeekBar.setInitPosition(Integer.parseInt(parseObject.getString("height"))); // position starts from zero
-
-                    headSeekBar.setMaxPosition(Integer.parseInt(parseObject.getString("head")));
-                    headSeekBar.setInitPosition(Integer.parseInt(parseObject.getString("head"))); // position starts from zero
-
-                    DateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
-                    int totalDays  = getDaysDifference(parseObject.getCreatedAt(), parseObject.getDate("nextvisit"));
-                    int remainingDays = getDaysDifference(new Date(), parseObject.getDate("nextvisit"));
-
-                    nextVisitSeekBar.setMaxPosition(totalDays);
-                    nextVisitSeekBar.setInitPositionCountdown(totalDays-remainingDays); // position starts from zero
-
-                    String nextVisitDate = df.format(parseObject.getDate("nextvisit"));
-                    lblNextVisitDate.setText(nextVisitDate);
-
-                    arrayMedications = parseObject.getJSONArray("medications");
-                    if(arrayMedications != null) {
-                        final BTFragmentGridPager mFragmentGridPager = (BTFragmentGridPager) myFragmentView.findViewById(R.id.fragmentGridPager);
-                        mFragmentGridPagerAdapter = new BTFragmentGridPager.FragmentGridPagerAdapter() {
-                            @Override
-                            public int rowCount() {
-                                return arrayMedications.length();
-                            }
-
-                            @Override
-                            public int columnCount(int row) {
-                                return arrayMedications.length();
-                            }
-
-                            @Override
-                            public Fragment getItem(BTFragmentGridPager.GridIndex index) {
-                                ParentMyBabyMedicinesFragment panelFrag1 = new ParentMyBabyMedicinesFragment();
-                                panelFrag1.setGridIndex(index);
-                                try {
-                                    JSONObject jsonObjectMedications = arrayMedications.getJSONObject(index.getRow());
-                                    panelFrag1.setMedName(jsonObjectMedications.getString("brandname"));
-                                    panelFrag1.setAdditionalData(jsonObjectMedications.getString("frequency"));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                                return panelFrag1;
-                            }
-                        };
-                        mFragmentGridPager.setGridPagerAdapter(mFragmentGridPagerAdapter);
-                    } else {
-                        LinearLayout medicineLayout = (LinearLayout) myFragmentView.findViewById(R.id.medicineLayout);
-                        medicineLayout.setVisibility(View.GONE);
-                    }
-                } else {
-                    Log.d("ROBERT", e.toString());
-                }
-            }
-        });
-
-
-
         return myFragmentView;
     }
 

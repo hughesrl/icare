@@ -31,6 +31,17 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
+    <style name="DialogAnimationZoom" parent="@android:style/Theme.Panel">
+        <item name="@android:windowEnterAnimation">@anim/zoom_in</item>
+        <item name="@android:windowExitAnimation">@anim/zoom_out</item>
+    </style>
+    <style name="DialogSlideAnimZoom" parent="android:Theme.Translucent.NoTitleBar">
+        <item name="android:windowAnimationStyle">@style/DialogAnimationZoom</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+
+    </style>
 
     <style name="text_Appearance_normal">
         <item name="android:textSize">15sp</item>

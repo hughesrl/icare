@@ -4,23 +4,16 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.fourello.icare.adapters.MyChildrenAdapter;
-import com.fourello.icare.datas.MyChildren;
-import com.fourello.icare.datas.PatientDatabase;
 import com.fourello.icare.view.CustomButton;
 import com.fourello.icare.view.CustomEditTextView;
 import com.fourello.icare.widgets.ParseProxyObject;
@@ -31,16 +24,13 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ProgressCallback;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 
 
-public class LoginSignupActivity extends Activity {
+public class    LoginSignupActivity extends Activity {
 
     private CustomEditTextView eTxtUsername;
     private CustomEditTextView eTxtPassword;
@@ -61,9 +51,6 @@ public class LoginSignupActivity extends Activity {
         getActionBar().hide();
         setContentView(R.layout.activity_login_signup);
 
-
-
-
         CustomButton btnLogin = (CustomButton)findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +69,7 @@ public class LoginSignupActivity extends Activity {
 
                 Boolean is_email = ICareApplication.isEmailValid(usernameTxt);
                 if(!is_email) {
+
                     // input data is for Doctors or Secretary
                     ParseQuery<ParseObject> query = ParseQuery.getQuery(ICareApplication.DOCTORS_LABEL);
                     query.whereEqualTo("username", usernameTxt);
@@ -152,7 +140,6 @@ public class LoginSignupActivity extends Activity {
                                     final ParseObject project = objects.get(0);
 
                                     loginData = new ParseProxyObject(project);
-
 
                                     loginSuccessfulParent(loginData);
                                 }

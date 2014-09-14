@@ -9,7 +9,6 @@
         android:id="@+id/patientPhoto"
         android:layout_width="@dimen/my_children_dropdown_photo_size"
         android:layout_height="@dimen/my_children_dropdown_photo_size"
-
         android:scaleType="centerInside"/>
 </LinearLayout>
 

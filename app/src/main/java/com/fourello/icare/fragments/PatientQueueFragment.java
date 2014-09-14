@@ -1,47 +1,33 @@
 package com.fourello.icare.fragments;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.net.Uri;
 import android.os.Bundle;
-
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-//import com.fourello.icare.Dashboard_DoctorActivity;
 import com.fourello.icare.DashboardDoctorFragmentActivity;
 import com.fourello.icare.ICareApplication;
-import com.fourello.icare.MainActivity;
 import com.fourello.icare.R;
-import com.fourello.icare.adapters.PatientDatabaseAdapter;
 import com.fourello.icare.adapters.PatientQueueAdapter;
-import com.fourello.icare.datas.PatientDatabase;
 import com.fourello.icare.datas.PatientQueue;
 import com.fourello.icare.widgets.ParseProxyObject;
-import com.fourello.icare.widgets.Utils;
 import com.parse.FindCallback;
-import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+//import com.fourello.icare.Dashboard_DoctorActivity;
 
 public class PatientQueueFragment extends ListFragment implements
         AdapterView.OnItemClickListener {

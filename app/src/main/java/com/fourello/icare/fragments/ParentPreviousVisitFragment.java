@@ -10,14 +10,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.fourello.icare.BTGridPager.BTFragmentGridPager;
-import com.fourello.icare.ICareApplication;
+import com.fourello.icare.DashboardParentFragmentActivity;
 import com.fourello.icare.R;
-import com.fourello.icare.datas.MyChildren;
+import com.fourello.icare.datas.PatientChildData;
+import com.fourello.icare.datas.Visits;
 import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import org.json.JSONArray;
@@ -44,7 +44,7 @@ public class ParentPreviousVisitFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private ParseProxyObject mParamLoginData;
-    private ArrayList<MyChildren> mParamChildData;
+    private ArrayList<PatientChildData> mParamChildData;
     private int mParamChildDataPosition;
     private byte[] mParamMyPicture;
     private String mParam1;
@@ -55,6 +55,8 @@ public class ParentPreviousVisitFragment extends Fragment {
 
     private BTFragmentGridPager.FragmentGridPagerAdapter mFragmentGridPagerAdapter;
     private JSONArray arrayMedications;
+
+
 
     /**
      * Use this factory method to create a new instance of
@@ -81,10 +83,10 @@ public class ParentPreviousVisitFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParamLoginData = (ParseProxyObject) getArguments().getSerializable(ParentDashboardFragment.ARG_LOGIN_DATA);
-            mParamChildData = getArguments().getParcelableArrayList(ParentDashboardFragment.ARG_CHILD_DATA);
-            mParamChildDataPosition = getArguments().getInt(ParentDashboardFragment.ARG_CHILD_DATA_POS);
-            mParamMyPicture = getArguments().getByteArray(ParentDashboardFragment.ARG_MY_PICTURE);
+            mParamLoginData = (ParseProxyObject) getArguments().getSerializable(DashboardParentFragmentActivity.ARG_LOGIN_DATA);
+            mParamChildData = getArguments().getParcelableArrayList(DashboardParentFragmentActivity.ARG_CHILD_DATA);
+            mParamChildDataPosition = getArguments().getInt(DashboardParentFragmentActivity.ARG_CHILD_DATA_POS);
+            mParamMyPicture = getArguments().getByteArray(DashboardParentFragmentActivity.ARG_MY_PICTURE);
         }
     }
 
@@ -97,9 +99,9 @@ public class ParentPreviousVisitFragment extends Fragment {
         final CustomTextView txtInstructions = (CustomTextView) myFragmentView.findViewById(R.id.txtInstructions);
         final CustomTextView txtNextVisit = (CustomTextView) myFragmentView.findViewById(R.id.txtNextVisit);
 
-        ParseQuery<ParseObject> queryVisits = new ParseQuery<ParseObject>(ICareApplication.VISITS_LABEL);
+        ParseQuery<Visits> queryVisits = Visits.getQuery();
+        queryVisits.fromLocalDatastore();
         queryVisits.setSkip(0);
-        queryVisits.whereEqualTo("patientid", mParamChildData.get(mParamChildDataPosition).getPatientObjectId());
         queryVisits.addDescendingOrder("updatedAt");
         try {
             if(queryVisits.count() == 0) {
@@ -108,30 +110,26 @@ public class ParentPreviousVisitFragment extends Fragment {
 
                 LinearLayout content = (LinearLayout) myFragmentView.findViewById(R.id.content);
                 content.setVisibility(View.GONE);
-            }
+            } else {
+                queryVisits.getFirstInBackground(new GetCallback<Visits>() {
+                        @Override
+                        public void done(Visits parseObject, ParseException e) {
+                            if(e == null) {
+                                DateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
+                                txtPreviousVisitDate.setText(Html.fromHtml("<u>" + df.format(parseObject.getCreatedAt()) + "<u>"));
+                                if (parseObject.containsKey("instructions")) {
+                                    txtInstructions.setText(parseObject.getInstructions());
+                                }
+                                if (parseObject.containsKey("nextvisit")) {
+                                    txtNextVisit.setText(df.format(parseObject.getNextVisit()));
+                                }
+                            }
+                        }
+                    });
+                }
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        queryVisits.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject parseObject, ParseException e) {
-                if(e == null) {
-                    DateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
-
-                    String lastVisitDate = df.format(parseObject.getCreatedAt());
-                    txtPreviousVisitDate.setText(Html.fromHtml("<u>" + lastVisitDate + "<u>"));
-
-                    if (parseObject.containsKey("instructions")) {
-                        String instructions = parseObject.getString("instructions");
-                        txtInstructions.setText(instructions);
-                    }
-                    if (parseObject.containsKey("nextvisit")) {
-                        String nextVisitDate = df.format(parseObject.getDate("nextvisit"));
-                        txtNextVisit.setText(nextVisitDate);
-                    }
-                }
-            }
-        });
 
         return myFragmentView;
     }
@@ -143,22 +141,6 @@ public class ParentPreviousVisitFragment extends Fragment {
         }
     }
 
-//    @Override
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
 
     /**
      * This interface must be implemented by activities that contain this

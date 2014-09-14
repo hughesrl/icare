@@ -23,18 +23,20 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fourello.icare.datas.MedsAndVaccines;
 import com.fourello.icare.datas.Patients;
 import com.fourello.icare.datas.SpinnerItems;
+import com.fourello.icare.datas.Visits;
 import com.fourello.icare.view.CustomButton;
 import com.fourello.icare.view.CustomEditTextView;
 import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.fourello.icare.widgets.Utils;
-import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -55,7 +57,7 @@ public class SyncParentDataActivity extends Activity {
     public ParseProxyObject loginData;
 
     private LinearLayout loadingLayout;
-    private LinearLayout addBabyLayout;
+    private ScrollView addBabyLayout;
 
     private ImageView patient_photo;
 
@@ -74,63 +76,65 @@ public class SyncParentDataActivity extends Activity {
         myChild = new Patients();
 
         loadingLayout = (LinearLayout)findViewById(R.id.loadingLayout);
-        addBabyLayout = (LinearLayout)findViewById(R.id.addBabyLayout);
+        addBabyLayout = (ScrollView)findViewById(R.id.addBabyLayout);
 
         // Create the array
         // Get Children Sync
-        ParseQuery<ParseObject> queryCount = new ParseQuery<ParseObject>(ICareApplication.PATIENTS_LABEL);
-        queryCount.whereEqualTo("email", loginData.getString("email"));
-        queryCount.addAscendingOrder("firstname");
-        queryCount.countInBackground(new CountCallback() {
-            @Override
-            public void done(int i, ParseException e) {
-                if(e == null) {
-                    if(i == 0) {
-                        loadingLayout.setVisibility(View.GONE);
-                        addBabyLayout.setVisibility(View.VISIBLE);
-                    } else {
-                        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.PATIENTS_LABEL);
-                        query.whereEqualTo("email", loginData.getString("email"));
-                        query.addAscendingOrder("firstname");
-                        query.findInBackground(new FindCallback<ParseObject>() {
-                            @Override
-                            public void done(List<ParseObject> parseObjects, ParseException e) {
-                                if (e == null) {
-                                    ParseObject.pinAllInBackground(ICareApplication.PATIENTS_LABEL, parseObjects, new SaveCallback() {
-                                        @Override
-                                        public void done(ParseException e) {
-                                            if (e == null) {
-                                                // Get Children from LocalDatastore
-                                                ParseQuery<ParseObject> queryChildren = ParseQuery.getQuery(ICareApplication.PATIENTS_LABEL);
-                                                queryChildren.fromLocalDatastore();
-                                                queryChildren.findInBackground(new FindCallback<ParseObject>() {
-                                                    @Override
-                                                    public void done(List<ParseObject> parseObjects, ParseException e) {
-                                                        if (e == null) {
-                                                            for (int i = 0; i < parseObjects.size(); i++) {
-                                                                ParseObject patientObjects = parseObjects.get(i);
+        loadPatientFromParse(loginData.getString("email"));
 
-                                                                Log.d("ROBERT", patientObjects.getObjectId());
-                                                                Log.d("ROBERT", i + " OF " + parseObjects.size());
-                                                            }
-
-                                                            Intent intent = new Intent(SyncParentDataActivity.this, DashboardParentFragmentActivity.class);
-                                                            intent.putExtra("loginData", loginData);
-                                                            startActivity(intent);
-                                                        }
-                                                    }
-                                                });
-
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    }
-                }
-            }
-        });
+//        ParseQuery<ParseObject> queryCount = new ParseQuery<ParseObject>(ICareApplication.PATIENTS_LABEL);
+//        queryCount.whereEqualTo("email", loginData.getString("email"));
+//        queryCount.addAscendingOrder("firstname");
+//        queryCount.countInBackground(new CountCallback() {
+//            @Override
+//            public void done(int i, ParseException e) {
+//                if(e == null) {
+//                    if(i == 0) {
+//                        loadingLayout.setVisibility(View.GONE);
+//                        addBabyLayout.setVisibility(View.VISIBLE);
+//                    } else {
+//                        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.PATIENTS_LABEL);
+//                        query.whereEqualTo("email", loginData.getString("email"));
+//                        query.addAscendingOrder("firstname");
+//                        query.findInBackground(new FindCallback<ParseObject>() {
+//                            @Override
+//                            public void done(List<ParseObject> parseObjects, ParseException e) {
+//                                if (e == null) {
+//                                    ParseObject.pinAllInBackground(ICareApplication.PATIENTS_LABEL, parseObjects, new SaveCallback() {
+//                                        @Override
+//                                        public void done(ParseException e) {
+//                                            if (e == null) {
+//                                                // Get Children from LocalDatastore
+//                                                ParseQuery<ParseObject> queryChildren = ParseQuery.getQuery(ICareApplication.PATIENTS_LABEL);
+//                                                queryChildren.fromLocalDatastore();
+//                                                queryChildren.findInBackground(new FindCallback<ParseObject>() {
+//                                                    @Override
+//                                                    public void done(List<ParseObject> parseObjects, ParseException e) {
+//                                                        if (e == null) {
+//                                                            for (int i = 0; i < parseObjects.size(); i++) {
+//                                                                ParseObject patientObjects = parseObjects.get(i);
+//
+//                                                                Log.d("ROBERT", patientObjects.getObjectId());
+//                                                                Log.d("ROBERT", i + " OF " + parseObjects.size());
+//                                                            }
+//
+//                                                            Intent intent = new Intent(SyncParentDataActivity.this, DashboardParentFragmentActivity.class);
+//                                                            intent.putExtra("loginData", loginData);
+//                                                            startActivity(intent);
+//                                                        }
+//                                                    }
+//                                                });
+//
+//                                            }
+//                                        }
+//                                    });
+//                                }
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//        });
 
 
         Spinner spinnerGender = (Spinner) findViewById(R.id.spinnerGender);
@@ -145,7 +149,6 @@ public class SyncParentDataActivity extends Activity {
                 selectImage();
             }
         });
-
 
         CustomButton btnAddBabyDone = (CustomButton)findViewById(R.id.btnAddBabyDone);
         btnAddBabyDone.setOnClickListener(new View.OnClickListener() {
@@ -209,38 +212,12 @@ public class SyncParentDataActivity extends Activity {
                                     myChild.setMotherFirstName(project.getString("firstname"));
                                     myChild.setMotherLastName(project.getString("lastname"));
                                 }
+
                                 myChild.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException myChildError) {
                                         if (myChildError == null) {
-                                            myChild.pinInBackground(new SaveCallback() {
-                                                @Override
-                                                public void done(ParseException e) {
-                                                    if (e == null) {
-                                                        // Get Children from LocalDatastore
-                                                        ParseQuery<ParseObject> queryChildren = ParseQuery.getQuery(ICareApplication.PATIENTS_LABEL);
-                                                        queryChildren.fromLocalDatastore();
-                                                        queryChildren.findInBackground(new FindCallback<ParseObject>() {
-                                                            @Override
-                                                            public void done(List<ParseObject> parseObjects, ParseException e) {
-                                                                if (e == null) {
-                                                                    for (int i = 0; i < parseObjects.size(); i++) {
-                                                                        ParseObject patientObjects = parseObjects.get(i);
-
-                                                                        Log.d("ROBERT", patientObjects.getObjectId());
-                                                                        Log.d("ROBERT", i + " OF " + parseObjects.size());
-                                                                    }
-
-                                                                    mProgressDialog.dismiss();
-                                                                    Intent intent = new Intent(SyncParentDataActivity.this, DashboardParentFragmentActivity.class);
-                                                                    intent.putExtra("loginData", loginData);
-                                                                    startActivity(intent);
-                                                                }
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                            });
+                                            loadPatientFromParse(loginData.getString("email"));
                                         } else {
                                             Toast.makeText(
                                                     SyncParentDataActivity.this,
@@ -351,7 +328,7 @@ public class SyncParentDataActivity extends Activity {
                 bytearray = stream.toByteArray();// get byte array here
                 Log.d("ROBERT bytearray", bytearray.toString()+"");
                 if (bytearray != null) {
-                    final ParseFile photoFile = new ParseFile(loginData.getString("objectId")+"_photo.jpg", bytearray);
+                    final ParseFile photoFile = new ParseFile("photo.jpg", bytearray);
                     photoFile.saveInBackground(new SaveCallback() {
                         public void done(ParseException e) {
                             if (e != null) {
@@ -410,5 +387,108 @@ public class SyncParentDataActivity extends Activity {
                 }
             }
         }
+    }
+
+    private void loadPatientFromParse(String email) {
+        ParseQuery<Patients> query = Patients.getQuery();
+        query.whereEqualTo("email", email);
+        query.addAscendingOrder("firstname");
+        query.setLimit(1);
+        query.findInBackground(new FindCallback<Patients>() {
+            public void done(final List<Patients> patientObject, ParseException e) {
+                if (e == null) {
+                    if (patientObject.size() == 0) {
+                        loadingLayout.setVisibility(View.GONE);
+                        addBabyLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        Patients.pinAllInBackground(patientObject,
+                            new SaveCallback() {
+                                public void done(ParseException e) {
+                                    if (e == null) {
+                                        if (!isFinishing()) {
+                                            loadVisitsFromParse(patientObject.get(0).getObjectId());
+
+                                            loadMedsAndVaccinesFromParse(patientObject.get(0).getObjectId());
+
+                                            Intent intent = new Intent(SyncParentDataActivity.this, DashboardParentFragmentActivity.class);
+                                            intent.putExtra("loginData", loginData);
+                                            startActivity(intent);
+                                            SyncParentDataActivity.this.finish();
+                                            Log.i("patient", "DATA SAVED : SIZE:" + patientObject.size() +
+                                                    " OBJECTID:" + patientObject.get(0).getObjectId());
+                                        }
+                                    } else {
+                                        Log.i("patient",
+                                                "Error pinning todos: "
+                                                        + e.getMessage());
+                                    }
+                                }
+                            }
+                        );
+                    }
+
+                } else {
+                    Log.i("patient",
+                            "loadFromParse: Error finding pinned patient: "
+                                    + e.getMessage());
+                }
+            }
+        });
+    }
+    private void loadVisitsFromParse(String objectId) {
+        ParseQuery<Visits> query = Visits.getQuery();
+        query.whereEqualTo("patientid", objectId);
+        query.findInBackground(new FindCallback<Visits>() {
+            public void done(final List<Visits> visitsObject, ParseException e) {
+                if (e == null) {
+                    Visits.pinAllInBackground(visitsObject,
+                            new SaveCallback() {
+                                public void done(ParseException e) {
+                                    if (e == null) {
+                                        if (!isFinishing()) {
+                                            Log.i("loadVisitsFromParse", "DATA SAVED : "+visitsObject.size());
+                                        }
+                                    } else {
+                                        Log.i("loadVisitsFromParse",
+                                                "Error pinning todos: "
+                                                        + e.getMessage());
+                                    }
+                                }
+                            });
+                } else {
+                    Log.i("VisitsList",
+                            "loadFromParse: Error finding pinned visits: "
+                                    + e.getMessage());
+                }
+            }
+        });
+    }
+    private void loadMedsAndVaccinesFromParse(String objectId) {
+        ParseQuery<MedsAndVaccines> query = MedsAndVaccines.getQuery();
+        query.whereEqualTo("patientid", objectId);
+        query.findInBackground(new FindCallback<MedsAndVaccines>() {
+            public void done(final List<MedsAndVaccines> medsAndVaccinesObject, ParseException e) {
+                if (e == null) {
+                    MedsAndVaccines.pinAllInBackground(medsAndVaccinesObject,
+                            new SaveCallback() {
+                                public void done(ParseException e) {
+                                    if (e == null) {
+                                        if (!isFinishing()) {
+                                            Log.i("loadMedsAndVaccinesFromParse", "DATA SAVED : "+medsAndVaccinesObject.size());
+                                        }
+                                    } else {
+                                        Log.i("loadMedsAndVaccinesFromParse",
+                                                "Error pinning todos: "
+                                                        + e.getMessage());
+                                    }
+                                }
+                            });
+                } else {
+                    Log.i("VisitsList",
+                            "loadFromParse: Error finding pinned visits: "
+                                    + e.getMessage());
+                }
+            }
+        });
     }
 }

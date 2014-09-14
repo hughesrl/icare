@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.fourello.icare.DashboardParentFragmentActivity;
 import com.fourello.icare.R;
-import com.fourello.icare.datas.MyChildren;
+import com.fourello.icare.datas.PatientChildData;
 import com.fourello.icare.widgets.ParseProxyObject;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class PromosFragmentTest extends Fragment implements DashboardParentFragm
 
     // TODO: Rename and change types of parameters
     private ParseProxyObject mParamLoginData;
-    private ArrayList<MyChildren> mParamChildData;
+    private ArrayList<PatientChildData> mParamChildData;
     private int mParamChildDataPosition;
 
 
@@ -65,7 +65,7 @@ public class PromosFragmentTest extends Fragment implements DashboardParentFragm
         // Inflate the layout for this fragment
         final ViewGroup myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_promos, container, false);
         Toast.makeText(getActivity(), "POS " + mParamChildDataPosition, Toast.LENGTH_LONG).show();
-        ((DashboardParentFragmentActivity)getActivity()).changePageTitle(mParamChildData.get(mParamChildDataPosition).getPatientName());
+        ((DashboardParentFragmentActivity)getActivity()).changePageTitle(mParamChildData.get(mParamChildDataPosition).getFirtname());
 
         return myFragmentView;
     }

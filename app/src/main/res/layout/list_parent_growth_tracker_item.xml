@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:icare="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:descendantFocusability="blocksDescendants">
+    <com.fourello.icare.view.CustomTextView
+        icare:fontName="VAGRoundedLight.ttf"
+        icare:fontStyle="bold"
+        icare:fontColor="@color/white"
+        android:textSize="@dimen/my_tracker_font_size"
+        android:id="@+id/txtVisitDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:gravity="center"
+        android:text="@string/app_name" />
+
+    <com.fourello.icare.view.CustomTextView
+        icare:fontName="VAGRoundedLight.ttf"
+        icare:fontStyle="bold"
+        icare:fontColor="@color/white"
+        android:textSize="@dimen/my_tracker_font_size"
+        android:id="@+id/txtWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:gravity="center"
+        android:text="@string/app_name" />
+    <com.fourello.icare.view.CustomTextView
+        icare:fontName="VAGRoundedLight.ttf"
+        icare:fontStyle="bold"
+        icare:fontColor="@color/white"
+        android:textSize="@dimen/my_tracker_font_size"
+        android:id="@+id/txtHeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:gravity="center"
+        android:text="@string/app_name" />
+    <com.fourello.icare.view.CustomTextView
+        icare:fontName="VAGRoundedLight.ttf"
+        icare:fontStyle="bold"
+        icare:fontColor="@color/white"
+        android:textSize="@dimen/my_tracker_font_size"
+        android:id="@+id/txtHead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:gravity="center"
+        android:text="@string/app_name" />
+</LinearLayout>

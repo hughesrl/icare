@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.Window;
@@ -25,19 +24,18 @@ import android.widget.Spinner;
 
 import com.fourello.icare.adapters.MenuItemsAdapter;
 import com.fourello.icare.adapters.MyChildrenAdapter;
+import com.fourello.icare.datas.MedsAndVaccines;
 import com.fourello.icare.datas.MenuItems;
-import com.fourello.icare.datas.MyChildren;
-import com.fourello.icare.datas.PatientDatabase;
+import com.fourello.icare.datas.PatientChildData;
 import com.fourello.icare.datas.Patients;
-import com.fourello.icare.fragments.AddBabyFragment;
-import com.fourello.icare.fragments.AddUserFragment;
+import com.fourello.icare.datas.Visits;
 import com.fourello.icare.fragments.CheckinPatientDialogFragment;
 import com.fourello.icare.fragments.DoctorInformationFragment;
+import com.fourello.icare.fragments.ParentBabyInfoFragment;
+import com.fourello.icare.fragments.ParentClinicVisitsFragment;
 import com.fourello.icare.fragments.ParentDashboardFragment;
-import com.fourello.icare.fragments.PatientDatabaseActionsFragment;
-import com.fourello.icare.fragments.PatientDatabaseFragment;
-import com.fourello.icare.fragments.SettingsFragment;
-import com.fourello.icare.fragments.ValidateEmailFragment;
+import com.fourello.icare.fragments.ParentGrowthTrackerFragment;
+import com.fourello.icare.fragments.ParentMedicationTrackerFragment;
 import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.widgets.FragmentUtils;
 import com.fourello.icare.widgets.ParseProxyObject;
@@ -50,13 +48,23 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DashboardParentFragmentActivity extends FragmentActivity implements View.OnClickListener,
         FragmentUtils.ActivityForResultStarter,
         PasswordDialogFragment.PasswordDialogListener,
         CheckinPatientDialogFragment.CheckinPatientDialogListener {
+
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    public static final String ARG_LOGIN_DATA = "loginData";
+    public static final String ARG_CHILD_DATA = "childData";
+    public static final String ARG_CHILD_DATA_POS = "childDataPosition";
+    public static final String ARG_MY_PICTURE = "myPicture";
+
 
     private static final int MY_REQUEST_CODE = 1;
 
@@ -74,7 +82,7 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
     private OpenMenuCallbacks mCallbacks;
     private SparseArray<Bundle> requests;
 
-    private List<MyChildren> listMyChildren;
+    private List<PatientChildData> listMyChildren;
 
     private Spinner mySpinnerChildren;
     private MyChildrenAdapter myChildrenAdapter;
@@ -130,39 +138,26 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
         loginData = (ParseProxyObject) extras.getSerializableExtra("loginData");
         myPicture = extras.getByteArrayExtra("myPicture");
 
-        listMyChildren = new ArrayList<MyChildren>();
+        listMyChildren = new ArrayList<PatientChildData>();
 
         // Get Children from LocalDatastore
-        ParseQuery<ParseObject> queryChildren = ParseQuery.getQuery(ICareApplication.PATIENTS_LABEL);
-        queryChildren.whereEqualTo("email", loginData.getString("email"));
+        ParseQuery<Patients> queryChildren = Patients.getQuery();
         queryChildren.fromLocalDatastore();
-        queryChildren.findInBackground(new FindCallback<ParseObject>() {
+        queryChildren.findInBackground(new FindCallback<Patients>() {
             @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
+            public void done(List<Patients> parseObjects, ParseException e) {
+                DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
                 if (e == null) {
                     for (int i = 0; i < parseObjects.size(); i++) {
                         ParseObject patientObjects = parseObjects.get(i);
 
-                        MyChildren myChildrenInfo = new MyChildren();
+                        PatientChildData myChildrenInfo = new PatientChildData();
 
                         myChildrenInfo.setPatientObjectId(patientObjects.getObjectId());
-                        ParseFile myPhoto = (ParseFile)patientObjects.get("photoFile");
-                        if(myPhoto!=null) {
-                            Log.d("ROBERT" +patientObjects.getObjectId(), "WithPhoto");
-                            try {
-                                byte[] data = myPhoto.getData();
-                                myChildrenInfo.setPatientphoto(data);
-                            } catch (ParseException e2) {
-                                // TODO Auto-generated catch block
-                                e2.printStackTrace();
-                            }
-                        } else {
-                            //Log.d("ROBERT" +patientObjects.getObjectId(), "NoPhoto");
-                        }
-                        myChildrenInfo.setPatientName(patientObjects.getString("firstname")+" "+patientObjects.getString("lastname"));
-                        myChildrenInfo.setPatientFirstName(patientObjects.getString("firstname"));
-                        myChildrenInfo.setPatientMiddleName(patientObjects.getString("middlename"));
-                        myChildrenInfo.setPatientLastName(patientObjects.getString("lastname"));
+
+                        myChildrenInfo.setFirtname(patientObjects.getString("firstname"));
+                        myChildrenInfo.setMiddlename(patientObjects.getString("middlename"));
+                        myChildrenInfo.setLastname(patientObjects.getString("lastname"));
 
                         if (patientObjects.getString("placeofbirth") != null) {
                             myChildrenInfo.setbPlace(patientObjects.getString("placeofbirth"));
@@ -188,31 +183,114 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                         if (patientObjects.getString("abdomencircumference") != null) {
                             myChildrenInfo.setpAbdomen(patientObjects.getString("abdomencircumference"));
                         }
-//                        if (patientObjects.getString("allergyrisk") != null) {
-//                            myChildrenInfo.setAllergyRisk(patientObjects.getString("allergyrisk"));
-//                        }
-//                        if (patientObjects.getDate("circumcisedon") != null) {
-//                            Date circumcisedon = patientObjects.getDate("circumcisedon");
-//                            String circumcisedOn = df.format(circumcisedon);
-//                            map.setpCircumcisedOn(circumcisedOn);
-//                        }
-//                        if (patientObjects.getDate("earpiercedon") != null) {
-//                            map.setpEarPiercedOn(patientObjects.getString("earpiercedon"));
-//                            Date earpiercedon = patientDatabaseObject.getDate("earpiercedon");
-//                            String earpiercedOn = df.format(earpiercedon);
-//                            map.setpCircumcisedOn(earpiercedOn);
-//                        }
+                        if (patientObjects.getString("allergyrisk") != null) {
+                            myChildrenInfo.setAllergyRisk(patientObjects.getString("allergyrisk"));
+                        }
+                        if (patientObjects.getDate("circumcisedon") != null) {
+                            Date circumcisedon = patientObjects.getDate("circumcisedon");
+                            String circumcisedOn = df.format(circumcisedon);
+                            myChildrenInfo.setpCircumcisedOn(circumcisedOn);
+                        }
+                        if (patientObjects.getDate("earpiercedon") != null) {
+                            myChildrenInfo.setpEarPiercedOn(patientObjects.getString("earpiercedon"));
+                            Date earpiercedon = patientObjects.getDate("earpiercedon");
+                            String earpiercedOn = df.format(earpiercedon);
+                            myChildrenInfo.setpCircumcisedOn(earpiercedOn);
+                        }
+
+                        if (patientObjects.getString("email") != null) {
+                            myChildrenInfo.setParentEmail(patientObjects.getString("email"));
+                        }
+                        // Distinguishing Marks cannot found
+
+                        // Newborn Screening cannot found
+
+                        // Vaccinations Given cannot found
+
+                        /* MOTHER */
+                        if (patientObjects.getString("motherfirstname") != null) {
+                            myChildrenInfo.setpMomsFname(patientObjects.getString("motherfirstname"));
+                        }
+                        if (patientObjects.getString("mothermiddlename") != null) {
+                            myChildrenInfo.setpMomsMname(patientObjects.getString("mothermiddlename"));
+                        }
+                        if (patientObjects.getString("motherlastname") != null) {
+                            myChildrenInfo.setpMomsLname(patientObjects.getString("motherlastname"));
+                        }
+                        if (patientObjects.getString("mothercompany") != null) {
+                            myChildrenInfo.setpMomsWorkPlace(patientObjects.getString("mothercompany"));
+                        }
+                        if (patientObjects.getString("motherprofession") != null) {
+                            myChildrenInfo.setpMomsWorkAs(patientObjects.getString("motherprofession"));
+                        }
+                        if (patientObjects.getString("motherhmo") != null) {
+                            myChildrenInfo.setpMomsHMO(patientObjects.getString("motherhmo"));
+                        }
+
+                        /* FATHER */
+                        if (patientObjects.getString("fatherfirstname") != null) {
+                            myChildrenInfo.setpDadsFname(patientObjects.getString("fatherfirstname"));
+                        }
+                        if (patientObjects.getString("fathermiddlename") != null) {
+                            myChildrenInfo.setpDadsMname(patientObjects.getString("fathermiddlename"));
+                        }
+                        if (patientObjects.getString("fatherlastname") != null) {
+                            myChildrenInfo.setpDadsLname(patientObjects.getString("fatherlastname"));
+                        }
+                        if (patientObjects.getString("fathercompany") != null) {
+                            myChildrenInfo.setpDadsWorkPlace(patientObjects.getString("fathercompany"));
+                        }
+                        if (patientObjects.getString("fatherprofession") != null) {
+                            myChildrenInfo.setpDadsWorkAs(patientObjects.getString("fatherprofession"));
+                        }
+                        if (patientObjects.getString("fatherhmo") != null) {
+                            myChildrenInfo.setpDadsHMO(patientObjects.getString("fatherhmo"));
+                        }
+
+                        /* ADDRESS */
+                        if (patientObjects.getString("address_1") != null) {
+                            myChildrenInfo.setpAddress1(patientObjects.getString("address_1"));
+                        }
+                        if (patientObjects.getString("address_2") != null) {
+                            myChildrenInfo.setpAddress2(patientObjects.getString("address_2"));
+                        }
+
+                        String contactnumber = "";
+                        if (patientObjects.getString("mothercontactnumber") != null && patientObjects.getString("fathercontactnumber") != null) {
+                            contactnumber = patientObjects.getString("mothercontactnumber") + " / " + patientObjects.getString("fathercontactnumber");
+                        } else if (patientObjects.getString("mothercontactnumber") != null) {
+                            contactnumber = patientObjects.getString("mothercontactnumber");
+                        } else if (patientObjects.getString("fathercontactnumber") != null) {
+                            contactnumber = patientObjects.getString("fathercontactnumber");
+                        }
+
+
+                        myChildrenInfo.setMobilenumbers(contactnumber);
+
+                        if(patientObjects.has("photoFile")) {
+                            ParseFile myPhoto = patientObjects.getParseFile("photoFile");
+                            if (myPhoto != null) {
+//                                myChildrenInfo.setPatientphoto(myPhoto.getUrl());
+                                try {
+                                    byte[] data = myPhoto.getData();
+                                    myChildrenInfo.setPatientphoto(data);
+                                } catch (ParseException e2) {
+                                    // TODO Auto-generated catch block
+                                    e2.printStackTrace();
+                                }
+                            }
+                        }
 
                         listMyChildren.add(myChildrenInfo);
                     }
                 }
 
-//                if (findViewById(R.id.alt_fragment_content_container) != null) {
-//                    if (savedInstanceState != null) {
-//                        return;
-//                    }
-//                    ParentDashboard(listMyChildren, 0);
-//                }
+                if (findViewById(R.id.alt_fragment_content_container) != null) {
+                    if (savedInstanceState != null) {
+                        return;
+                    }
+                    ParentDashboard(listMyChildren, 0);
+                }
 
                 btnShowMenu = (ImageButton)findViewById(R.id.btnShowMenu);
                 dialog = new Dialog(DashboardParentFragmentActivity.this, R.style.DialogSlideAnim);
@@ -232,6 +310,7 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                 });
             }
         });
+
 
 
     }
@@ -291,21 +370,23 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
             final CustomTextView txtUserName = (CustomTextView) dialog.findViewById(R.id.userName);
             final ImageView imgViewMyPicture = (ImageView) dialog.findViewById(R.id.btnMyPicture);
 
+            imgViewMyPicture.setOnClickListener(this);
             mySpinnerChildren = (Spinner) dialog.findViewById(R.id.spinnerChildren);
 
             mySpinnerChildren.setClickable(false); // disable the dropdown for version 1
-            myChildrenAdapter = new MyChildrenAdapter(DashboardParentFragmentActivity.this, R.layout.spinner_row, (ArrayList<MyChildren>) listMyChildren);
+            myChildrenAdapter = new MyChildrenAdapter(DashboardParentFragmentActivity.this, R.layout.spinner_row, (ArrayList<PatientChildData>) listMyChildren);
             mySpinnerChildren.setAdapter(myChildrenAdapter);
             mySpinnerChildren.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     byte[] childPhoto = listMyChildren.get(position).getPatientphoto();
 
-                    txtUserName.setText("Baby "+listMyChildren.get(position).getPatientFirstName());
-                    Bitmap bMap = BitmapFactory.decodeByteArray(childPhoto, 0, childPhoto.length);
-                    imgViewMyPicture.setBackground(Utils.resizedBitmapDisplayUserPhoto(DashboardParentFragmentActivity.this, bMap));
-
-                    ParentDashboard(listMyChildren, position);
+                    txtUserName.setText("Baby "+listMyChildren.get(position).getFirtname());
+                    if(childPhoto!=null) {
+                        Bitmap bMap = BitmapFactory.decodeByteArray(childPhoto, 0, childPhoto.length);
+                        imgViewMyPicture.setBackground(Utils.resizedBitmapDisplayUserPhoto(DashboardParentFragmentActivity.this, bMap));
+                    }
+//                    ParentDashboard(listMyChildren, position);
                 }
 
                 @Override
@@ -348,6 +429,15 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btnMyPicture:
+                    dialog.dismiss();
+                    Intent intent = getIntent();
+                    intent.putExtra("loginData", loginData);
+                    intent.putExtra("myPicture", myPicture);
+                    intent.putExtra("isRestarted", true);
+                    finish();
+                    startActivity(intent);
+                break;
             case R.id.btnMyBaby:
 //                Toast.makeText(this, mySpinnerChildren.getSelectedItemPosition()+" selected item", Toast.LENGTH_LONG).show();
                 // Defined Array values to show in ListView
@@ -363,7 +453,7 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                         dialog.dismiss();
                         switch (position) {
                             case 0:
-                                AddUser();
+                                BabyInfo(listMyChildren, mySpinnerChildren.getSelectedItemPosition());
                                 break;
                         }
                     }
@@ -386,7 +476,10 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                         dialog.dismiss();
                         switch (position) {
                             case 0:
-                                AddUser();
+                                GrowthTracker();
+                                break;
+                            case 1:
+                                MedicationTracker();
                                 break;
                         }
                     }
@@ -407,7 +500,7 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                         dialog.dismiss();
                         switch (position) {
                             case 0:
-                                AddUser();
+                                ClinicVisits();
                                 break;
                         }
                     }
@@ -436,18 +529,18 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                                 ParseObject.unpinAllInBackground(new DeleteCallback() {
                                     public void done(ParseException e) {
                                         if (e != null) {
-                                            // There was some error.
                                             return;
                                         } else {
-                                            ParseObject.unpinAllInBackground(ICareApplication.PATIENTS_LABEL);
+                                            Patients.unpinAllInBackground();
+                                            Visits.unpinAllInBackground();
+                                            MedsAndVaccines.unpinAllInBackground();
                                             ParseObject.unpinAllInBackground(ICareApplication.USERS_LABEL, new DeleteCallback() {
                                                 public void done(ParseException e) {
-                                                    if (e != null) {
-                                                        return;
+                                                    if (e == null) {
+                                                        Intent intent = new Intent(DashboardParentFragmentActivity.this, LoginSignupActivity.class);
+                                                        startActivity(intent);
+                                                        finish();
                                                     }
-                                                    Intent intent = new Intent(DashboardParentFragmentActivity.this, LoginSignupActivity.class);
-                                                    startActivity(intent);
-                                                    finish();
                                                 }
                                             });
                                         }
@@ -469,7 +562,7 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
     // -----------------------------------------------
     // FRAGMENTS
     // -----------------------------------------------
-    public void ParentDashboard(List<MyChildren> listMyChildren, int childPosition) {
+    public void ParentDashboard(List<PatientChildData> listMyChildren, int childPosition) {
         mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         ParentDashboardFragment myFragment = new ParentDashboardFragment();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
@@ -480,8 +573,8 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
 
         Bundle bundle = getIntent().getExtras();
 
-        bundle.putInt(ParentDashboardFragment.ARG_CHILD_DATA, childPosition);
-        bundle.putParcelableArrayList(ParentDashboardFragment.ARG_CHILD_DATA, (ArrayList<MyChildren>) listMyChildren);
+        bundle.putInt(ARG_CHILD_DATA, childPosition);
+        bundle.putParcelableArrayList(ARG_CHILD_DATA, (ArrayList<PatientChildData>) listMyChildren);
         myFragment.setArguments(bundle);
 
 
@@ -495,16 +588,18 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
         mCallbacks = (OpenMenuCallbacks) myFragment;
     }
 
-    public void AddUser() {
+    public void BabyInfo(List<PatientChildData> listMyChildren, int childPosition) {
         mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        AddUserFragment myFragment = new AddUserFragment();
+        ParentBabyInfoFragment myFragment = new ParentBabyInfoFragment();
 
         Bundle bundle = getIntent().getExtras();
 
+        bundle.putInt(ARG_CHILD_DATA, childPosition);
+        bundle.putParcelableArrayList(ARG_CHILD_DATA, (ArrayList<PatientChildData>) listMyChildren);
         myFragment.setArguments(bundle);
 
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.alt_fragment_content_container, myFragment, "ADD_USER_FRAGMENT");
+        transaction.replace(R.id.alt_fragment_content_container, myFragment, "BABY_INFO_FRAGMENT");
         transaction.commit();
         // Fragment must implement the callback.
         if (!(myFragment instanceof OpenMenuCallbacks)) {
@@ -513,20 +608,15 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
         }
         mCallbacks = (OpenMenuCallbacks) myFragment;
     }
-
-
-    public void ParentEmailValidate(String newUserRecordObjectId, String newRecordObjectId) {
+    public void GrowthTracker() {
         mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        ValidateEmailFragment myFragment = new ValidateEmailFragment();
-
+        ParentGrowthTrackerFragment myFragment = new ParentGrowthTrackerFragment();
         Bundle bundle = getIntent().getExtras();
-        bundle.putString("newUserRecordObjectId", newUserRecordObjectId);
-        bundle.putString("newPatientRecordObjectId", newRecordObjectId);
 
         myFragment.setArguments(bundle);
 
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.alt_fragment_content_container, myFragment, "PARENT_EMAIL_VALIDATE_FRAGMENT");
+        transaction.replace(R.id.alt_fragment_content_container, myFragment, "GROWTH_TRACKER_FRAGMENT");
         transaction.commit();
         // Fragment must implement the callback.
         if (!(myFragment instanceof OpenMenuCallbacks)) {
@@ -535,18 +625,15 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
         }
         mCallbacks = (OpenMenuCallbacks) myFragment;
     }
-    public void AddBaby(String newUserRecordObjectId, String newRecordObjectId) {
+    public void MedicationTracker() {
         mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        AddBabyFragment myFragment = new AddBabyFragment();
-
+        ParentMedicationTrackerFragment myFragment = new ParentMedicationTrackerFragment();
         Bundle bundle = getIntent().getExtras();
-        bundle.putString("newUserRecordObjectId", newUserRecordObjectId);
-        bundle.putString("newPatientRecordObjectId", newRecordObjectId);
 
         myFragment.setArguments(bundle);
 
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.alt_fragment_content_container, myFragment, "ADD_BABY_FRAGMENT");
+        transaction.replace(R.id.alt_fragment_content_container, myFragment, "MEDICATION_TRACKER_FRAGMENT");
         transaction.commit();
         // Fragment must implement the callback.
         if (!(myFragment instanceof OpenMenuCallbacks)) {
@@ -555,17 +642,15 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
         }
         mCallbacks = (OpenMenuCallbacks) myFragment;
     }
-
-    public void PatientDatabase() {
+    public void ClinicVisits() {
         mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        PatientDatabaseFragment myFragment = new PatientDatabaseFragment();
-
+        ParentClinicVisitsFragment myFragment = new ParentClinicVisitsFragment();
         Bundle bundle = getIntent().getExtras();
 
         myFragment.setArguments(bundle);
 
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.alt_fragment_content_container, myFragment, "PATIENT_DATABASE_FRAGMENT");
+        transaction.replace(R.id.alt_fragment_content_container, myFragment, "MEDICATION_TRACKER_FRAGMENT");
         transaction.commit();
         // Fragment must implement the callback.
         if (!(myFragment instanceof OpenMenuCallbacks)) {
@@ -573,55 +658,6 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                     "Fragment must implement the callbacks.");
         }
         mCallbacks = (OpenMenuCallbacks) myFragment;
-    }
-    public void PatientDatabaseActions(PatientDatabase patientDatabase, ArrayList<PatientDatabase> patientDatabaseComplete, int position) {
-        mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        PatientDatabaseActionsFragment myFragment = new PatientDatabaseActionsFragment();
-
-
-        String patientObjectId = patientDatabase.getPatientObjectId();
-        String patientName = patientDatabase.getFullName();
-        byte[] patientPhoto = patientDatabase.getPatientphoto();
-
-        Bundle bundle = getIntent().getExtras();
-        bundle.putString(PatientDatabaseActionsFragment.ARG_PATIENT_OBJECT_ID, patientObjectId);
-        bundle.putByteArray(PatientDatabaseActionsFragment.ARG_MY_PICTURE, patientPhoto);
-        bundle.putInt(PatientDatabaseActionsFragment.ARG_PATIENT_DATA_POSITION, position);
-//        bundle.putParcelableArrayList("test", patientDatabase.getVisits());
-        bundle.putParcelable(PatientDatabaseActionsFragment.ARG_PATIENT_DATA, patientDatabase);
-        bundle.putParcelableArrayList(PatientDatabaseActionsFragment.ARG_PATIENT_DATA_COMPLETE, patientDatabaseComplete);
-        myFragment.setArguments(bundle);
-
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.alt_fragment_content_container, myFragment, "PATIENT_DATABASE_ACTIONS_FRAGMENT");
-        transaction.commit();
-        // Fragment must implement the callback.
-        if (!(myFragment instanceof OpenMenuCallbacks)) {
-            throw new IllegalStateException(
-                    "Fragment must implement the callbacks.");
-        }
-        mCallbacks = (OpenMenuCallbacks) myFragment;
-
-    }
-
-    public void Settings() {
-        mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        SettingsFragment myFragment = new SettingsFragment();
-
-        Bundle bundle = getIntent().getExtras();
-
-        myFragment.setArguments(bundle);
-
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.alt_fragment_content_container, myFragment, "SETTINGS_FRAGMENT");
-        transaction.commit();
-        // Fragment must implement the callback.
-        if (!(myFragment instanceof OpenMenuCallbacks)) {
-            throw new IllegalStateException(
-                    "Fragment must implement the callbacks.");
-        }
-        mCallbacks = (OpenMenuCallbacks) myFragment;
-
     }
 
     public void DoctorInformation() {
@@ -645,48 +681,34 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
 
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data){
-//        super.onActivityResult(requestCode,resultCode,data);
-//
-//        Toast.makeText(getApplicationContext(), requestCode+" - DashboardDoctorFragmentActivity", Toast.LENGTH_LONG).show();
-//    }
-@Override
-protected void onActivityResult(int requestCode, int resultCode, Intent data)
-{
-//first check if we saved any data about the origin of this request (which fragment)
-    final Bundle request = this.requests.get(requestCode, null);
-    if (request != null)
-    {
-//find the indices-array
-        final int[] indices = request.getIntArray("indices");
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //first check if we saved any data about the origin of this request (which fragment)
+        final Bundle request = this.requests.get(requestCode, null);
+        if (request != null) {
+            //find the indices-array
+            final int[] indices = request.getIntArray("indices");
 
-        FragmentManager fm = this.getSupportFragmentManager();
-        Fragment f = null;
-//loop backwards
-        for(int i = indices.length - 1 ; i >= 0 ; i--)
-        {
-            if (fm != null)
-            {
-//find a list of active fragments
-                List<Fragment> flist = fm.getFragments();
-                if (flist != null && indices[i] < flist.size())
-                {
-                    f = flist.get(indices[i]);
-                    fm = f.getChildFragmentManager();
+            FragmentManager fm = this.getSupportFragmentManager();
+            Fragment f = null;
+            //loop backwards
+            for(int i = indices.length - 1 ; i >= 0 ; i--) {
+                if (fm != null) {
+                    //find a list of active fragments
+                    List<Fragment> flist = fm.getFragments();
+                    if (flist != null && indices[i] < flist.size()) {
+                        f = flist.get(indices[i]);
+                        fm = f.getChildFragmentManager();
+                    }
                 }
             }
+            //we found our fragment that initiated the request to startActivityForResult, give it the callback!
+            if (f != null) {
+                f.onActivityResult(requestCode, resultCode, data);
+                return ;
+            }
         }
-
-//we found our fragment that initiated the request to startActivityForResult, give it the callback!
-        if (f != null)
-        {
-            f.onActivityResult(requestCode, resultCode, data);
-            return ;
-        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
-
-    super.onActivityResult(requestCode, resultCode, data);
-}
 
 }

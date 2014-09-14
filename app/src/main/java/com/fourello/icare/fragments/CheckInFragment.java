@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -34,8 +33,8 @@ import com.fourello.icare.DashboardDoctorFragmentActivity;
 import com.fourello.icare.ICareApplication;
 import com.fourello.icare.R;
 import com.fourello.icare.datas.ClinicSurvey;
-import com.fourello.icare.datas.PatientCheckIn;
 import com.fourello.icare.datas.PatientDatabase;
+import com.fourello.icare.datas.Patients;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.view.CustomButton;
 import com.fourello.icare.view.CustomEditTextView;
@@ -68,7 +67,7 @@ public class CheckInFragment extends Fragment implements
     private static String mParamPatientObjectId;
     private static int mParamIsInClinicSurvey;
 
-    private PatientCheckIn patientCheckIn;
+    private Patients patientCheckIn;
     private ClinicSurvey clinicSurvery;
 
 
@@ -126,7 +125,7 @@ public class CheckInFragment extends Fragment implements
             mParamIsInClinicSurvey = getArguments().getInt(PatientDatabaseActionsFragment.ARG_IS_IN_CLINIC_SURVEY);
         }
 
-        patientCheckIn = new PatientCheckIn();
+        patientCheckIn = new Patients();
 
         clinicSurvery = new ClinicSurvey();
 
@@ -175,9 +174,6 @@ public class CheckInFragment extends Fragment implements
                         }
                     });
                 }
-
-
-
             }
         }
     }
@@ -369,7 +365,7 @@ public class CheckInFragment extends Fragment implements
         }
     }
 
-    public PatientCheckIn getCurrentPatientCheckIn() {
+    public Patients getCurrentPatientCheckIn() {
         return patientCheckIn;
     }
 

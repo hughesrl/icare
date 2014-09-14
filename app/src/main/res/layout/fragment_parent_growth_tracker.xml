@@ -1,0 +1,112 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:icare="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_below="@+id/btnShowMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/rounded_corners_container_wth_transparency">
+        <com.fourello.icare.view.CustomTextView
+            icare:fontName="VAGRoundedLight.ttf"
+            icare:fontStyle="bold"
+            icare:fontColor="@color/white"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_growth_tracker"
+            android:id="@+id/pageTitle"
+            android:layout_gravity="center_horizontal"
+            style="@style/text_Appearance_large_container_title_light"
+            android:shadowColor="@android:color/background_dark"
+            android:background="@drawable/rounded_corners_container_title_bg" />
+
+        <!--<TableLayout
+            android:id="@+id/tableHeader"
+            android:layout_below="@+id/pageTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:shrinkColumns="*"
+            android:stretchColumns="*"
+            android:background="@android:color/black">
+
+        </TableLayout>-->
+        <LinearLayout
+            android:id="@+id/tableHeader"
+            android:layout_below="@+id/pageTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:orientation="horizontal"
+            android:background="#90000000">
+            <com.fourello.icare.view.CustomTextView
+                icare:fontName="VAGRoundedLight.ttf"
+                icare:fontStyle="bold"
+                icare:fontColor="@color/white"
+                android:textSize="@dimen/my_tracker_font_size"
+                android:id="@+id/txtHeaderVisitDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:gravity="center"
+                android:text="Date" />
+
+            <com.fourello.icare.view.CustomTextView
+                icare:fontName="VAGRoundedLight.ttf"
+                icare:fontStyle="bold"
+                icare:fontColor="@color/white"
+                android:textSize="@dimen/my_tracker_font_size"
+                android:id="@+id/txtHeaderWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:gravity="center"
+                android:text="Weight" />
+
+            <com.fourello.icare.view.CustomTextView
+                icare:fontName="VAGRoundedLight.ttf"
+                icare:fontStyle="bold"
+                icare:fontColor="@color/white"
+                android:textSize="@dimen/my_tracker_font_size"
+                android:id="@+id/txtHeaderHeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:gravity="center"
+                android:text="Height" />
+
+            <com.fourello.icare.view.CustomTextView
+                icare:fontName="VAGRoundedLight.ttf"
+                icare:fontStyle="bold"
+                icare:fontColor="@color/white"
+                android:textSize="@dimen/my_tracker_font_size"
+                android:id="@+id/txtHeaderHead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:gravity="center"
+                android:text="Head" />
+
+        </LinearLayout>
+        <ListView
+            android:layout_below="@+id/tableHeader"
+            android:id="@+id/listGrowthTracker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+</RelativeLayout>

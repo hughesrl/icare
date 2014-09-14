@@ -31,9 +31,7 @@
     <dimen name="patient_photo_size">155dp</dimen>
     <integer name="resize_patient_photo_size">125</integer>
 
-    <dimen name="content_left_right_margin">10dp</dimen>
-
-    <!--DRAWABLE CUSTOMS-->
+    <dimen name="content_left_right_margin">10dp</dimen>    <!--DRAWABLE CUSTOMS-->
     <dimen name="drawable_top">5dp</dimen>
     <dimen name="drawable_left">5dp</dimen>
     <dimen name="drawable_bottom">5dp</dimen>
@@ -41,9 +39,13 @@
 
     <dimen name="menu_font_size">15sp</dimen>
 
+    <dimen name="my_children_dropdown_photo_size">45dp</dimen>
+
     <!--PARENT-->
     <dimen name="dashboard_my_baby_containers">170dp</dimen>
-    <dimen name="seek_bar_size">150dp</dimen>
-    <integer name="seek_bar_text_size">30</integer>
-    <integer name="seek_bar_pointer_size">25</integer>
+    <dimen name="seek_bar_size">90dp</dimen>
+    <integer name="seek_bar_text_size">20</integer>
+    <integer name="seek_bar_pointer_size">20</integer>
+
+    <dimen name="my_tracker_font_size">15sp</dimen>
 </resources>

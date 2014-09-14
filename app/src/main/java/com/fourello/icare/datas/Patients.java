@@ -3,6 +3,7 @@ package com.fourello.icare.datas;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.Date;
 
@@ -62,6 +63,13 @@ public class Patients extends ParseObject {
         put("address_unit", address_unit);
     }
 
+    public String getAllergyRisk() {
+        return getString("allergyrisk");
+    }
+    public void setAllergyRisk(String allergyrisk) {
+        put("allergyrisk", allergyrisk);
+    }
+
     public String getAge() {
         return getString("age");
     }
@@ -83,17 +91,17 @@ public class Patients extends ParseObject {
         put("birthcertificatephoto", birthcertificatephoto);
     }
 
-    public Date getChestCircumference() {
-        return getDate("chestcircumference");
+    public String getChestCircumference() {
+        return getString("chestcircumference");
     }
-    public void setChestCircumference(Date chestcircumference) {
+    public void setChestCircumference(String chestcircumference) {
         put("chestcircumference", chestcircumference);
     }
 
-    public String getCircumcisedOn() {
-        return getString("circumcisedon");
+    public Date getCircumcisedOn() {
+        return getDate("circumcisedon");
     }
-    public void setCircumcisedOn(String circumcisedon) {
+    public void setCircumcisedOn(Date circumcisedon) {
         put("circumcisedon", circumcisedon);
     }
 
@@ -173,6 +181,13 @@ public class Patients extends ParseObject {
     }
     public void setFatherFirstName(String fatherfirstname) {
         put("fatherfirstname", fatherfirstname);
+    }
+
+    public String getFatherMiddleName() {
+        return getString("fathermiddlename");
+    }
+    public void setFatherMiddleName(String fathermiddlename) {
+        put("fathermiddlename", fathermiddlename);
     }
 
     public String getFatherHMO() {
@@ -279,6 +294,12 @@ public class Patients extends ParseObject {
     public void setMotherFirstName(String motherfirstname) {
         put("motherfirstname", motherfirstname);
     }
+    public String getMotherMiddleName() {
+        return getString("mothermiddlename");
+    }
+    public void setMotherMiddleName(String mothermiddlename) {
+        put("mothermiddlename", mothermiddlename);
+    }
 
     public String getMotherHMO() {
         return getString("motherhmo");
@@ -355,5 +376,9 @@ public class Patients extends ParseObject {
     }
     public void setZipCode(String zipcode) {
         put("zipcode", zipcode);
+    }
+
+    public static ParseQuery<Patients> getQuery() {
+        return ParseQuery.getQuery(Patients.class);
     }
 }
