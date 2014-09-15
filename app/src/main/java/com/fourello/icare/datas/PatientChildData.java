@@ -16,6 +16,8 @@ public class PatientChildData implements Parcelable {
 
     public String photoFileUrl;
 
+    public String pDoctorID;
+
     public String parentEmail;
     public String accompaniedBy;
     public String parentRelationship;
@@ -69,6 +71,8 @@ public class PatientChildData implements Parcelable {
         patientphoto = null;
         photoFileUrl = "";
 
+        pDoctorID = "";
+
         parentEmail = "";
         accompaniedBy = "";
         parentRelationship = "";
@@ -121,6 +125,8 @@ public class PatientChildData implements Parcelable {
         in.readByteArray(patientphoto);
 
         photoFileUrl = in.readString();
+
+        pDoctorID = in.readString();
 
         parentEmail = in.readString();
         accompaniedBy = in.readString();
@@ -271,6 +277,14 @@ public class PatientChildData implements Parcelable {
     public void setPhotoFileUrl(String photoFileUrl) {
         this.photoFileUrl = photoFileUrl;
     }
+
+    public String getDoctorID() {
+        return pDoctorID;
+    }
+    public void setDoctorID(String doctorID) {
+        this.pDoctorID = pDoctorID;
+    }
+
 
 // ------------ FROM USERS
     public String getParentEmail() {
@@ -537,6 +551,8 @@ public class PatientChildData implements Parcelable {
         dest.writeString(lastname);
         dest.writeString(mobilenumbers);
         dest.writeByteArray(patientphoto);
+
+        dest.writeString(pDoctorID);
 
         dest.writeString(parentEmail);
         dest.writeString(accompaniedBy);

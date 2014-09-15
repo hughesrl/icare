@@ -9,33 +9,23 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.fourello.icare.DashboardDoctorFragmentActivity;
 import com.fourello.icare.ICareApplication;
 import com.fourello.icare.R;
-import com.fourello.icare.view.CustomButton;
 import com.fourello.icare.view.CustomEditTextView;
-import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.fourello.icare.widgets.Utils;
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.SaveCallback;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class DoctorInformationFragment extends Fragment implements
         DashboardDoctorFragmentActivity.OpenMenuCallbacks {
@@ -84,7 +74,6 @@ public class DoctorInformationFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParamLoginData = (ParseProxyObject) getArguments().getSerializable(ARG_LOGIN_DATA);
-
         }
 
     }

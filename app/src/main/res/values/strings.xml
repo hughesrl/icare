@@ -118,6 +118,7 @@
     <string name="lblChangePassword">Change Password</string>
 
     <!--DOCTOR INFORMATION-->
+    <string name="lblLinkDoctor">Link Doctor</string>
     <string name="lblDoctorsName">Doctor\'s Name</string>
     <string name="lblSpecialty">Specialty</string>
     <string name="lblPRCLicNo">PRC Lic No.</string>

@@ -21,19 +21,21 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.fourello.icare.adapters.MenuItemsAdapter;
 import com.fourello.icare.adapters.MyChildrenAdapter;
+import com.fourello.icare.datas.Doctors;
 import com.fourello.icare.datas.MedsAndVaccines;
 import com.fourello.icare.datas.MenuItems;
 import com.fourello.icare.datas.PatientChildData;
 import com.fourello.icare.datas.Patients;
 import com.fourello.icare.datas.Visits;
 import com.fourello.icare.fragments.CheckinPatientDialogFragment;
-import com.fourello.icare.fragments.DoctorInformationFragment;
 import com.fourello.icare.fragments.ParentBabyInfoFragment;
 import com.fourello.icare.fragments.ParentClinicVisitsFragment;
 import com.fourello.icare.fragments.ParentDashboardFragment;
+import com.fourello.icare.fragments.ParentDoctorInformationFragment;
 import com.fourello.icare.fragments.ParentGrowthTrackerFragment;
 import com.fourello.icare.fragments.ParentMedicationTrackerFragment;
 import com.fourello.icare.view.CustomTextView;
@@ -89,6 +91,8 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
 
     private Patients myChild;
 
+    private PatientChildData myChildData;
+
     @Override
     public void onDialogDoneClick(DialogFragment dialog) {
 
@@ -117,6 +121,8 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
         public void onMenuPressedCallback();
     }
 
+    public Date midnight;
+    public Date elevenfiftynine;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +131,17 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
         } else {
             this.requests = savedInstanceState.getSparseParcelableArray("requests");
         }
+
+        // Create the array
+        midnight = new Date();
+        midnight.setHours(0);
+        midnight.setMinutes(0);
+        midnight.setSeconds(0);
+
+        elevenfiftynine = new Date();
+        elevenfiftynine.setHours(23);
+        elevenfiftynine.setMinutes(59);
+        elevenfiftynine.setSeconds(59);
 
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         getActionBar().hide();
@@ -200,6 +217,10 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
 
                         if (patientObjects.getString("email") != null) {
                             myChildrenInfo.setParentEmail(patientObjects.getString("email"));
+                        }
+
+                        if(!patientObjects.getString("doctorid").isEmpty()) {
+                            myChildrenInfo.setDoctorID(patientObjects.getString("doctorid"));
                         }
                         // Distinguishing Marks cannot found
 
@@ -502,6 +523,9 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                             case 0:
                                 ClinicVisits();
                                 break;
+                            case 1:
+                                CheckIfPINOfTheDayExists();
+                                break;
                         }
                     }
                 });
@@ -523,7 +547,7 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                         switch (position) {
                             case 0:
                                 // Doctor Information
-                                DoctorInformation();
+                                DoctorInformation(listMyChildren, mySpinnerChildren.getSelectedItemPosition());
                                 break;
                             case 1:;
                                 ParseObject.unpinAllInBackground(new DeleteCallback() {
@@ -534,6 +558,7 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                                             Patients.unpinAllInBackground();
                                             Visits.unpinAllInBackground();
                                             MedsAndVaccines.unpinAllInBackground();
+                                            Doctors.unpinAllInBackground();
                                             ParseObject.unpinAllInBackground(ICareApplication.USERS_LABEL, new DeleteCallback() {
                                                 public void done(ParseException e) {
                                                     if (e == null) {
@@ -660,12 +685,14 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
         mCallbacks = (OpenMenuCallbacks) myFragment;
     }
 
-    public void DoctorInformation() {
+    public void DoctorInformation(List<PatientChildData> listMyChildren, int childPosition) {
         mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        DoctorInformationFragment myFragment = new DoctorInformationFragment();
+        ParentDoctorInformationFragment myFragment = new ParentDoctorInformationFragment();
 
         Bundle bundle = getIntent().getExtras();
 
+        bundle.putInt(ARG_CHILD_DATA, childPosition);
+        bundle.putParcelableArrayList(ARG_CHILD_DATA, (ArrayList<PatientChildData>) listMyChildren);
         myFragment.setArguments(bundle);
 
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
@@ -709,6 +736,22 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void CheckIfPINOfTheDayExists() {
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.SETTINGS_LABEL);
+        query.whereEqualTo("doctorid", listMyChildren.get(0).getDoctorID());
+        query.whereGreaterThan("updatedAt", midnight);
+        query.whereLessThan("updatedAt", elevenfiftynine);
+        try {
+            if(query.count() == 0) {
+                Toast.makeText(getApplication(), "No PIN", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplication(), "Enter PIN", Toast.LENGTH_LONG).show();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
 }

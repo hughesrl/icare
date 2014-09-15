@@ -28,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fourello.icare.datas.Doctors;
 import com.fourello.icare.datas.MedsAndVaccines;
 import com.fourello.icare.datas.Patients;
 import com.fourello.icare.datas.SpinnerItems;
@@ -38,6 +39,7 @@ import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.fourello.icare.widgets.Utils;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -406,6 +408,10 @@ public class SyncParentDataActivity extends Activity {
                                 public void done(ParseException e) {
                                     if (e == null) {
                                         if (!isFinishing()) {
+                                            if(!patientObject.get(0).getDoctorId().isEmpty()) {
+                                                Log.i("DOCTOR", patientObject.get(0).getDoctorId()+"");
+                                                loadDoctorFromParse(Integer.parseInt(patientObject.get(0).getDoctorId()));
+                                            }
                                             loadVisitsFromParse(patientObject.get(0).getObjectId());
 
                                             loadMedsAndVaccinesFromParse(patientObject.get(0).getObjectId());
@@ -435,6 +441,34 @@ public class SyncParentDataActivity extends Activity {
             }
         });
     }
+
+    private void loadDoctorFromParse(int doctorID) { // DoctorId
+        ParseQuery<Doctors> query = Doctors.getQuery();
+        query.whereEqualTo("doctorID", doctorID);
+        query.getFirstInBackground(new GetCallback<Doctors>() {
+            @Override
+            public void done(Doctors doctors, ParseException e) {
+                if(e == null) {
+                    doctors.pinInBackground(
+                            new SaveCallback() {
+                                public void done(ParseException e) {
+                                    if (e == null) {
+                                        if (!isFinishing()) {
+                                            Log.i("ROBERT DOCTOR", "DATA SAVED : ");
+                                        }
+                                    } else {
+                                        Log.i("ROBERT DOCTOR", "Error pinning todos: " + e.getMessage());
+                                    }
+                                }
+                            }
+                    );
+                } else {
+                    Log.i("ROBERT DOCTOR", "loadFromParse: Error finding pinned doctor: " + e.getMessage());
+                }
+            }
+        });
+    }
+
     private void loadVisitsFromParse(String objectId) {
         ParseQuery<Visits> query = Visits.getQuery();
         query.whereEqualTo("patientid", objectId);
