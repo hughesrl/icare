@@ -10,6 +10,7 @@ import android.view.View;
 import com.fourello.icare.datas.ClinicSurvey;
 import com.fourello.icare.datas.Doctors;
 import com.fourello.icare.datas.MedsAndVaccines;
+import com.fourello.icare.datas.PatientNotes;
 import com.fourello.icare.datas.Patients;
 import com.fourello.icare.datas.Settings;
 import com.fourello.icare.datas.SpinnerItems;
@@ -61,6 +62,7 @@ public class ICareApplication extends Application {
         ParseObject.registerSubclass(Patients.class);
         ParseObject.registerSubclass(Visits.class);
         ParseObject.registerSubclass(MedsAndVaccines.class);
+        ParseObject.registerSubclass(PatientNotes.class);
         ParseObject.registerSubclass(Doctors.class);
 //        ParseObject.registerSubclass(PatientCheckIn.class);
         ParseObject.registerSubclass(ClinicSurvey.class);

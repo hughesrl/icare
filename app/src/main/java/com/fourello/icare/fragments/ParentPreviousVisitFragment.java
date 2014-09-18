@@ -116,12 +116,22 @@ public class ParentPreviousVisitFragment extends Fragment {
                         public void done(Visits parseObject, ParseException e) {
                             if(e == null) {
                                 DateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
-                                txtPreviousVisitDate.setText(Html.fromHtml("<u>" + df.format(parseObject.getCreatedAt()) + "<u>"));
-                                if (parseObject.containsKey("instructions")) {
-                                    txtInstructions.setText(parseObject.getInstructions());
-                                }
-                                if (parseObject.containsKey("nextvisit")) {
-                                    txtNextVisit.setText(df.format(parseObject.getNextVisit()));
+
+                                int remainingDays = getDaysDifference(new Date(), parseObject.getNextVisit());
+                                if(remainingDays > 0) {
+                                    txtPreviousVisitDate.setText(Html.fromHtml("<u>" + df.format(parseObject.getCreatedAt()) + "<u>"));
+                                    if (parseObject.containsKey("instructions")) {
+                                        txtInstructions.setText(parseObject.getInstructions());
+                                    }
+                                    if (parseObject.containsKey("nextvisit")) {
+                                        txtNextVisit.setText(df.format(parseObject.getNextVisit()));
+                                    }
+                                } else {
+                                    LinearLayout nodata = (LinearLayout) myFragmentView.findViewById(R.id.nodata);
+                                    nodata.setVisibility(View.VISIBLE);
+
+                                    LinearLayout content = (LinearLayout) myFragmentView.findViewById(R.id.content);
+                                    content.setVisibility(View.GONE);
                                 }
                             }
                         }

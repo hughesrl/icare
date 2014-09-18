@@ -18,6 +18,7 @@ import android.widget.ListView;
 
 import com.fourello.icare.DashboardParentFragmentActivity;
 import com.fourello.icare.R;
+import com.fourello.icare.adapters.ParentImmunizationListAdapter;
 import com.fourello.icare.adapters.ParentMedicationListAdapter;
 import com.fourello.icare.datas.MedsAndVaccines;
 import com.fourello.icare.datas.PatientChildData;
@@ -30,7 +31,7 @@ import com.parse.ParseQueryAdapter;
 
 import java.util.ArrayList;
 
-public class ParentMedicationTrackerFragment extends Fragment implements
+public class ParentImmunizationTrackerFragment extends Fragment implements
         DashboardParentFragmentActivity.OpenMenuCallbacks,
         View.OnClickListener{
 
@@ -44,11 +45,11 @@ public class ParentMedicationTrackerFragment extends Fragment implements
     private ProgressDialog mProgressDialog;
 
     private static int pos = 0;
-    private ParentMedicationListAdapter medicationTrackerListAdapter;
+    private ParentImmunizationListAdapter immunizationTrackerListAdapter;
 
 
     public static Fragment newInstance(int position, PatientDatabase patientData, ParseProxyObject loginData, String patientObjectId) {
-        ParentMedicationTrackerFragment f = new ParentMedicationTrackerFragment();
+        ParentImmunizationTrackerFragment f = new ParentImmunizationTrackerFragment();
 
 //        myChild = patientData;
 //        mParamLoginData = loginData;
@@ -70,7 +71,7 @@ public class ParentMedicationTrackerFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_parent_medication_tracker, container, false);
+        myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_parent_immunization_tracker, container, false);
 
         ((DashboardParentFragmentActivity)getActivity()).changePageTitle("My Tracker");
 
@@ -78,8 +79,8 @@ public class ParentMedicationTrackerFragment extends Fragment implements
         ParseQueryAdapter.QueryFactory<MedsAndVaccines> factory = new ParseQueryAdapter.QueryFactory<MedsAndVaccines>() {
             public ParseQuery<MedsAndVaccines> create() {
                 ParseQuery<MedsAndVaccines> query = MedsAndVaccines.getQuery();
-                query.whereMatches("type", "2");
-                query.addDescendingOrder("updatedAt");
+                query.whereMatches("type", "1");
+                query.addDescendingOrder("vaccine_datetaken");
                 query.fromLocalDatastore();
                 return query;
             }
@@ -87,42 +88,34 @@ public class ParentMedicationTrackerFragment extends Fragment implements
 
         // Set up the adapter
         inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        medicationTrackerListAdapter = new ParentMedicationListAdapter(getActivity(), factory);
+        immunizationTrackerListAdapter = new ParentImmunizationListAdapter(getActivity(), factory);
 
         // Attach the query adapter to the view
-        ListView growthTrackerListView = (ListView) myFragmentView.findViewById(R.id.listGrowthTracker);
-        growthTrackerListView.setAdapter(medicationTrackerListAdapter);
+        ListView immunizationTracker = (ListView) myFragmentView.findViewById(R.id.listImmunizationTracker);
+        immunizationTracker.setAdapter(immunizationTrackerListAdapter);
 
-        growthTrackerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        immunizationTracker.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                MedsAndVaccines medsAndVaccines = medicationTrackerListAdapter.getItem(position);
-                showDialogMedication(medsAndVaccines);
+                MedsAndVaccines medsAndVaccines = immunizationTrackerListAdapter.getItem(position);
+//                showDialogMedication(medsAndVaccines);
             }
         });
         int width = getActivity().getResources().getDisplayMetrics().widthPixels;
-        int columnWidth = (width-70)/5;
+        int columnWidth = width/3;
 
-        CustomTextView txtHeaderMedicine = (CustomTextView) myFragmentView.findViewById(R.id.txtHeaderMedicine);
-        CustomTextView txtHeaderDuration = (CustomTextView) myFragmentView.findViewById(R.id.txtHeaderDuration);
-        CustomTextView txtHeaderFrequency = (CustomTextView) myFragmentView.findViewById(R.id.txtHeaderFrequency);
+        CustomTextView txtHeaderVaccine = (CustomTextView) myFragmentView.findViewById(R.id.txtHeaderVaccine);
         CustomTextView txtHeaderDose = (CustomTextView) myFragmentView.findViewById(R.id.txtHeaderDose);
-        CustomTextView txtHeaderTrack = (CustomTextView) myFragmentView.findViewById(R.id.txtHeaderTrack);
-        CustomTextView txtHeaderActions = (CustomTextView) myFragmentView.findViewById(R.id.txtHeaderActions);
+        CustomTextView txtHeaderDateTaken = (CustomTextView) myFragmentView.findViewById(R.id.txtHeaderDateTaken);
 
-        txtHeaderMedicine.setWidth(columnWidth);
-        txtHeaderDuration.setWidth(columnWidth);
-        txtHeaderFrequency.setWidth(columnWidth);
+        txtHeaderVaccine.setWidth(columnWidth);
         txtHeaderDose.setWidth(columnWidth);
-        txtHeaderTrack.setWidth(columnWidth);
-        txtHeaderActions.setWidth(100);
+        txtHeaderDateTaken.setWidth(columnWidth);
 
-        txtHeaderMedicine.setGravity(Gravity.CENTER);
-        txtHeaderDuration.setGravity(Gravity.CENTER);
-        txtHeaderFrequency.setGravity(Gravity.CENTER);
+        txtHeaderVaccine.setGravity(Gravity.CENTER);
         txtHeaderDose.setGravity(Gravity.CENTER);
-        txtHeaderTrack.setGravity(Gravity.CENTER);
+        txtHeaderDateTaken.setGravity(Gravity.CENTER);
 
         return myFragmentView;
     }

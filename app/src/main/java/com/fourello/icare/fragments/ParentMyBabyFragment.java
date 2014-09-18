@@ -125,67 +125,82 @@ public class ParentMyBabyFragment extends Fragment {
                     public void done(Visits parseObject, ParseException e) {
                         DateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
                         if(e == null) {
-                            if(parseObject.has("weight")) {
-                                weightSeekBar.setMaxPosition(Integer.parseInt(parseObject.getWeight())); // position starts from zero
-                                weightSeekBar.setInitPosition(Integer.parseInt(parseObject.getWeight())); // position starts from zero
-                            }
-
-                            if(parseObject.has("height")) {
-                                heightSeekBar.setMaxPosition(Integer.parseInt(parseObject.getHeight()));
-                                heightSeekBar.setInitPosition(Integer.parseInt(parseObject.getHeight())); // position starts from zero
-                            }
-
-                            if(parseObject.has("head")) {
-                                headSeekBar.setMaxPosition(Integer.parseInt(parseObject.getHead()));
-                                headSeekBar.setInitPosition(Integer.parseInt(parseObject.getHead())); // position starts from zero
-                            }
-
                             if(parseObject.has("nextvisit")) {
-                                int totalDays  = getDaysDifference(parseObject.getCreatedAt(), parseObject.getNextVisit());
+                                int totalDays = getDaysDifference(parseObject.getCreatedAt(), parseObject.getNextVisit());
                                 int remainingDays = getDaysDifference(new Date(), parseObject.getNextVisit());
+                                if(remainingDays > 0) {
 
-                                nextVisitSeekBar.setMaxPosition(totalDays);
-                                nextVisitSeekBar.setInitPositionCountdown(totalDays-remainingDays); // position starts from zero
+                                    nextVisitSeekBar.setMaxPosition(totalDays);
+                                    nextVisitSeekBar.setInitPositionCountdown(totalDays - remainingDays); // position starts from zero
 
-                                String nextVisitDate = df.format(parseObject.getNextVisit());
-                                lblNextVisitDate.setText(nextVisitDate);
-                            }
+                                    String nextVisitDate = df.format(parseObject.getNextVisit());
+                                    lblNextVisitDate.setText(nextVisitDate);
 
-                            if(parseObject.has("medications")) {
-                                arrayMedications = parseObject.getMedications();
-                                if (arrayMedications != null) {
-                                    final BTFragmentGridPager mFragmentGridPager = (BTFragmentGridPager) myFragmentView.findViewById(R.id.fragmentGridPager);
-                                    mFragmentGridPagerAdapter = new BTFragmentGridPager.FragmentGridPagerAdapter() {
-                                        @Override
-                                        public int rowCount() {
-                                            return arrayMedications.length();
+                                    if (parseObject.has("weight")) {
+                                        weightSeekBar.setMaxPosition(Integer.parseInt(parseObject.getWeight())); // position starts from zero
+                                        weightSeekBar.setInitPosition(Integer.parseInt(parseObject.getWeight())); // position starts from zero
+                                    }
+
+                                    if (parseObject.has("height")) {
+                                        heightSeekBar.setMaxPosition(Integer.parseInt(parseObject.getHeight()));
+                                        heightSeekBar.setInitPosition(Integer.parseInt(parseObject.getHeight())); // position starts from zero
+                                    }
+
+                                    if (parseObject.has("head")) {
+                                        headSeekBar.setMaxPosition(Integer.parseInt(parseObject.getHead()));
+                                        headSeekBar.setInitPosition(Integer.parseInt(parseObject.getHead())); // position starts from zero
+                                    }
+
+
+                                    if (parseObject.has("medications")) {
+                                        arrayMedications = parseObject.getMedications();
+                                        if (arrayMedications != null) {
+                                            final BTFragmentGridPager mFragmentGridPager = (BTFragmentGridPager) myFragmentView.findViewById(R.id.fragmentGridPager);
+                                            mFragmentGridPagerAdapter = new BTFragmentGridPager.FragmentGridPagerAdapter() {
+                                                @Override
+                                                public int rowCount() {
+                                                    return arrayMedications.length();
+                                                }
+
+                                                @Override
+                                                public int columnCount(int row) {
+                                                    return arrayMedications.length();
+                                                }
+
+                                                @Override
+                                                public Fragment getItem(BTFragmentGridPager.GridIndex index) {
+                                                    ParentMyBabyMedicinesFragment panelFrag1 = new ParentMyBabyMedicinesFragment();
+                                                    panelFrag1.setGridIndex(index);
+                                                    try {
+                                                        JSONObject jsonObjectMedications = arrayMedications.getJSONObject(index.getRow());
+                                                        panelFrag1.setMedName(jsonObjectMedications.getString("brandname"));
+                                                        panelFrag1.setAdditionalData(jsonObjectMedications.getString("frequency"));
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+
+                                                    return panelFrag1;
+                                                }
+                                            };
+                                            mFragmentGridPager.setGridPagerAdapter(mFragmentGridPagerAdapter);
+                                        } else {
+                                            LinearLayout medicineLayout = (LinearLayout) myFragmentView.findViewById(R.id.medicineLayout);
+                                            medicineLayout.setVisibility(View.GONE);
                                         }
-
-                                        @Override
-                                        public int columnCount(int row) {
-                                            return arrayMedications.length();
-                                        }
-
-                                        @Override
-                                        public Fragment getItem(BTFragmentGridPager.GridIndex index) {
-                                            ParentMyBabyMedicinesFragment panelFrag1 = new ParentMyBabyMedicinesFragment();
-                                            panelFrag1.setGridIndex(index);
-                                            try {
-                                                JSONObject jsonObjectMedications = arrayMedications.getJSONObject(index.getRow());
-                                                panelFrag1.setMedName(jsonObjectMedications.getString("brandname"));
-                                                panelFrag1.setAdditionalData(jsonObjectMedications.getString("frequency"));
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                            return panelFrag1;
-                                        }
-                                    };
-                                    mFragmentGridPager.setGridPagerAdapter(mFragmentGridPagerAdapter);
+                                    }
                                 } else {
-                                    LinearLayout medicineLayout = (LinearLayout) myFragmentView.findViewById(R.id.medicineLayout);
-                                    medicineLayout.setVisibility(View.GONE);
+                                    LinearLayout nodata = (LinearLayout) myFragmentView.findViewById(R.id.nodata);
+                                    nodata.setVisibility(View.VISIBLE);
+
+                                    HorizontalScrollView visitrackerdata = (HorizontalScrollView) myFragmentView.findViewById(R.id.visitrackerdata);
+                                    visitrackerdata.setVisibility(View.GONE);
                                 }
+                            } else {
+                                LinearLayout nodata = (LinearLayout) myFragmentView.findViewById(R.id.nodata);
+                                nodata.setVisibility(View.VISIBLE);
+
+                                HorizontalScrollView visitrackerdata = (HorizontalScrollView) myFragmentView.findViewById(R.id.visitrackerdata);
+                                visitrackerdata.setVisibility(View.GONE);
                             }
                         } else {
                             Log.d("ROBERT", e.toString());
