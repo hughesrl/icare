@@ -47,6 +47,7 @@
     <string name="lbl_add_baby">ADD BABY</string>
     <string name="lbl_growth_tracker">GROWTH TRACKER</string>
     <string name="lbl_medication_tracker">MEDICATION TRACKER</string>
+    <string name="lbl_immunization_tracker">IMMUNIZATION TRACKER</string>
     <string name="lbl_clinic_visit">CLINIC VISIT</string>
     <string name="lbl_add_baby_lower">Add Baby</string>
     <string name="lbl_add_patient">ADD PATIENT</string>
@@ -131,6 +132,14 @@
     <string name="lblClinicNotes">Clinic Notes</string>
     <string name="lblSecretarysName">Secretary\' Name</string>
     <string name="lblSecretarysContactNo">Contact No.</string>
+
+    <!--SYMPTOM-->
+    <string name="lblSymptomSubject">Subject</string>
+    <string name="lblSymptomSymptoms">Symptom(s)</string>
+    <string name="lblSymptomNotes">Notes</string>
+    <string name="lblSymptomQuestion">Questions for Doctor in my next visit</string>
+    <string name="lblSymptomAttachPhoto">Attach Photos</string>
+    <string name="lblSymptomSave">Save</string>
 
     <string name="lblZero">0</string>
     <string name="lblKg">Kg</string>

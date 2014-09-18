@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.fourello.icare.datas.Doctors;
 import com.fourello.icare.datas.MedsAndVaccines;
+import com.fourello.icare.datas.PatientNotes;
 import com.fourello.icare.datas.Patients;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.datas.Visits;
@@ -416,6 +417,8 @@ public class SyncParentDataActivity extends Activity {
 
                                             loadMedsAndVaccinesFromParse(patientObject.get(0).getObjectId());
 
+                                            loadPatientsNotesFromParse(patientObject.get(0).getObjectId());
+
                                             Intent intent = new Intent(SyncParentDataActivity.this, DashboardParentFragmentActivity.class);
                                             intent.putExtra("loginData", loginData);
                                             startActivity(intent);
@@ -519,6 +522,35 @@ public class SyncParentDataActivity extends Activity {
                             });
                 } else {
                     Log.i("VisitsList",
+                            "loadFromParse: Error finding pinned visits: "
+                                    + e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void loadPatientsNotesFromParse(String objectId) {
+        ParseQuery<PatientNotes> query = PatientNotes.getQuery();
+        query.whereEqualTo("patientid", objectId);
+        query.findInBackground(new FindCallback<PatientNotes>() {
+            public void done(final List<PatientNotes> patientNotesObject, ParseException e) {
+                if (e == null) {
+                    PatientNotes.pinAllInBackground(patientNotesObject,
+                            new SaveCallback() {
+                                public void done(ParseException e) {
+                                    if (e == null) {
+                                        if (!isFinishing()) {
+                                            Log.i("ROBERT PatientNotes", "DATA SAVED : "+patientNotesObject.size());
+                                        }
+                                    } else {
+                                        Log.i("ROBERT PatientNotes",
+                                                "Error pinning PatientNotes: "
+                                                        + e.getMessage());
+                                    }
+                                }
+                            });
+                } else {
+                    Log.i("ROBERT PatientNotes",
                             "loadFromParse: Error finding pinned visits: "
                                     + e.getMessage());
                 }

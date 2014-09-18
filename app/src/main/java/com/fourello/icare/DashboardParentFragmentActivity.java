@@ -37,7 +37,9 @@ import com.fourello.icare.fragments.ParentClinicVisitsFragment;
 import com.fourello.icare.fragments.ParentDashboardFragment;
 import com.fourello.icare.fragments.ParentDoctorInformationFragment;
 import com.fourello.icare.fragments.ParentGrowthTrackerFragment;
+import com.fourello.icare.fragments.ParentImmunizationTrackerFragment;
 import com.fourello.icare.fragments.ParentMedicationTrackerFragment;
+import com.fourello.icare.fragments.ParentSymptomsTrackerFragment;
 import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.widgets.FragmentUtils;
 import com.fourello.icare.widgets.ParseProxyObject;
@@ -502,6 +504,12 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                             case 1:
                                 MedicationTracker();
                                 break;
+                            case 2:
+                                ImmunizationTracker();
+                                break;
+                            case 3:
+                                SymptomsTracker(listMyChildren, mySpinnerChildren.getSelectedItemPosition());
+                                break;
                         }
                     }
                 });
@@ -659,6 +667,42 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
 
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.replace(R.id.alt_fragment_content_container, myFragment, "MEDICATION_TRACKER_FRAGMENT");
+        transaction.commit();
+        // Fragment must implement the callback.
+        if (!(myFragment instanceof OpenMenuCallbacks)) {
+            throw new IllegalStateException(
+                    "Fragment must implement the callbacks.");
+        }
+        mCallbacks = (OpenMenuCallbacks) myFragment;
+    }
+    public void ImmunizationTracker() {
+        mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        ParentImmunizationTrackerFragment myFragment = new ParentImmunizationTrackerFragment();
+        Bundle bundle = getIntent().getExtras();
+
+        myFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.alt_fragment_content_container, myFragment, "IMMUNIZATION_TRACKER_FRAGMENT");
+        transaction.commit();
+        // Fragment must implement the callback.
+        if (!(myFragment instanceof OpenMenuCallbacks)) {
+            throw new IllegalStateException(
+                    "Fragment must implement the callbacks.");
+        }
+        mCallbacks = (OpenMenuCallbacks) myFragment;
+    }
+    public void SymptomsTracker(List<PatientChildData> listMyChildren, int childPosition) {
+        mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        ParentSymptomsTrackerFragment myFragment = new ParentSymptomsTrackerFragment();
+        Bundle bundle = getIntent().getExtras();
+
+        bundle.putInt(ARG_CHILD_DATA, childPosition);
+        bundle.putParcelableArrayList(ARG_CHILD_DATA, (ArrayList<PatientChildData>) listMyChildren);
+        myFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.alt_fragment_content_container, myFragment, "IMMUNIZATION_TRACKER_FRAGMENT");
         transaction.commit();
         // Fragment must implement the callback.
         if (!(myFragment instanceof OpenMenuCallbacks)) {
