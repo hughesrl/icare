@@ -35,6 +35,9 @@ import java.util.regex.Pattern;
         formUriBasicAuthPassword="flipstop"
 )
 public class ICareApplication extends Application {
+    public static String PARENT_GROUP = "ParentGroup";
+    public static String DOCTORS_GROUP = "doctorGroup";
+    public static String PATIENTS_GROUP = "patientsGroup";
 
     public static String DOCTORS_LABEL = "Doctors";
     public static String USERS_LABEL = "Users";

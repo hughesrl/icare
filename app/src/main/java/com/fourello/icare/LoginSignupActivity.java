@@ -135,7 +135,7 @@ public class    LoginSignupActivity extends Activity {
                                     usernameOrPasswordIsInvalid();
                                 } else {
                                     //Login success
-                                    ParseObject.pinAllInBackground(ICareApplication.USERS_LABEL, objects);
+                                    ParseObject.pinAllInBackground(ICareApplication.PARENT_GROUP, objects);
 
                                     final ParseObject project = objects.get(0);
 
@@ -220,9 +220,11 @@ public class    LoginSignupActivity extends Activity {
     }
 
     public void loginSuccessfulParent(ParseProxyObject loginData) {
+        Log.d("ROBERT LOGINDATA", loginData.getValues().toString());
         mProgressDialog.dismiss();
         // Get Children Sync
         Intent intent = new Intent(LoginSignupActivity.this, SyncParentDataActivity.class);
+
         intent.putExtra("loginData", loginData);
         startActivity(intent);
         //Toast.makeText(getApplicationContext(), "Successfully Logged in", Toast.LENGTH_LONG).show();

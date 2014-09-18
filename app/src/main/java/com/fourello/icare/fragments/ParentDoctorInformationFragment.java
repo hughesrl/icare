@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.fourello.icare.DashboardParentFragmentActivity;
+import com.fourello.icare.ICareApplication;
 import com.fourello.icare.R;
 import com.fourello.icare.datas.Doctors;
 import com.fourello.icare.datas.PatientChildData;
@@ -141,12 +142,9 @@ public class ParentDoctorInformationFragment extends Fragment implements
                                 public void done(Doctors doctors, ParseException e) {
                                     if (e == null) {
                                         myData = ParseObject.createWithoutData(Patients.class, myChild.getPatientObjectId());
-
                                         myData.setDoctorId(String.valueOf(doctors.getDoctorID()));
-                                        // Remove Exisiting Doctor in Background
-                                        Doctors.unpinAllInBackground();
                                         // Save new Doctor Information in Background
-                                        doctors.pinInBackground(
+                                        doctors.pinInBackground(ICareApplication.PARENT_GROUP,
                                             new SaveCallback() {
                                                 public void done(ParseException e) {
                                                     if (e == null) {
@@ -155,13 +153,19 @@ public class ParentDoctorInformationFragment extends Fragment implements
                                                                 @Override
                                                                 public void done(ParseException error) {
                                                                     if (error == null) {
-                                                                        getActivity().runOnUiThread(new Runnable() {
-                                                                            public void run() {
-                                                                                doctorInfo.setVisibility(View.VISIBLE);
-                                                                                linkDoctor.setVisibility(View.GONE);
+                                                                        myData.pinInBackground(ICareApplication.PARENT_GROUP, new SaveCallback() {
+                                                                            @Override
+                                                                            public void done(ParseException e) {
+                                                                                getActivity().runOnUiThread(new Runnable() {
+                                                                                    public void run() {
+                                                                                        doctorInfo.setVisibility(View.VISIBLE);
+                                                                                        linkDoctor.setVisibility(View.GONE);
 
-                                                                                getDoctorInformation();
-                                                                                mProgressDialog.dismiss();
+                                                                                        getDoctorInformation();
+                                                                                        mProgressDialog.dismiss();
+//                                                                                        ((DashboardParentFragmentActivity)getActivity()).restartView();
+                                                                                    }
+                                                                                });
                                                                             }
                                                                         });
 

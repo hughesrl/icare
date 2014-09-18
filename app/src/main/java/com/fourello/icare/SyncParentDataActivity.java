@@ -39,7 +39,6 @@ import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.fourello.icare.widgets.Utils;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -83,61 +82,6 @@ public class SyncParentDataActivity extends Activity {
         // Create the array
         // Get Children Sync
         loadPatientFromParse(loginData.getString("email"));
-
-//        ParseQuery<ParseObject> queryCount = new ParseQuery<ParseObject>(ICareApplication.PATIENTS_LABEL);
-//        queryCount.whereEqualTo("email", loginData.getString("email"));
-//        queryCount.addAscendingOrder("firstname");
-//        queryCount.countInBackground(new CountCallback() {
-//            @Override
-//            public void done(int i, ParseException e) {
-//                if(e == null) {
-//                    if(i == 0) {
-//                        loadingLayout.setVisibility(View.GONE);
-//                        addBabyLayout.setVisibility(View.VISIBLE);
-//                    } else {
-//                        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.PATIENTS_LABEL);
-//                        query.whereEqualTo("email", loginData.getString("email"));
-//                        query.addAscendingOrder("firstname");
-//                        query.findInBackground(new FindCallback<ParseObject>() {
-//                            @Override
-//                            public void done(List<ParseObject> parseObjects, ParseException e) {
-//                                if (e == null) {
-//                                    ParseObject.pinAllInBackground(ICareApplication.PATIENTS_LABEL, parseObjects, new SaveCallback() {
-//                                        @Override
-//                                        public void done(ParseException e) {
-//                                            if (e == null) {
-//                                                // Get Children from LocalDatastore
-//                                                ParseQuery<ParseObject> queryChildren = ParseQuery.getQuery(ICareApplication.PATIENTS_LABEL);
-//                                                queryChildren.fromLocalDatastore();
-//                                                queryChildren.findInBackground(new FindCallback<ParseObject>() {
-//                                                    @Override
-//                                                    public void done(List<ParseObject> parseObjects, ParseException e) {
-//                                                        if (e == null) {
-//                                                            for (int i = 0; i < parseObjects.size(); i++) {
-//                                                                ParseObject patientObjects = parseObjects.get(i);
-//
-//                                                                Log.d("ROBERT", patientObjects.getObjectId());
-//                                                                Log.d("ROBERT", i + " OF " + parseObjects.size());
-//                                                            }
-//
-//                                                            Intent intent = new Intent(SyncParentDataActivity.this, DashboardParentFragmentActivity.class);
-//                                                            intent.putExtra("loginData", loginData);
-//                                                            startActivity(intent);
-//                                                        }
-//                                                    }
-//                                                });
-//
-//                                            }
-//                                        }
-//                                    });
-//                                }
-//                            }
-//                        });
-//                    }
-//                }
-//            }
-//        });
-
 
         Spinner spinnerGender = (Spinner) findViewById(R.id.spinnerGender);
         CustomAdapter adapter = new CustomAdapter(SyncParentDataActivity.this, android.R.layout.simple_spinner_item, ICareApplication.populateGender());
@@ -399,38 +343,70 @@ public class SyncParentDataActivity extends Activity {
         query.findInBackground(new FindCallback<Patients>() {
             public void done(final List<Patients> patientObject, ParseException e) {
                 if (e == null) {
+                    Log.d("ROBERT PATIENT INFO", patientObject.get(0).toString());
                     if (patientObject.size() == 0) {
                         loadingLayout.setVisibility(View.GONE);
                         addBabyLayout.setVisibility(View.VISIBLE);
                     } else {
-                        Patients.pinAllInBackground(patientObject,
-                            new SaveCallback() {
-                                public void done(ParseException e) {
-                                    if (e == null) {
-                                        if (!isFinishing()) {
-                                            if(!patientObject.get(0).getDoctorId().isEmpty()) {
-                                                Log.i("DOCTOR", patientObject.get(0).getDoctorId()+"");
-                                                loadDoctorFromParse(Integer.parseInt(patientObject.get(0).getDoctorId()));
+                        ParseObject.pinAllInBackground(ICareApplication.PARENT_GROUP, patientObject,
+                                new SaveCallback() {
+                                    public void done(ParseException e) {
+                                        if (e == null) {
+                                            if (!isFinishing()) {
+                                                if(patientObject.get(0).has("doctorid")) {
+                                                    if(!patientObject.get(0).getDoctorId().isEmpty()) {
+                                                        Log.i("DOCTOR", patientObject.get(0).getDoctorId() + "");
+                                                        loadDoctorFromParse(Integer.parseInt(patientObject.get(0).getDoctorId()));
+                                                    }
+                                                }
+                                                loadVisitsFromParse(patientObject.get(0).getObjectId());
+
+                                                loadMedsAndVaccinesFromParse(patientObject.get(0).getObjectId());
+
+                                                Intent intent = new Intent(SyncParentDataActivity.this, DashboardParentFragmentActivity.class);
+                                                intent.putExtra("loginData", loginData);
+                                                startActivity(intent);
+                                                SyncParentDataActivity.this.finish();
+                                                Log.i("patient", "DATA SAVED : SIZE:" + patientObject.size() +
+                                                        " OBJECTID:" + patientObject.get(0).getObjectId());
                                             }
-                                            loadVisitsFromParse(patientObject.get(0).getObjectId());
-
-                                            loadMedsAndVaccinesFromParse(patientObject.get(0).getObjectId());
-
-                                            Intent intent = new Intent(SyncParentDataActivity.this, DashboardParentFragmentActivity.class);
-                                            intent.putExtra("loginData", loginData);
-                                            startActivity(intent);
-                                            SyncParentDataActivity.this.finish();
-                                            Log.i("patient", "DATA SAVED : SIZE:" + patientObject.size() +
-                                                    " OBJECTID:" + patientObject.get(0).getObjectId());
+                                        } else {
+                                            Log.i("patient",
+                                                    "Error pinning todos: "
+                                                            + e.getMessage());
                                         }
-                                    } else {
-                                        Log.i("patient",
-                                                "Error pinning todos: "
-                                                        + e.getMessage());
                                     }
-                                }
-                            }
-                        );
+                                });
+//                        Patients.pinAllInBackground(ICareApplication.PARENT_GROUP, patientObject,
+//                            new SaveCallback() {
+//                                public void done(ParseException e) {
+//                                    if (e == null) {
+//                                        if (!isFinishing()) {
+//                                            if(patientObject.get(0).has("doctorid")) {
+//                                                if(!patientObject.get(0).getDoctorId().isEmpty()) {
+//                                                    Log.i("DOCTOR", patientObject.get(0).getDoctorId() + "");
+//                                                    loadDoctorFromParse(Integer.parseInt(patientObject.get(0).getDoctorId()));
+//                                                }
+//                                            }
+//                                            loadVisitsFromParse(patientObject.get(0).getObjectId());
+//
+//                                            loadMedsAndVaccinesFromParse(patientObject.get(0).getObjectId());
+//
+//                                            Intent intent = new Intent(SyncParentDataActivity.this, DashboardParentFragmentActivity.class);
+//                                            intent.putExtra("loginData", loginData);
+//                                            startActivity(intent);
+//                                            SyncParentDataActivity.this.finish();
+//                                            Log.i("patient", "DATA SAVED : SIZE:" + patientObject.size() +
+//                                                    " OBJECTID:" + patientObject.get(0).getObjectId());
+//                                        }
+//                                    } else {
+//                                        Log.i("patient",
+//                                                "Error pinning todos: "
+//                                                        + e.getMessage());
+//                                    }
+//                                }
+//                            }
+//                        );
                     }
 
                 } else {
@@ -445,28 +421,47 @@ public class SyncParentDataActivity extends Activity {
     private void loadDoctorFromParse(int doctorID) { // DoctorId
         ParseQuery<Doctors> query = Doctors.getQuery();
         query.whereEqualTo("doctorID", doctorID);
-        query.getFirstInBackground(new GetCallback<Doctors>() {
+        query.findInBackground(new FindCallback<Doctors>() {
             @Override
-            public void done(Doctors doctors, ParseException e) {
-                if(e == null) {
-                    doctors.pinInBackground(
-                            new SaveCallback() {
-                                public void done(ParseException e) {
-                                    if (e == null) {
-                                        if (!isFinishing()) {
-                                            Log.i("ROBERT DOCTOR", "DATA SAVED : ");
-                                        }
-                                    } else {
-                                        Log.i("ROBERT DOCTOR", "Error pinning todos: " + e.getMessage());
+            public void done(List<Doctors> doctorses, ParseException e) {
+                ParseObject.pinAllInBackground(ICareApplication.PARENT_GROUP, doctorses,
+                        new SaveCallback() {
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    if (!isFinishing()) {
+                                        Log.i("ROBERT DOCTOR", "DATA SAVED : ");
                                     }
+                                } else {
+                                    Log.i("ROBERT DOCTOR", "Error pinning todos: " + e.getMessage());
                                 }
                             }
-                    );
-                } else {
-                    Log.i("ROBERT DOCTOR", "loadFromParse: Error finding pinned doctor: " + e.getMessage());
-                }
+                        }
+                );
             }
         });
+//        query.getFirstInBackground(new GetCallback<Doctors>() {
+//            @Override
+//            public void done(Doctors doctors, ParseException e) {
+//                if(e == null) {
+//
+//                    doctors.pinInBackground(ICareApplication.PARENT_GROUP,
+//                            new SaveCallback() {
+//                                public void done(ParseException e) {
+//                                    if (e == null) {
+//                                        if (!isFinishing()) {
+//                                            Log.i("ROBERT DOCTOR", "DATA SAVED : ");
+//                                        }
+//                                    } else {
+//                                        Log.i("ROBERT DOCTOR", "Error pinning todos: " + e.getMessage());
+//                                    }
+//                                }
+//                            }
+//                    );
+//                } else {
+//                    Log.i("ROBERT DOCTOR", "loadFromParse: Error finding pinned doctor: " + e.getMessage());
+//                }
+//            }
+//        });
     }
 
     private void loadVisitsFromParse(String objectId) {
@@ -475,7 +470,7 @@ public class SyncParentDataActivity extends Activity {
         query.findInBackground(new FindCallback<Visits>() {
             public void done(final List<Visits> visitsObject, ParseException e) {
                 if (e == null) {
-                    Visits.pinAllInBackground(visitsObject,
+                    ParseObject.pinAllInBackground(ICareApplication.PARENT_GROUP,visitsObject,
                             new SaveCallback() {
                                 public void done(ParseException e) {
                                     if (e == null) {
@@ -489,6 +484,20 @@ public class SyncParentDataActivity extends Activity {
                                     }
                                 }
                             });
+//                    Visits.pinAllInBackground(ICareApplication.PARENT_GROUP,visitsObject,
+//                            new SaveCallback() {
+//                                public void done(ParseException e) {
+//                                    if (e == null) {
+//                                        if (!isFinishing()) {
+//                                            Log.i("loadVisitsFromParse", "DATA SAVED : "+visitsObject.size());
+//                                        }
+//                                    } else {
+//                                        Log.i("loadVisitsFromParse",
+//                                                "Error pinning todos: "
+//                                                        + e.getMessage());
+//                                    }
+//                                }
+//                            });
                 } else {
                     Log.i("VisitsList",
                             "loadFromParse: Error finding pinned visits: "
@@ -503,7 +512,7 @@ public class SyncParentDataActivity extends Activity {
         query.findInBackground(new FindCallback<MedsAndVaccines>() {
             public void done(final List<MedsAndVaccines> medsAndVaccinesObject, ParseException e) {
                 if (e == null) {
-                    MedsAndVaccines.pinAllInBackground(medsAndVaccinesObject,
+                    ParseObject.pinAllInBackground(ICareApplication.PARENT_GROUP,medsAndVaccinesObject,
                             new SaveCallback() {
                                 public void done(ParseException e) {
                                     if (e == null) {
@@ -517,6 +526,20 @@ public class SyncParentDataActivity extends Activity {
                                     }
                                 }
                             });
+//                    MedsAndVaccines.pinAllInBackground(ICareApplication.PARENT_GROUP,medsAndVaccinesObject,
+//                            new SaveCallback() {
+//                                public void done(ParseException e) {
+//                                    if (e == null) {
+//                                        if (!isFinishing()) {
+//                                            Log.i("loadMedsAndVaccinesFromParse", "DATA SAVED : "+medsAndVaccinesObject.size());
+//                                        }
+//                                    } else {
+//                                        Log.i("loadMedsAndVaccinesFromParse",
+//                                                "Error pinning todos: "
+//                                                        + e.getMessage());
+//                                    }
+//                                }
+//                            });
                 } else {
                     Log.i("VisitsList",
                             "loadFromParse: Error finding pinned visits: "

@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.Window;
@@ -26,11 +27,9 @@ import android.widget.Toast;
 import com.fourello.icare.adapters.MenuItemsAdapter;
 import com.fourello.icare.adapters.MyChildrenAdapter;
 import com.fourello.icare.datas.Doctors;
-import com.fourello.icare.datas.MedsAndVaccines;
 import com.fourello.icare.datas.MenuItems;
 import com.fourello.icare.datas.PatientChildData;
 import com.fourello.icare.datas.Patients;
-import com.fourello.icare.datas.Visits;
 import com.fourello.icare.fragments.CheckinPatientDialogFragment;
 import com.fourello.icare.fragments.ParentBabyInfoFragment;
 import com.fourello.icare.fragments.ParentClinicVisitsFragment;
@@ -39,12 +38,14 @@ import com.fourello.icare.fragments.ParentDoctorInformationFragment;
 import com.fourello.icare.fragments.ParentGrowthTrackerFragment;
 import com.fourello.icare.fragments.ParentMedicationTrackerFragment;
 import com.fourello.icare.view.CustomTextView;
+import com.fourello.icare.widgets.AlertDialogFragment;
 import com.fourello.icare.widgets.FragmentUtils;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.fourello.icare.widgets.PasswordDialogFragment;
 import com.fourello.icare.widgets.Utils;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -58,7 +59,7 @@ import java.util.List;
 
 public class DashboardParentFragmentActivity extends FragmentActivity implements View.OnClickListener,
         FragmentUtils.ActivityForResultStarter,
-        PasswordDialogFragment.PasswordDialogListener,
+        AlertDialogFragment.AlertDialogListener,
         CheckinPatientDialogFragment.CheckinPatientDialogListener {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -219,7 +220,7 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                             myChildrenInfo.setParentEmail(patientObjects.getString("email"));
                         }
 
-                        if(!patientObjects.getString("doctorid").isEmpty()) {
+                        if(patientObjects.has("doctorid")) {
                             myChildrenInfo.setDoctorID(patientObjects.getString("doctorid"));
                         }
                         // Distinguishing Marks cannot found
@@ -331,9 +332,6 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                 });
             }
         });
-
-
-
     }
 
     @Override
@@ -364,6 +362,17 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
 
         passwordDialog.setArguments(args);
         passwordDialog.setTargetFragment(fragment, MY_REQUEST_CODE);
+        passwordDialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+    }
+
+    public void showAlertDialog(String purpose) {
+        // To create an instance of DialogFragment and displays
+        DialogFragment passwordDialog = AlertDialogFragment.newInstance(purpose);
+        Bundle args = getIntent().getExtras();
+        args.putString(AlertDialogFragment.PURPOSE_TO_OPEN, purpose);
+
+        passwordDialog.setArguments(args);
+//        passwordDialog.setTargetFragment(fragment, MY_REQUEST_CODE);
         passwordDialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
     }
 
@@ -511,7 +520,8 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                 MenuItems menu_items_data_btnMyClinicVisits[] = new MenuItems[]{
                         new MenuItems("Clinic Visits", true),
                         new MenuItems("Check-in", true)
-                };
+                    };
+
                 MenuItemsAdapter adapter_btnMyClinicVisits = new MenuItemsAdapter(DashboardParentFragmentActivity.this, R.layout.list_menu_items, menu_items_data_btnMyClinicVisits);
                 // Assign adapter to ListView
                 listSubMenu.setAdapter(adapter_btnMyClinicVisits);
@@ -524,7 +534,11 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                                 ClinicVisits();
                                 break;
                             case 1:
-                                CheckIfPINOfTheDayExists();
+                                try {
+                                    CheckIfPINOfTheDayExists();
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                                 break;
                         }
                     }
@@ -550,24 +564,64 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                                 DoctorInformation(listMyChildren, mySpinnerChildren.getSelectedItemPosition());
                                 break;
                             case 1:;
-                                ParseObject.unpinAllInBackground(new DeleteCallback() {
+//                                Patients.unpinAllInBackground(ICareApplication.PARENT_GROUP, new DeleteCallback() {
+//                                    @Override
+//                                    public void done(ParseException e) {
+//                                        if(e==null) {
+//                                            Log.d("ROBERT", "PATIENTS NO ERROR");
+//                                        } else {
+//                                            Log.d("ROBERT", "PATIENTS ERROR :" + e.getMessage());
+//                                        }
+//                                    }
+//                                });
+//                                Visits.unpinAllInBackground(ICareApplication.PARENT_GROUP);
+//                                MedsAndVaccines.unpinAllInBackground(ICareApplication.PARENT_GROUP);
+//                                Doctors.unpinAllInBackground(ICareApplication.PARENT_GROUP, new DeleteCallback() {
+//                                    @Override
+//                                    public void done(ParseException e) {
+//                                        if(e==null) {
+//                                            Log.d("ROBERT", "DOCTORS NO ERROR");
+//                                        } else {
+//                                            Log.d("ROBERT", "DOCTORS ERROR :" + e.getMessage());
+//                                        }
+//                                    }
+//                                });
+                                ParseObject.unpinAllInBackground(ICareApplication.PARENT_GROUP, new DeleteCallback() {
                                     public void done(ParseException e) {
                                         if (e != null) {
                                             return;
                                         } else {
-                                            Patients.unpinAllInBackground();
-                                            Visits.unpinAllInBackground();
-                                            MedsAndVaccines.unpinAllInBackground();
-                                            Doctors.unpinAllInBackground();
-                                            ParseObject.unpinAllInBackground(ICareApplication.USERS_LABEL, new DeleteCallback() {
-                                                public void done(ParseException e) {
-                                                    if (e == null) {
-                                                        Intent intent = new Intent(DashboardParentFragmentActivity.this, LoginSignupActivity.class);
-                                                        startActivity(intent);
-                                                        finish();
+                                            ParseQuery<Doctors> query = Doctors.getQuery();
+                                            query.fromLocalDatastore();
+
+                                            query.findInBackground(new FindCallback<Doctors>() {
+                                                @Override
+                                                public void done(List<Doctors> doctorses, ParseException e) {
+//                                                    ParseObject.unpinAll(ICareApplication.PARENT_GROUP, doctorses);
+                                                    try {
+                                                        ParseObject.unpinAll(doctorses);
+                                                    } catch (ParseException e1) {
+                                                        e1.printStackTrace();
                                                     }
                                                 }
                                             });
+
+//                                            Patients.unpinAllInBackground(ICareApplication.PATIENTS_GROUP);
+//                                            Visits.unpinAllInBackground();
+//                                            MedsAndVaccines.unpinAllInBackground();
+//
+////                                            ParseObject.unpinAllInBackground(ICareApplication.DOCTORS_LABEL);
+////                                            Doctors.unpinAllInBackground();
+//                                            Doctors.unpinAllInBackground(ICareApplication.DOCTORS_GROUP);
+//                                            ParseObject.unpinAllInBackground(ICareApplication.USERS_LABEL, new DeleteCallback() {
+//                                                public void done(ParseException e) {
+//                                                    if (e == null) {
+                                                        Intent intent = new Intent(DashboardParentFragmentActivity.this, LoginSignupActivity.class);
+                                                        startActivity(intent);
+                                                        finish();
+//                                                    }
+//                                                }
+//                                            });
                                         }
                                     }
                                 });
@@ -738,20 +792,60 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void CheckIfPINOfTheDayExists() {
-        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.SETTINGS_LABEL);
-        query.whereEqualTo("doctorid", listMyChildren.get(0).getDoctorID());
-        query.whereGreaterThan("updatedAt", midnight);
-        query.whereLessThan("updatedAt", elevenfiftynine);
-        try {
-            if(query.count() == 0) {
-                Toast.makeText(getApplication(), "No PIN", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getApplication(), "Enter PIN", Toast.LENGTH_LONG).show();
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+    public void CheckIfPINOfTheDayExists() throws ParseException {
+//        final ProgressDialog mProgressDialog;
+//        mProgressDialog = Utils.createProgressDialog(DashboardParentFragmentActivity.this);
+//        mProgressDialog.show();
+
+        ParseQuery<Doctors> query = Doctors.getQuery();
+        query.fromLocalDatastore();
+        if(query.count() == 0) {
+            Toast.makeText(getApplication(), "Please set your Doctor", Toast.LENGTH_LONG).show();
+        } else {
+            query.getFirstInBackground(new GetCallback<Doctors>() {
+                @Override
+                public void done(Doctors doctors, ParseException e) {
+                    if(e == null) {
+                        Log.d("ROBERT MID", midnight.toString());
+                        Log.d("ROBERT 1159", elevenfiftynine.toString());
+                        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.SETTINGS_LABEL);
+                        query.whereEqualTo("doctorid", doctors.getDoctorID());
+                        query.whereGreaterThan("updatedAt", midnight);
+                        query.whereLessThan("updatedAt", elevenfiftynine);
+                        try {
+                            if (query.count() == 0) {
+                                showAlertDialog("enter_pin");
+                                Toast.makeText(getApplication(), "No PIN", Toast.LENGTH_LONG).show();
+                            } else {
+                                showAlertDialog("alert");
+                                Toast.makeText(getApplication(), "Enter PIN", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+//                    mProgressDialog.dismiss();
+                }
+            });
         }
+
+//        if(!listMyChildren.get(0).getDoctorID().isEmpty()) {
+//            ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.SETTINGS_LABEL);
+//            query.whereEqualTo("doctorid", listMyChildren.get(0).getDoctorID());
+//            query.whereGreaterThan("updatedAt", midnight);
+//            query.whereLessThan("updatedAt", elevenfiftynine);
+//            try {
+//                if (query.count() == 0) {
+//                    Toast.makeText(getApplication(), "No PIN", Toast.LENGTH_LONG).show();
+//                } else {
+//                    Toast.makeText(getApplication(), "Enter PIN", Toast.LENGTH_LONG).show();
+//                }
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            Toast.makeText(getApplication(), "Please set your Doctor", Toast.LENGTH_LONG).show();
+//        }
     }
 
 }
