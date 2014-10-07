@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 import com.fourello.icare.datas.Doctors;
 import com.fourello.icare.datas.MedsAndVaccines;
-import com.fourello.icare.datas.PatientNotes;
+import com.fourello.icare.datas.NewsFeeds;
 import com.fourello.icare.datas.Patients;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.datas.Visits;
@@ -354,22 +354,27 @@ public class SyncParentDataActivity extends Activity {
                                     public void done(ParseException e) {
                                         if (e == null) {
                                             if (!isFinishing()) {
-                                                if(patientObject.get(0).has("doctorid")) {
-                                                    if(!patientObject.get(0).getDoctorId().isEmpty()) {
+                                                if (patientObject.get(0).has("doctorid")) {
+                                                    if (!patientObject.get(0).getDoctorId().isEmpty()) {
                                                         Log.i("DOCTOR", patientObject.get(0).getDoctorId() + "");
                                                         loadDoctorFromParse(Integer.parseInt(patientObject.get(0).getDoctorId()));
                                                     }
                                                 }
                                                 loadVisitsFromParse(patientObject.get(0).getObjectId());
 
-											loadMedsAndVaccinesFromParse(patientObject.get(0).getObjectId());											loadPatientsNotesFromParse(patientObject.get(0).getObjectId());
+                                                loadMedsAndVaccinesFromParse(patientObject.get(0).getObjectId());
+//                                                loadPatientsNotesFromParse(patientObject.get(0).getObjectId());
 
-											Intent intent = new Intent(SyncParentDataActivity.this, DashboardParentFragmentActivity.class);
-                                            intent.putExtra("loginData", loginData);
-                                            startActivity(intent);
-                                            SyncParentDataActivity.this.finish();
-                                            Log.i("patient", "DATA SAVED : SIZE:" + patientObject.size() +
-                                            	" OBJECTID:" + patientObject.get(0).getObjectId());                                        }
+                                                loadNewsFeedsFromParse();
+
+                                                Intent intent = new Intent(SyncParentDataActivity.this, DashboardParentFragmentActivity.class);
+                                                intent.putExtra("loginData", loginData);
+                                                startActivity(intent);
+                                                SyncParentDataActivity.this.finish();
+                                                Log.i("patient", "DATA SAVED : SIZE:" + patientObject.size() +
+                                                        " OBJECTID:" + patientObject.get(0).getObjectId());
+                                            }
+                                        }
                                     }
                                 });
 //                        Patients.pinAllInBackground(ICareApplication.PARENT_GROUP, patientObject,
@@ -544,29 +549,57 @@ public class SyncParentDataActivity extends Activity {
         });
     }
 
-    private void loadPatientsNotesFromParse(String objectId) {
-        ParseQuery<PatientNotes> query = PatientNotes.getQuery();
-        query.whereEqualTo("patientid", objectId);
-        query.findInBackground(new FindCallback<PatientNotes>() {
-            public void done(final List<PatientNotes> patientNotesObject, ParseException e) {
+//    private void loadPatientsNotesFromParse(String objectId) {
+//        ParseQuery<PatientNotes> query = PatientNotes.getQuery();
+//        query.whereEqualTo("patientid", objectId);
+//        query.findInBackground(new FindCallback<PatientNotes>() {
+//            public void done(final List<PatientNotes> patientNotesObject, ParseException e) {
+//                if (e == null) {
+//                    PatientNotes.pinAllInBackground(ICareApplication.PARENT_GROUP_PATIENT_NOTES,patientNotesObject,
+//                            new SaveCallback() {
+//                                public void done(ParseException e) {
+//                                    if (e == null) {
+//                                        if (!isFinishing()) {
+//                                            Log.i("ROBERT PatientNotes", "DATA SAVED : "+patientNotesObject.size());
+//                                        }
+//                                    } else {
+//                                        Log.i("ROBERT PatientNotes",
+//                                                "Error pinning PatientNotes: "
+//                                                        + e.getMessage());
+//                                    }
+//                                }
+//                            });
+//                } else {
+//                    Log.i("ROBERT PatientNotes",
+//                            "loadFromParse: Error finding pinned visits: "
+//                                    + e.getMessage());
+//                }
+//            }
+//        });
+//    }
+
+    private void loadNewsFeedsFromParse() {
+        ParseQuery<NewsFeeds> query = NewsFeeds.getQuery();
+        query.findInBackground(new FindCallback<NewsFeeds>() {
+            public void done(final List<NewsFeeds> newsFeedsObject, ParseException e) {
                 if (e == null) {
-                    PatientNotes.pinAllInBackground(patientNotesObject,
+                    ParseObject.pinAllInBackground(ICareApplication.PARENT_GROUP, newsFeedsObject,
                             new SaveCallback() {
                                 public void done(ParseException e) {
                                     if (e == null) {
                                         if (!isFinishing()) {
-                                            Log.i("ROBERT PatientNotes", "DATA SAVED : "+patientNotesObject.size());
+                                            Log.i("loadNewsFeedsFromParse", "DATA SAVED : "+newsFeedsObject.size());
                                         }
                                     } else {
-                                        Log.i("ROBERT PatientNotes",
-                                                "Error pinning PatientNotes: "
+                                        Log.i("loadNewsFeedsFromParse",
+                                                "Error pinning todos: "
                                                         + e.getMessage());
                                     }
                                 }
                             });
                 } else {
-                    Log.i("ROBERT PatientNotes",
-                            "loadFromParse: Error finding pinned visits: "
+                    Log.i("loadNewsFeedsFromParse",
+                            "loadNewsFeedsFromParse: Error finding pinned news feeds: "
                                     + e.getMessage());
                 }
             }

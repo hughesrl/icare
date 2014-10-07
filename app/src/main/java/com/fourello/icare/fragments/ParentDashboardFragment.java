@@ -81,14 +81,21 @@ public class ParentDashboardFragment extends Fragment implements
 
         Bundle bundle = getArguments();
 
-        ParentMyBabyFragment myBabyFragment = new ParentMyBabyFragment();
+        ParentDashboardMyBabyFragment myBabyFragment = new ParentDashboardMyBabyFragment();
         myBabyFragment.setArguments(bundle);
         ft.replace(R.id.my_baby, myBabyFragment, "MY_BABY_FRAGMENT");
-        //ft.commit();
 
-        ParentPreviousVisitFragment previousVisitFragment = new ParentPreviousVisitFragment();
+        ParentDashboardPreviousVisitFragment previousVisitFragment = new ParentDashboardPreviousVisitFragment();
         previousVisitFragment.setArguments(bundle);
         ft.replace(R.id.previous_visits, previousVisitFragment, "PREVIOUS_VISIT_FRAGMENT");
+
+        ParentDashboardSymptomsFragment symptomsTrackerFragment = new ParentDashboardSymptomsFragment();
+        symptomsTrackerFragment.setArguments(bundle);
+        ft.replace(R.id.symptomsTracker, symptomsTrackerFragment, "SYMPTOM_TRACKER_FRAGMENT");
+
+        ParentDashboardNewsFeedsFragment newsFeedsFragment = new ParentDashboardNewsFeedsFragment();
+        newsFeedsFragment.setArguments(bundle);
+        ft.replace(R.id.newsFeeds, newsFeedsFragment, "NEWS_FEEDS_FRAGMENT");
 
         ft.commit();
 

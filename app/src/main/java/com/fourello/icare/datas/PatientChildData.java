@@ -178,7 +178,7 @@ public class PatientChildData implements Parcelable {
     }
 
 
-    public PatientChildData(String patientObjectId, String firstname, String lastname, String middlename, String mobilenumbers, byte[] patientphoto,
+    public PatientChildData(String patientObjectId, String pDoctorID, String firstname, String lastname, String middlename, String mobilenumbers, byte[] patientphoto,
                             String bDate, String bPlace, String drName, String deliveryType, String pWeight, String pHeight,
                             String pHead, String pChest, String pAbdomen, String pCircumcisedOn, String pEarPiercedOn, String pDistinguishingMarks,
                             String pNewbornScreening, String pVaccinationsGiven, String pMomsFname, String pMomsMname,
@@ -187,6 +187,7 @@ public class PatientChildData implements Parcelable {
                             String pAddress1, String pAddress2, ArrayList<PatientVisits> visits) {
         super();
         setPatientObjectId(patientObjectId);
+        setDoctorID(pDoctorID);
         setFirtname(firstname);
         setMiddlename(middlename);
         setLastname(lastname);
@@ -281,7 +282,7 @@ public class PatientChildData implements Parcelable {
     public String getDoctorID() {
         return pDoctorID;
     }
-    public void setDoctorID(String doctorID) {
+    public void setDoctorID(String pDoctorID) {
         this.pDoctorID = pDoctorID;
     }
 

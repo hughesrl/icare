@@ -48,4 +48,7 @@
     <integer name="seek_bar_pointer_size">20</integer>
 
     <dimen name="my_tracker_font_size">15sp</dimen>
+
+    <!--NEWS FEEDS-->
+    <dimen name="photo_size">40dp</dimen>
 </resources>

@@ -17,12 +17,13 @@ import com.fourello.icare.R;
 
 public class AlertDialogFragment extends DialogFragment {
     public static final String PASSWORD_DIALOG_MENU = "open_menu";
-    public static final String PASSWORD_DIALOG_CUSTOM = "custom_display";
+    public static final String DOCTOR_ID = "doctorID";
     public static final String PURPOSE_TO_OPEN = "purposeToOpen";
 
     private ParseProxyObject loginData;
     private int isValid;
-    private EditText etPINOfTheDay;
+    private EditText etCheckInPINOfTheDay;
+    private String doctorID;
     private String purposeToOpen;
 
     public AlertDialogFragment() { }
@@ -30,8 +31,8 @@ public class AlertDialogFragment extends DialogFragment {
     /*In order to receive event callback, create a dialog box activity must implement this interface.
      * In case the host need to query the properties dialog box, each method will pass a DialogFragment instance.  */
     public interface AlertDialogListener {
-        public void onDialogPositiveClick(DialogFragment dialog, String password, String purpose);
-        public void onDialogNegativeClick(DialogFragment dialog);
+        public void onCheckInDialogPositiveClick(DialogFragment dialog, String purpose, String doctorID, String etPINOfTheDay);
+        public void onCheckInDialogNegativeClick(DialogFragment dialog);
     }
 
     // Examples of the use of this interface to transmit motion events
@@ -41,6 +42,7 @@ public class AlertDialogFragment extends DialogFragment {
         AlertDialogFragment f = new AlertDialogFragment();
         // Supply num input as an argument.
         Bundle args = new Bundle();
+        args.putString(DOCTOR_ID, purposeToOpen);
         args.putString(PURPOSE_TO_OPEN, purposeToOpen);
         f.setArguments(args);
         return f;
@@ -77,8 +79,7 @@ public class AlertDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NORMAL, android.R.style.Theme_Light_Panel);
-
-
+        setCancelable(false);
     }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -90,6 +91,7 @@ public class AlertDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
 
         // GET PURPOSE TO OPEN
+        doctorID = getArguments().getString(DOCTOR_ID);
         purposeToOpen = getArguments().getString(PURPOSE_TO_OPEN);
 
 //        Toast.makeText(getActivity(), purposeToOpen+" - toOPEN", Toast.LENGTH_LONG).show();
@@ -98,28 +100,56 @@ public class AlertDialogFragment extends DialogFragment {
         final View dialogView = inflater.inflate(R.layout.dialog_alert, container, false);
         LinearLayout displayAlert = (LinearLayout) dialogView.findViewById(R.id.displayAlert);
         LinearLayout displayPINOfTheDay = (LinearLayout) dialogView.findViewById(R.id.displayPINOfTheDay);
+        LinearLayout displayOkayAlertPINNotMatch = (LinearLayout) dialogView.findViewById(R.id.displayOkayAlertPINNotMatch);
+
         if(purposeToOpen.equalsIgnoreCase("alert")) {
             displayAlert.setVisibility(View.VISIBLE);
             displayPINOfTheDay.setVisibility(View.GONE);
+            displayOkayAlertPINNotMatch.setVisibility(View.GONE);
+        } else if(purposeToOpen.equalsIgnoreCase("error")) {
+            displayAlert.setVisibility(View.GONE);
+            displayPINOfTheDay.setVisibility(View.GONE);
+            displayOkayAlertPINNotMatch.setVisibility(View.VISIBLE);
         } else {
             displayAlert.setVisibility(View.GONE);
             displayPINOfTheDay.setVisibility(View.VISIBLE);
+            displayOkayAlertPINNotMatch.setVisibility(View.GONE);
         }
-        etPINOfTheDay = (EditText)dialogView.findViewById(R.id.etPINOfTheDay);
+        etCheckInPINOfTheDay = (EditText)dialogView.findViewById(R.id.etCheckInPINOfTheDay);
 
-        Button btnDialogOkayAlertPIN = (Button)dialogView.findViewById(R.id.btnDialogOkayAlertPIN);
-        btnDialogOkayAlertPIN.setOnClickListener(new View.OnClickListener() {
+//        if(!etPINOfTheDay.getText().toString().isEmpty()) {
+        Button btnDialogOkayPIN = (Button) dialogView.findViewById(R.id.btnDialogOkayPIN);
+        btnDialogOkayPIN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onDialogNegativeClick(AlertDialogFragment.this);
+                mListener.onCheckInDialogPositiveClick(AlertDialogFragment.this, purposeToOpen, doctorID, etCheckInPINOfTheDay.getText().toString());
             }
         });
-        Button btnDialogOkayPIN = (Button)dialogView.findViewById(R.id.btnDialogOkayPIN);
-        btnDialogOkayPIN.setOnClickListener(new View.OnClickListener() {
+//        }
+        Button btnDialogCancelPIN = (Button)dialogView.findViewById(R.id.btnDialogCancelPIN);
+        btnDialogCancelPIN.setOnClickListener(new View.OnClickListener() {
             // DIALOG PASSWORD
             @Override
             public void onClick(View v) {
-//                mListener.onDialogPositiveClick(AlertDialogFragment.this, etPassword.getText().toString(), purposeToOpen);
+                mListener.onCheckInDialogNegativeClick(AlertDialogFragment.this);
+            }
+        });
+
+
+        Button btnDialogOkayAlertPIN = (Button) dialogView.findViewById(R.id.btnDialogOkayAlertPIN);
+        btnDialogOkayAlertPIN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onCheckInDialogPositiveClick(AlertDialogFragment.this, purposeToOpen, "" ,"");
+            }
+        });
+
+        Button btnDialogOkayAlertPINNotMatch = (Button)dialogView.findViewById(R.id.btnDialogOkayAlertPINNotMatch);
+        btnDialogOkayAlertPINNotMatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onCheckInDialogPositiveClick(AlertDialogFragment.this, purposeToOpen, doctorID, etCheckInPINOfTheDay.getText().toString());
+//                mListener.onDialogNegativeClick(AlertDialogFragment.this);
             }
         });
 

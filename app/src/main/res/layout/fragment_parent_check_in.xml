@@ -1,32 +1,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:icare="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@android:color/transparent"
-    android:gravity="center_horizontal">
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnClosePatientCheckin"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_close"
-        />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
-        android:layout_below="@+id/btnClosePatientCheckin"
+        android:layout_below="@+id/btnShowMenu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        >
-
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/rounded_corners_container_wth_transparency">
         <com.fourello.icare.view.CustomTextView
             icare:fontName="VAGRoundedLight.ttf"
             icare:fontStyle="bold"
@@ -34,21 +18,46 @@
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/lbl_visit_tracker"
+            android:text="@string/lbl_check_in"
             android:id="@+id/pageTitle"
             android:layout_gravity="center_horizontal"
             style="@style/text_Appearance_large_container_title_light"
             android:shadowColor="@android:color/background_dark"
             android:background="@drawable/rounded_corners_container_title_bg" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:id="@+id/checkInLayoutEmpty"
+            android:gravity="center_horizontal"
+            android:visibility="gone">
+
+            <com.fourello.icare.view.CustomTextView
+                icare:fontName="VAGRoundedLight.ttf"
+                icare:fontStyle="bold"
+                icare:fontColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lblPatientAlreadyCheckedIn"
+                android:id="@+id/lblPatientAlreadyCheckedIn"
+                android:layout_gravity="center"
+                style="@style/text_Appearance_large_title_light"
+                android:shadowColor="@android:color/background_dark"
+                />
+        </LinearLayout>
         <ScrollView
+            android:id="@+id/doctorInfo"
             android:layout_below="@+id/pageTitle"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:scrollbars="none"
             >
             <LinearLayout
-                android:background="@drawable/dialog_background"
-                android:paddingTop="5dp"
+                android:layout_marginTop="5dp"
                 android:padding="@dimen/activity_vertical_margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,45 +125,12 @@
                         android:gravity="center_vertical"
                         android:layout_marginBottom="5dp"
                         android:layout_weight="3"
-                        android:id="@+id/lblAge"
-                        android:text="@string/lblAge"
-                        />
-
-                    <com.fourello.icare.view.CustomEditTextView
-                        icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/etAge"
-                        android:drawableStart="@drawable/custom_edittext_no_drawable_left"
-                        android:drawableLeft="@drawable/custom_edittext_no_drawable_left"
-                        android:background="@drawable/rounded_corners"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="10dp"
-                        android:singleLine="true"
-                        android:hint="@string/lblAccompaniedBy"
-                        android:layout_weight="1"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <com.fourello.icare.view.CustomTextView
-                        icare:fontName="VAGRoundedLight.ttf"
-                        icare:fontColor="@color/white"
-                        style="@style/text_Appearance_large_light"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="5dp"
-                        android:layout_weight="3"
                         android:id="@+id/lblAccompaniedBy"
                         android:text="@string/lblAccompaniedBy"
                         />
 
                     <com.fourello.icare.view.CustomEditTextView
                         icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/etAccompaniedBy"
@@ -180,18 +156,41 @@
                         android:gravity="center_vertical"
                         android:layout_marginBottom="5dp"
                         android:layout_weight="3"
+                        android:id="@+id/lblRelationshipToPatient"
+                        android:text="@string/lblRelationshipToPatient"
+                        />
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinnerRelationshipToPatient"
+                        android:background="@drawable/rounded_corners"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:singleLine="true"
+                        android:hint="@string/lblRelationshipToPatient"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.fourello.icare.view.CustomTextView
+                        icare:fontName="VAGRoundedLight.ttf"
+                        icare:fontColor="@color/white"
+                        style="@style/text_Appearance_large_light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="3"
                         android:id="@+id/lblPurpose"
                         android:text="@string/lblPurpose"
                         />
-
-                    <com.fourello.icare.view.CustomEditTextView
-                        icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
+                    <Spinner
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/etPurpose"
-                        android:drawableStart="@drawable/custom_edittext_no_drawable_left"
-                        android:drawableLeft="@drawable/custom_edittext_no_drawable_left"
+                        android:id="@+id/spinnerPurpose"
                         android:background="@drawable/rounded_corners"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="10dp"
@@ -212,54 +211,19 @@
                         android:gravity="center_vertical"
                         android:layout_marginBottom="5dp"
                         android:layout_weight="3"
-                        android:id="@+id/lblPatientNotes"
-                        android:text="@string/lblPatientNotes"
-                        />
-                    <com.fourello.icare.view.CustomEditTextView
-                        icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/etPatientNotes"
-                        android:drawableStart="@drawable/custom_edittext_no_drawable_left"
-                        android:drawableLeft="@drawable/custom_edittext_no_drawable_left"
-                        android:background="@drawable/rounded_corners"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="10dp"
-                        android:singleLine="true"
-                        android:hint="@string/lblAccompaniedBy"
-                        android:layout_weight="1"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <com.fourello.icare.view.CustomTextView
-                        icare:fontName="VAGRoundedLight.ttf"
-                        icare:fontColor="@color/white"
-                        style="@style/text_Appearance_large_light"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="5dp"
-                        android:layout_weight="3"
                         android:id="@+id/lblTypeOfDelivery"
                         android:text="@string/lblTypeOfDelivery"
                         />
-                    <com.fourello.icare.view.CustomEditTextView
-                        icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
+                    <Spinner
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/etTypeOfDelivery"
-                        android:drawableStart="@drawable/custom_edittext_no_drawable_left"
-                        android:drawableLeft="@drawable/custom_edittext_no_drawable_left"
+                        android:id="@+id/spinnerTypeOfDelivery"
                         android:background="@drawable/rounded_corners"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="10dp"
                         android:singleLine="true"
                         android:hint="@string/lblTypeOfDelivery"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -277,19 +241,47 @@
                         android:id="@+id/lblAllergyRisk"
                         android:text="@string/lblAllergyRisk"
                         />
-                    <com.fourello.icare.view.CustomEditTextView
-                        icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
+                    <Spinner
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/etAllergyRisk"
-                        android:drawableStart="@drawable/custom_edittext_no_drawable_left"
-                        android:drawableLeft="@drawable/custom_edittext_no_drawable_left"
+                        android:id="@+id/spinnerAllergyRisk"
                         android:background="@drawable/rounded_corners"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="10dp"
                         android:singleLine="true"
                         android:hint="@string/lblAllergyRisk"
+                        android:layout_weight="1" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.fourello.icare.view.CustomTextView
+                        icare:fontName="VAGRoundedLight.ttf"
+                        icare:fontColor="@color/white"
+                        style="@style/text_Appearance_large_light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="3"
+                        android:id="@+id/lblMomsNotes"
+                        android:text="@string/lblMomsNotes"
+                        />
+                    <com.fourello.icare.view.CustomEditTextView
+                        icare:fontName="VAGRoundedLight.ttf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/etMomsNotes"
+                        android:drawableStart="@drawable/custom_edittext_no_drawable_left"
+                        android:drawableLeft="@drawable/custom_edittext_no_drawable_left"
+                        android:background="@drawable/rounded_corners"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"
+                        android:hint="@string/lblMomsNotes"
+                        android:lineSpacingExtra="5dp"
+                        android:ems="10"
+                        android:inputType="textCapSentences|textMultiLine"
                         android:layout_weight="1"/>
                 </LinearLayout>
                 <LinearLayout
@@ -297,7 +289,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginBottom="10dp">
-                    <include layout="@layout/visit_tracker_growth_tracker"/>
+                    <include layout="@layout/growth_tracker"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -305,125 +297,17 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     >
-                    <com.fourello.icare.view.CustomTextView
+                    <com.fourello.icare.view.CustomButton
                         icare:fontName="VAGRoundedLight.ttf"
+                        icare:fontStyle="bold"
                         icare:fontColor="@color/white"
-                        style="@style/text_Appearance_large_light"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="5dp"
-                        android:id="@+id/lblVaccinationsTaken"
-                        android:text="@string/lblVaccinationsTaken"
-                        />
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:minHeight="200dp"
-                        android:orientation="vertical"
-                        android:background="@drawable/rounded_corners_container_wth_transparency"
-                        android:gravity="center_horizontal">
-                        <ListView
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:id="@+id/vaccinationsTaken"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_gradient_shape_bus_title_left_round"/>
-                    </RelativeLayout>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
-                    <com.fourello.icare.view.CustomTextView
-                        icare:fontName="VAGRoundedLight.ttf"
-                        icare:fontColor="@color/white"
-                        style="@style/text_Appearance_large_light"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="5dp"
-                        android:id="@+id/lblMedicationsTaken"
-                        android:text="@string/lblMedicationsTaken"
-                        />
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:minHeight="200dp"
-                        android:orientation="vertical"
-                        android:background="@drawable/rounded_corners_container_wth_transparency"
-                        android:gravity="center_horizontal">
-                        <ListView
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:id="@+id/medicationsTaken"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_gradient_shape_bus_title_left_round"/>
-                    </RelativeLayout>
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <com.fourello.icare.view.CustomTextView
-                        icare:fontName="VAGRoundedLight.ttf"
-                        icare:fontColor="@color/white"
-                        style="@style/text_Appearance_large_light"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="5dp"
-                        android:layout_weight="3"
-                        android:id="@+id/lblInstructions"
-                        android:text="@string/lblInstructions"
-                        />
-                    <com.fourello.icare.view.CustomEditTextView
-                        icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/etInstructions"
-                        android:drawableStart="@drawable/custom_edittext_no_drawable_left"
-                        android:drawableLeft="@drawable/custom_edittext_no_drawable_left"
-                        android:background="@drawable/rounded_corners"
+                        android:text="@string/lbl_done"
+                        android:id="@+id/btnQuickSurvey"
+                        android:background="@drawable/custom_button"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="10dp"
-                        android:hint="@string/lblAllergyRisk"
-                        android:layout_weight="1"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <com.fourello.icare.view.CustomTextView
-                        icare:fontName="VAGRoundedLight.ttf"
-                        icare:fontColor="@color/white"
-                        style="@style/text_Appearance_large_light"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="5dp"
-                        android:layout_weight="3"
-                        android:id="@+id/lblNextVisit"
-                        android:text="@string/lblNextVisit"
-                        />
-                    <com.fourello.icare.view.CustomEditTextView
-                        icare:fontName="VAGRoundedLight.ttf"
-                        icare:isEnabled="false"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/etNextVisit"
-                        android:drawableStart="@drawable/custom_edittext_no_drawable_left"
-                        android:drawableLeft="@drawable/custom_edittext_no_drawable_left"
-                        android:background="@drawable/rounded_corners"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="10dp"
-                        android:hint="@string/lblNextVisit"
-                        android:layout_weight="1"/>
+                        style="@style/button_appearance" />
                 </LinearLayout>
 
 

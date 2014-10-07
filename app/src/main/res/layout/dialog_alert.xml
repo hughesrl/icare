@@ -8,7 +8,7 @@
     android:layout_marginLeft="70dp"
     android:layout_marginRight="70dp">
     <LinearLayout
-        android:id="@+id/displayAlert"
+        android:id="@+id/displayPINOfTheDay"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -26,9 +26,8 @@
             android:shadowColor="@android:color/white"
             android:paddingBottom="40dp"
             />
-        <EditText
+        <!--<EditText
             android:id="@+id/etPINOfTheDay"
-            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -36,7 +35,24 @@
             android:layout_marginRight="4dp"
             android:layout_marginBottom="16dp"
             android:fontFamily="sans-serif"
-            android:hint="@string/hint_password"/>
+            android:hint="@string/hint_password"/>-->
+
+        <com.fourello.icare.view.CustomEditTextView
+            icare:fontName="VAGRoundedLight.ttf"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/etCheckInPINOfTheDay"
+            android:drawableStart="@drawable/custom_edittext_no_drawable_left"
+            android:drawableLeft="@drawable/custom_edittext_no_drawable_left"
+            android:background="@drawable/rounded_corners"
+            android:layout_gravity="center_horizontal"
+            android:singleLine="true"
+            android:hint="@string/lblPINOfTheDay"
+            android:layout_weight="1"/>
 
         <LinearLayout
             android:layout_marginTop="15dp"
@@ -62,7 +78,7 @@
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/displayPINOfTheDay"
+        android:id="@+id/displayAlert"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -94,6 +110,42 @@
                 android:layout_height="wrap_content"
                 android:text="OK"
                 android:id="@+id/btnDialogOkayAlertPIN" />
+
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/displayOkayAlertPINNotMatch"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.fourello.icare.view.CustomTextView
+            icare:fontName="VAGRoundedLight.ttf"
+            icare:fontStyle="normal"
+            icare:fontColor="@android:color/black"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Your PIN does not match with Doctor's PIN"
+            android:id="@+id/pageError"
+            android:layout_gravity="center_horizontal"
+            style="@style/text_Appearance_large_container_title_light"
+            android:shadowColor="@android:color/white"
+            android:paddingBottom="56dp"
+            />
+
+        <LinearLayout
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center">
+            <Button
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OK"
+                android:id="@+id/btnDialogOkayAlertPINNotMatch" />
 
         </LinearLayout>
     </LinearLayout>

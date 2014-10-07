@@ -4,15 +4,18 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,9 +23,7 @@ import android.widget.Toast;
 import com.fourello.icare.DashboardParentFragmentActivity;
 import com.fourello.icare.ICareApplication;
 import com.fourello.icare.R;
-import com.fourello.icare.adapters.ParentImmunizationListAdapter;
 import com.fourello.icare.adapters.ParentSymptomsListAdapter;
-import com.fourello.icare.datas.MedsAndVaccines;
 import com.fourello.icare.datas.PatientChildData;
 import com.fourello.icare.datas.PatientDatabase;
 import com.fourello.icare.datas.PatientNotes;
@@ -30,13 +31,15 @@ import com.fourello.icare.view.CustomButton;
 import com.fourello.icare.view.CustomEditTextView;
 import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.widgets.ParseProxyObject;
+import com.fourello.icare.widgets.Utils;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 public class ParentSymptomsTrackerFragment extends Fragment implements
         DashboardParentFragmentActivity.OpenMenuCallbacks,
@@ -55,6 +58,10 @@ public class ParentSymptomsTrackerFragment extends Fragment implements
     private ParentSymptomsListAdapter symptomsTrackerListAdapter;
 
     public PatientNotes patientNotes;
+
+    private ListView symptomsTracker;
+
+    public boolean isConnected;
 
 
     public static Fragment newInstance(int position, PatientDatabase patientData, ParseProxyObject loginData, String patientObjectId) {
@@ -85,33 +92,26 @@ public class ParentSymptomsTrackerFragment extends Fragment implements
 
         ((DashboardParentFragmentActivity)getActivity()).changePageTitle("My Tracker");
 
-        // Set up the Parse query to use in the adapter
-        ParseQueryAdapter.QueryFactory<PatientNotes> factory = new ParseQueryAdapter.QueryFactory<PatientNotes>() {
-            public ParseQuery<PatientNotes> create() {
-                ParseQuery<PatientNotes> query = PatientNotes.getQuery();
-                query.addDescendingOrder("createdAt");
-                query.fromLocalDatastore();
-                return query;
-            }
-        };
+        symptomsTracker = (ListView) myFragmentView.findViewById(R.id.listSymptomsTracker);
 
+        ConnectivityManager cm = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 
-        // Set up the adapter
-        inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        symptomsTrackerListAdapter = new ParentSymptomsListAdapter(getActivity(), factory);
-
-        // Attach the query adapter to the view
-        ListView symptomsTracker = (ListView) myFragmentView.findViewById(R.id.listSymptomsTracker);
-        symptomsTracker.setAdapter(symptomsTrackerListAdapter);
-
-//        immunizationTracker.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view,
-//                                    int position, long id) {
-//                MedsAndVaccines medsAndVaccines = v.getItem(position);
-////                showDialogMedication(medsAndVaccines);
+//        // Set up the Parse query to use in the adapter
+//        ParseQueryAdapter.QueryFactory<PatientNotes> factory = new ParseQueryAdapter.QueryFactory<PatientNotes>() {
+//            public ParseQuery<PatientNotes> create() {
+//                ParseQuery<PatientNotes> query = PatientNotes.getQuery();
+//                query.addDescendingOrder("createdAt");
+//                query.fromLocalDatastore();
+//                return query;
 //            }
-//        });
+//        };
+
+
+
+
+
         int width = getActivity().getResources().getDisplayMetrics().widthPixels;
         int columnWidth = (width-100)/3;
 
@@ -136,12 +136,6 @@ public class ParentSymptomsTrackerFragment extends Fragment implements
 
 
         return myFragmentView;
-    }
-
-
-
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -174,10 +168,21 @@ public class ParentSymptomsTrackerFragment extends Fragment implements
         btnSaveNewSymptom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String txtSymptomSubject = etSymptomSubject.getText().toString().trim();
+                ConnectivityManager cm = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+
+                if (mProgressDialog == null) {
+                    mProgressDialog = Utils.createProgressDialog(getActivity());
+                    mProgressDialog.show();
+                } else {
+                    mProgressDialog.show();
+                }
+                final String txtSymptomSubject = etSymptomSubject.getText().toString().trim();
                 String txtSymptomSymptoms = etSymptomSymptoms.getText().toString().trim();
-                String txtSymptomNotes = etSymptomNotes.getText().toString().trim();
-                String txtSymptomQuestion = etSymptomQuestion.getText().toString().trim();
+                final String txtSymptomNotes = etSymptomNotes.getText().toString().trim();
+                final String txtSymptomQuestion = etSymptomQuestion.getText().toString().trim();
 
                 if(txtSymptomSubject.equalsIgnoreCase("") || txtSymptomSymptoms.equalsIgnoreCase("") ||
                         txtSymptomNotes.equalsIgnoreCase("") || txtSymptomQuestion.equalsIgnoreCase("")) {
@@ -189,45 +194,67 @@ public class ParentSymptomsTrackerFragment extends Fragment implements
                     patientNotes.setNotes(txtSymptomNotes);
                     patientNotes.setQuestion(txtSymptomQuestion);
 
-                    patientNotes.saveEventually(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if(e == null) {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        dialog.dismiss();
-                                    }
-                                });
-                            } else {
-                                dialog.dismiss();
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // Set up the Parse query to use in the adapter
-                                        ParseQueryAdapter.QueryFactory<PatientNotes> factory = new ParseQueryAdapter.QueryFactory<PatientNotes>() {
-                                            public ParseQuery<PatientNotes> create() {
-                                                ParseQuery<PatientNotes> query = PatientNotes.getQuery();
-                                                query.addDescendingOrder("createdAt");
-                                                query.fromLocalDatastore();
-                                                return query;
+                    if(isConnected) {
+                        patientNotes.saveEventually(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    ParseQuery<PatientNotes> query = PatientNotes.getQuery();
+                                    query.whereEqualTo("patientid", mParamChildData.get(mParamChildDataPosition).getPatientObjectId());
+                                    query.findInBackground(new FindCallback<PatientNotes>() {
+                                        public void done(final List<PatientNotes> patientNotesObject, ParseException e) {
+                                            if (e == null) {
+                                                try {
+                                                    PatientNotes.unpinAll(ICareApplication.PARENT_GROUP_PATIENT_NOTES);
+                                                    PatientNotes.pinAllInBackground(ICareApplication.PARENT_GROUP_PATIENT_NOTES, patientNotesObject,
+                                                            new SaveCallback() {
+                                                                public void done(ParseException e) {
+                                                                    if (e == null) {
+                                                                        new PopulateSymptomsDataTask() {
+                                                                            protected Void doInBackground(Void... params) {
+                                                                                dialog.dismiss();
+                                                                                super.doInBackground();
+                                                                                return null;
+                                                                            }
+                                                                        }.execute();
+                                                                        Log.i("ROBERT PatientNotes", "DATA SAVED : " + patientNotesObject.size());
+                                                                    } else {
+                                                                        Log.i("ROBERT PatientNotes", "Error pinning PatientNotes: " + e.getMessage());
+                                                                    }
+                                                                }
+                                                            }
+                                                    );
+                                                } catch (ParseException e1) {
+                                                    e1.printStackTrace();
+                                                }
+                                            } else {
+                                                Log.i("ROBERT PatientNotes",
+                                                        "loadFromParse: Error finding pinned visits: "
+                                                                + e.getMessage());
                                             }
-                                        };
+                                        }
+                                    });
 
-
-                                        // Set up the adapter
-                                        symptomsTrackerListAdapter = new ParentSymptomsListAdapter(getActivity(), factory);
-                                        symptomsTrackerListAdapter.notifyDataSetChanged();
-
-                                        // Attach the query adapter to the view
-                                        ListView symptomsTracker = (ListView) myFragmentView.findViewById(R.id.listSymptomsTracker);
-                                    }
-                                });
+                                } else {
+                                    Log.i("ROBERT PatientNotes saveEventually",
+                                            "loadFromParse: Error finding pinned visits: "
+                                                    + e.getMessage());
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        patientNotes.saveEventually();
+                        Toast.makeText(getActivity(), "No Internet Connection, this will be sync once connected to Internet.", Toast.LENGTH_LONG).show();
+                        new PopulateSymptomsDataTask() {
+                            protected Void doInBackground(Void... params) {
+                                dialog.dismiss();
+                                super.doInBackground();
+                                return null;
+                            }
+                        }.execute();
+
+                    }
                 }
-                //Toast.makeText(getActivity(), "SAVE THTHTHT", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -243,5 +270,106 @@ public class ParentSymptomsTrackerFragment extends Fragment implements
         dialog.show();
     }
 
+    public class PopulateSymptomsDataTask extends AsyncTask<Void, Void, Void> {
+        private ParseQueryAdapter.QueryFactory<PatientNotes> queryFactory;
 
+        // Override this method to do custom remote calls
+        protected Void doInBackground(Void... params) {
+
+            queryFactory = new ParseQueryAdapter.QueryFactory<PatientNotes>() {
+                public ParseQuery<PatientNotes> create() {
+                    ParseQuery<PatientNotes> query = PatientNotes.getQuery();
+                    query.addDescendingOrder("createdAt");
+                    query.fromLocalDatastore();
+                    return query;
+                }
+            };
+
+
+            //queryFactory = factory;
+
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            // Set up the adapter
+//            inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            symptomsTrackerListAdapter = new ParentSymptomsListAdapter(getActivity(), queryFactory);
+
+            symptomsTrackerListAdapter.notifyDataSetChanged();
+            // Attach the query adapter to the view
+
+            symptomsTracker.setAdapter(symptomsTrackerListAdapter);
+
+//            symptomsTracker.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                }
+//            });
+
+            mProgressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mProgressDialog == null) {
+            mProgressDialog = Utils.createProgressDialog(getActivity());
+            mProgressDialog.show();
+        } else {
+            mProgressDialog.show();
+        }
+        if(!isConnected) {
+            new PopulateSymptomsDataTask().execute();
+        } else {
+            ParseQuery<PatientNotes> query = PatientNotes.getQuery();
+            query.whereEqualTo("patientid", mParamChildData.get(mParamChildDataPosition).getPatientObjectId());
+            query.findInBackground(new FindCallback<PatientNotes>() {
+                public void done(final List<PatientNotes> patientNotesObject, ParseException e) {
+                    if (e == null) {
+                        try {
+                            PatientNotes.unpinAll(ICareApplication.PARENT_GROUP_PATIENT_NOTES);
+
+                            PatientNotes.pinAllInBackground(ICareApplication.PARENT_GROUP_PATIENT_NOTES, patientNotesObject,
+                                    new SaveCallback() {
+                                        public void done(ParseException e) {
+                                            if (e == null) {
+                                                new PopulateSymptomsDataTask().execute();
+                                            } else {
+                                                Log.i("ROBERT PatientNotes",
+                                                        "Error pinning PatientNotes: "
+                                                                + e.getMessage());
+                                            }
+                                        }
+                                    });
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
+                    } else {
+                        Log.i("ROBERT PatientNotes",
+                                "loadFromParse: Error finding pinned visits: "
+                                        + e.getMessage());
+                    }
+                }
+            });
+        }
+    }
+
+    public void updateListSymptoms() {
+        symptomsTrackerListAdapter.notifyDataSetChanged();
+    }
 }

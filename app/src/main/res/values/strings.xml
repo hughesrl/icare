@@ -34,10 +34,12 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="lbl_promos">PROMOS</string>
-    <string name="lbl_news_feed">NEWS FEED</string>
+    <string name="lbl_news_feed">NEWS FEEDS</string>
     <string name="lbl_scheduler">SCHEDULER</string>
     <string name="lbl_my_dashboard">MY DASHBOARD</string>
     <string name="lbl_my_baby">MY BABY</string>
+    <string name="lbl_dashboard_symptoms_tracker">SYMPTOMS TRACKER</string>
+    <string name="lbl_check_in">CHECK-IN</string>
     <string name="lbl_previous_visit">PREVIOUS VISIT</string>
     <string name="lbl_patient_database">PATIENT DATABASE</string>
     <string name="lbl_patient_visits">VISITS</string>

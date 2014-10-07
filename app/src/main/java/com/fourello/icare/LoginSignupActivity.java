@@ -126,6 +126,9 @@ public class    LoginSignupActivity extends Activity {
                 } else {
                     // input data is for Parents
                     ParseQuery<ParseObject> query = ParseQuery.getQuery(ICareApplication.USERS_LABEL);
+                    query.whereExists("firstname");
+                    query.whereExists("lastname");
+                    query.whereExists("role");
                     query.whereEqualTo("email", usernameTxt);
                     query.whereEqualTo("password", passwordTxt);
                     query.findInBackground(new FindCallback<ParseObject>() {
@@ -136,7 +139,6 @@ public class    LoginSignupActivity extends Activity {
                                 } else {
                                     //Login success
                                     ParseObject.pinAllInBackground(ICareApplication.PARENT_GROUP, objects);
-
                                     final ParseObject project = objects.get(0);
 
                                     loginData = new ParseProxyObject(project);

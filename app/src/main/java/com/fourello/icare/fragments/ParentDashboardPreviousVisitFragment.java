@@ -30,13 +30,13 @@ import java.util.Date;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.fourello.icare.fragments.ParentPreviousVisitFragment.OnFragmentInteractionListener} interface
+ * {@link ParentDashboardPreviousVisitFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link com.fourello.icare.fragments.ParentPreviousVisitFragment#newInstance} factory method to
+ * Use the {@link ParentDashboardPreviousVisitFragment#newInstance} factory method to
  * create an instance of this fragment.
  *
  */
-public class ParentPreviousVisitFragment extends Fragment {
+public class ParentDashboardPreviousVisitFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -67,15 +67,15 @@ public class ParentPreviousVisitFragment extends Fragment {
      * @return A new instance of fragment MyDashboardFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ParentPreviousVisitFragment newInstance(String param1, String param2) {
-        ParentPreviousVisitFragment fragment = new ParentPreviousVisitFragment();
+    public static ParentDashboardPreviousVisitFragment newInstance(String param1, String param2) {
+        ParentDashboardPreviousVisitFragment fragment = new ParentDashboardPreviousVisitFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
-    public ParentPreviousVisitFragment() {
+    public ParentDashboardPreviousVisitFragment() {
         // Required empty public constructor
     }
 
@@ -93,7 +93,7 @@ public class ParentPreviousVisitFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_parent_previous_visit, container, false);
+        myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_parent_dashboard_previous_visit, container, false);
 
         final CustomTextView txtPreviousVisitDate = (CustomTextView) myFragmentView.findViewById(R.id.txtPreviousVisitDate);
         final CustomTextView txtInstructions = (CustomTextView) myFragmentView.findViewById(R.id.txtInstructions);

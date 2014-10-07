@@ -16,13 +16,20 @@
             android:layout_height="@dimen/dashboard_container_height"
             android:layout_marginBottom="@dimen/activity_vertical_margin" />
 
-        <!--<FrameLayout
-            android:id="@+id/my_baby_visit_tracker"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dashboard_container_height"
-            android:layout_marginBottom="@dimen/activity_vertical_margin" />-->
         <FrameLayout
             android:id="@+id/previous_visits"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dashboard_container_height"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
+
+        <FrameLayout
+            android:id="@+id/symptomsTracker"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dashboard_container_height"
+            android:layout_marginBottom="@dimen/activity_vertical_margin" />
+
+        <FrameLayout
+            android:id="@+id/newsFeeds"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dashboard_container_height"
             android:layout_marginBottom="@dimen/activity_vertical_margin" />

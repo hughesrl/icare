@@ -2,9 +2,12 @@ package com.fourello.icare;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -22,7 +25,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.fourello.icare.adapters.MenuItemsAdapter;
 import com.fourello.icare.adapters.MyChildrenAdapter;
@@ -38,6 +40,7 @@ import com.fourello.icare.fragments.ParentDoctorInformationFragment;
 import com.fourello.icare.fragments.ParentGrowthTrackerFragment;
 import com.fourello.icare.fragments.ParentImmunizationTrackerFragment;
 import com.fourello.icare.fragments.ParentMedicationTrackerFragment;
+import com.fourello.icare.fragments.ParentMyClinicCheckInFragment;
 import com.fourello.icare.fragments.ParentSymptomsTrackerFragment;
 import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.widgets.AlertDialogFragment;
@@ -45,9 +48,9 @@ import com.fourello.icare.widgets.FragmentUtils;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.fourello.icare.widgets.PasswordDialogFragment;
 import com.fourello.icare.widgets.Utils;
+import com.parse.CountCallback;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -179,6 +182,13 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                         myChildrenInfo.setMiddlename(patientObjects.getString("middlename"));
                         myChildrenInfo.setLastname(patientObjects.getString("lastname"));
 
+                        if (patientObjects.getDate("dateofbirth") != null) {
+                            Date dateofbirth = patientObjects.getDate("dateofbirth");
+                            String dateofbirthString = df.format(dateofbirth);
+                            myChildrenInfo.setbDate(dateofbirthString);
+
+                            Log.d("ROBERT dateofbirthString", dateofbirthString);
+                        }
                         if (patientObjects.getString("placeofbirth") != null) {
                             myChildrenInfo.setbPlace(patientObjects.getString("placeofbirth"));
                         }
@@ -222,8 +232,11 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                             myChildrenInfo.setParentEmail(patientObjects.getString("email"));
                         }
 
-                        if(patientObjects.has("doctorid")) {
+                        if(patientObjects.getString("doctorid") != null) {
+
                             myChildrenInfo.setDoctorID(patientObjects.getString("doctorid"));
+
+                            Log.d("ROBERT DOCTORID", patientObjects.getString("doctorid"));
                         }
                         // Distinguishing Marks cannot found
 
@@ -320,6 +333,7 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                 dialog = new Dialog(DashboardParentFragmentActivity.this, R.style.DialogSlideAnim);
                 dialog.setContentView(R.layout.activity_menu_parent);
 
+
                 if(!extras.getBooleanExtra("isRestarted", false)) {
                     showMenu(btnShowMenu);
                 } else {
@@ -367,11 +381,12 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
         passwordDialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
     }
 
-    public void showAlertDialog(String purpose) {
+    public void showAlertDialog(String purpose, String doctorID) {
         // To create an instance of DialogFragment and displays
         DialogFragment passwordDialog = AlertDialogFragment.newInstance(purpose);
         Bundle args = getIntent().getExtras();
         args.putString(AlertDialogFragment.PURPOSE_TO_OPEN, purpose);
+        args.putString(AlertDialogFragment.DOCTOR_ID, doctorID);
 
         passwordDialog.setArguments(args);
 //        passwordDialog.setTargetFragment(fragment, MY_REQUEST_CODE);
@@ -380,15 +395,43 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
 
     // Through the Fragment.onAttach () of the callback, the instance of DialogFragment can receive the realization method of NoticeDialogFragment.NoticeDialogListener is used to define the reference
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog, String password, String purposeToOpen) {
-        // Active user touch button dialog
+    public void onCheckInDialogPositiveClick(DialogFragment dialog, String purposeToOpen, String doctorID, String etPINOfTheDay) {
+        if(purposeToOpen.equalsIgnoreCase("enter_pin")) {
+
+            new CheckIfPINOfTheDayMatch(this, dialog, doctorID, etPINOfTheDay).execute();
+
+        } else if(purposeToOpen.equalsIgnoreCase("alert")) {
+            dialog.dismiss();
+            Intent intent = getIntent();
+            intent.putExtra("loginData", loginData);
+            intent.putExtra("myPicture", myPicture);
+            intent.putExtra("isRestarted", true);
+            finish();
+            startActivity(intent);
+        } else if(purposeToOpen.equalsIgnoreCase("error")) {
+            dialog.dismiss();
+            Intent intent = getIntent();
+            intent.putExtra("loginData", loginData);
+            intent.putExtra("myPicture", myPicture);
+            intent.putExtra("isRestarted", true);
+            finish();
+            startActivity(intent);
+        } else {
+            // Check if PIN of the day match.
+            dialog.dismiss();
+        }
     }
 
     @Override
-     public void onDialogNegativeClick(DialogFragment dialog) {
+     public void onCheckInDialogNegativeClick(DialogFragment dialog) {
         // The user touches the negative Button Dialog
-        validPassword = 0;
         dialog.dismiss();
+        Intent intent = getIntent();
+        intent.putExtra("loginData", loginData);
+        intent.putExtra("myPicture", myPicture);
+        intent.putExtra("isRestarted", true);
+        finish();
+        startActivity(intent);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -542,11 +585,14 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
                                 ClinicVisits();
                                 break;
                             case 1:
-                                try {
-                                    CheckIfPINOfTheDayExists();
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
+                                CheckIn(listMyChildren, mySpinnerChildren.getSelectedItemPosition());
+//                                Toast.makeText(getApplication(), "Please wait.", Toast.LENGTH_LONG).show();
+//
+//                                try {
+//                                    CheckIfPINOfTheDayExists();
+//                                } catch (ParseException e) {
+//                                    e.printStackTrace();
+//                                }
                                 break;
                         }
                     }
@@ -782,6 +828,26 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
         }
         mCallbacks = (OpenMenuCallbacks) myFragment;
     }
+    public void CheckIn(List<PatientChildData> listMyChildren, int childPosition) {
+        mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        ParentMyClinicCheckInFragment myFragment = new ParentMyClinicCheckInFragment();
+        Bundle bundle = getIntent().getExtras();
+
+        bundle.putSerializable(ARG_LOGIN_DATA, loginData);
+        bundle.putInt(ARG_CHILD_DATA_POS, childPosition);
+        bundle.putParcelableArrayList(ARG_CHILD_DATA, (ArrayList<PatientChildData>) listMyChildren);
+        myFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.alt_fragment_content_container, myFragment, "IMMUNIZATION_TRACKER_FRAGMENT");
+        transaction.commit();
+        // Fragment must implement the callback.
+        if (!(myFragment instanceof OpenMenuCallbacks)) {
+            throw new IllegalStateException(
+                    "Fragment must implement the callbacks.");
+        }
+        mCallbacks = (OpenMenuCallbacks) myFragment;
+    }
 
     public void DoctorInformation(List<PatientChildData> listMyChildren, int childPosition) {
         mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -836,60 +902,84 @@ public class DashboardParentFragmentActivity extends FragmentActivity implements
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void CheckIfPINOfTheDayExists() throws ParseException {
-//        final ProgressDialog mProgressDialog;
-//        mProgressDialog = Utils.createProgressDialog(DashboardParentFragmentActivity.this);
-//        mProgressDialog.show();
 
-        ParseQuery<Doctors> query = Doctors.getQuery();
-        query.fromLocalDatastore();
-        if(query.count() == 0) {
-            Toast.makeText(getApplication(), "Please set your Doctor", Toast.LENGTH_LONG).show();
-        } else {
-            query.getFirstInBackground(new GetCallback<Doctors>() {
-                @Override
-                public void done(Doctors doctors, ParseException e) {
-                    if(e == null) {
-                        Log.d("ROBERT MID", midnight.toString());
-                        Log.d("ROBERT 1159", elevenfiftynine.toString());
-                        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.SETTINGS_LABEL);
-                        query.whereEqualTo("doctorid", doctors.getDoctorID());
-                        query.whereGreaterThan("updatedAt", midnight);
-                        query.whereLessThan("updatedAt", elevenfiftynine);
-                        try {
-                            if (query.count() == 0) {
-                                showAlertDialog("enter_pin");
-                                Toast.makeText(getApplication(), "No PIN", Toast.LENGTH_LONG).show();
-                            } else {
-                                showAlertDialog("alert");
-                                Toast.makeText(getApplication(), "Enter PIN", Toast.LENGTH_LONG).show();
-                            }
-                        } catch (ParseException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
-//                    mProgressDialog.dismiss();
-                }
-            });
+    private class CheckIfPINOfTheDayMatch extends AsyncTask<Void, Void, Integer> {
+        Context context;
+        DialogFragment dialog;
+        String doctorID;
+        String pinOfTheDay;
+        ProgressDialog mProgressDialog;
+
+        public CheckIfPINOfTheDayMatch(Context context, DialogFragment dialog, String objectId, String pinOfTheDay) {
+            this.context = context;
+            this.dialog = dialog;
+            this.doctorID = objectId;
+            this.pinOfTheDay = pinOfTheDay;
         }
 
-//        if(!listMyChildren.get(0).getDoctorID().isEmpty()) {
-//            ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.SETTINGS_LABEL);
-//            query.whereEqualTo("doctorid", listMyChildren.get(0).getDoctorID());
-//            query.whereGreaterThan("updatedAt", midnight);
-//            query.whereLessThan("updatedAt", elevenfiftynine);
-//            try {
-//                if (query.count() == 0) {
-//                    Toast.makeText(getApplication(), "No PIN", Toast.LENGTH_LONG).show();
-//                } else {
-//                    Toast.makeText(getApplication(), "Enter PIN", Toast.LENGTH_LONG).show();
-//                }
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            Toast.makeText(getApplication(), "Please set your Doctor", Toast.LENGTH_LONG).show();
-//        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Create a progressdialog
+
+            mProgressDialog = Utils.createProgressDialog(context);
+            mProgressDialog.show();
+
+        }
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // Create the array
+            final Date midnight = new Date();
+            midnight.setHours(0);
+            midnight.setMinutes(0);
+            midnight.setSeconds(0);
+
+            final Date elevenfiftynine = new Date();
+            elevenfiftynine.setHours(23);
+            elevenfiftynine.setMinutes(59);
+            elevenfiftynine.setSeconds(59);
+
+            Log.d("ROBERT MID", midnight.toString());
+            Log.d("ROBERT 1159", elevenfiftynine.toString());
+            ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(ICareApplication.SETTINGS_LABEL);
+            query.whereEqualTo("doctorid", doctorID);
+            query.whereEqualTo("pin", pinOfTheDay);
+            query.whereGreaterThan("updatedAt", midnight);
+            query.whereLessThan("updatedAt", elevenfiftynine);
+
+            query.countInBackground(new CountCallback() {
+                @Override
+                public void done(int i, ParseException e) {
+                    if(i == 0) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mProgressDialog.dismiss();
+                                //showAlertDialog("error", doctorID);
+                                //Toast.makeText(DashboardParentFragmentActivity.this, "PIN does not match.", Toast.LENGTH_LONG).show();
+                                showAlertDialog("error", doctorID);
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialog.dismiss();
+                                mProgressDialog.dismiss();
+
+                            }
+                        });
+                    }
+                }
+            });
+            return 0;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+        }
     }
+
 
 }
