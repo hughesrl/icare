@@ -97,7 +97,7 @@
     <string name="lblMyMomGaveBirthToMeThrough">My mom gave birth to me through</string>
     <string name="lblWhenIWasBornIWeighed">When I was born I weighed</string>
     <string name="lblAndIMeasured">and I measured</string>
-    <string name="lblAllergyRiskNotes"><![CDATA[When your child have allergies, his development may also suffer.\n Find out your child\'s allergy risk here (<a>http://stage.allergyrisktracker.com/ph/</a>).]]></string>
+    <string name="lblAllergyRiskNotes"><![CDATA[When your child have allergies, his development may also suffer.\n Find out your child\'s allergy risk here ( <a href="http://stage.allergyrisktracker.com/ph/">http://stage.allergyrisktracker.com/ph</a> ).]]></string>
     <string name="lblCircumcisedOn">Circumcised on</string>
     <string name="lblEarsPiercedOn">Ears pierced on</string>
     <string name="lblDistinguishingMarks">Distinguishing marks</string>

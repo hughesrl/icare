@@ -381,7 +381,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_weight="3"
                 android:id="@+id/lblAllergyRiskNotes"
-                android:text="@string/lblAllergyRiskNotes"
+                android:autoLink="web"
                 />
             <LinearLayout
                 android:layout_width="match_parent"

@@ -9,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 
 import com.fourello.icare.ICareApplication;
 import com.fourello.icare.R;
 import com.fourello.icare.adapters.PatientVisitsAdapter;
 import com.fourello.icare.datas.PatientDatabase;
 import com.fourello.icare.datas.PatientVisits;
+import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.widgets.FragmentUtils;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.parse.FindCallback;
@@ -77,6 +79,10 @@ public class PatientVisitsFragment extends ListFragment {
 
         patientVisitsList = new ArrayList<PatientVisits>();
         patientVisitsList.clear();
+
+        final ProgressBar visitProgress = (ProgressBar) myFragmentView.findViewById(R.id.visitProgress);
+        visitProgress.setVisibility(View.VISIBLE);
+        final CustomTextView noData = (CustomTextView) myFragmentView.findViewById(R.id.noData);
             /* Adding the Visits */
         ParseQuery<ParseObject> queryVisits = new ParseQuery<ParseObject>(ICareApplication.VISITS_LABEL);
         queryVisits.setSkip(0);
@@ -156,7 +162,12 @@ public class PatientVisitsFragment extends ListFragment {
                                 visitTrackerDialogFragment.show(getChildFragmentManager(), "fragment_visit_tracker");
                             }
                         });
+                        noData.setVisibility(View.GONE);
+                    } else {
+                        noData.setVisibility(View.VISIBLE);
                     }
+                    noData.setVisibility(View.GONE);
+                    visitProgress.setVisibility(View.GONE);
                 }
             }
         });

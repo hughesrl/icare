@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,7 @@ import com.fourello.icare.datas.PatientDatabase;
 import com.fourello.icare.datas.Patients;
 import com.fourello.icare.view.CustomButton;
 import com.fourello.icare.view.CustomEditTextView;
+import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.widgets.FragmentUtils;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.fourello.icare.widgets.Utils;
@@ -101,11 +104,17 @@ public class ParentBabyInfoFragment extends Fragment implements
 //        patients = new Patients();
 
 
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_parent_baby_info, container, false);
+
+        CustomTextView lblAllergyRiskNotes = (CustomTextView) myFragmentView.findViewById(R.id.lblAllergyRiskNotes);
+        lblAllergyRiskNotes.setText(Html.fromHtml(getString(R.string.lblAllergyRiskNotes)));
+        Linkify.addLinks(lblAllergyRiskNotes, Linkify.WEB_URLS);
 
         myChild = mParamChildData.get(mParamChildDataPosition);
 

@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:icare="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="top"
@@ -13,5 +14,24 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_gradient_shape_bus_title"
+        />
+
+    <ProgressBar
+        android:id="@+id/visitProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        style="?android:attr/progressBarStyleLarge"
+        />
+    <com.fourello.icare.view.CustomTextView
+        icare:fontName="VAGRoundedLight.ttf"
+        icare:fontColor="@color/white"
+        style="@style/text_Appearance_large_light"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:id="@+id/noData"
+        android:text="No Visit(s)"
+        android:visibility="gone"
         />
 </RelativeLayout>

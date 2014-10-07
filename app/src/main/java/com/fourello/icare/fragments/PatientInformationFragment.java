@@ -8,17 +8,13 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
+import android.text.Html;
+import android.text.util.Linkify;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,13 +25,9 @@ import com.fourello.icare.datas.PatientDatabase;
 import com.fourello.icare.datas.Patients;
 import com.fourello.icare.datas.SpinnerItems;
 import com.fourello.icare.view.CustomEditTextView;
-import com.fourello.icare.view.RoundedAvatarDrawable;
+import com.fourello.icare.view.CustomTextView;
 import com.fourello.icare.widgets.ParseProxyObject;
 import com.fourello.icare.widgets.Utils;
-import com.parse.GetDataCallback;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 
@@ -96,6 +88,10 @@ public class PatientInformationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         ViewGroup myFragmentView = (ViewGroup) inflater.inflate(R.layout.fragment_patient_information, container, false);
+
+        CustomTextView lblAllergyRiskNotes = (CustomTextView) myFragmentView.findViewById(R.id.lblAllergyRiskNotes);
+        lblAllergyRiskNotes.setText(Html.fromHtml(getString(R.string.lblAllergyRiskNotes)));
+        Linkify.addLinks(lblAllergyRiskNotes, Linkify.WEB_URLS);
 
         imgPatientPhoto         = (ImageView)myFragmentView.findViewById(R.id.patient_photo);
         etPatientsFName         = (CustomEditTextView)myFragmentView.findViewById(R.id.etPatientsFName);
